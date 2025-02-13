@@ -1,0 +1,284 @@
+
+<!doctype html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <meta charset="UTF-8">
+  <title>Custom Codelabs Landing Page</title>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://storage.googleapis.com/claat-public/codelab-elements.css">
+  <style>
+    .success {
+      color: #1e8e3e;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+  <google-codelab codelab-gaid="UA-49880327-14"
+                  id="landing-page-customization"
+                  title="Custom Codelabs Landing Page"
+                  environment="web"
+                  feedback-link="https://github.com/mikaere66/mikaere66.github.io/issues">
+    
+      <google-codelab-step label="Landing page introduction" duration="2">
+        <p><img style="width: 240.00px" src="img/8ab8af10cfd00117.png"><br><a href="https://iconscout.com/icons/html" target="_blank">Html</a> icon by <a href="https://iconscout.com/contributors/ravindra-kalkani" target="_blank">Ravindra Kalkani</a></p>
+<aside class="warning"><p>This guide and all references to CLaaT assume that you&#39;ve completed one of my <a href="https://mikaere66.github.io" target="_blank">other Codelabs</a> (or someone else&#39;s) for <strong>Making your own Codelab</strong>(s), and you know what the <code>CLaaT</code> tool is</p>
+</aside>
+<h2 is-upgraded><strong>Target computers for Software</strong></h2>
+<h3 is-upgraded><strong>Linux</strong></h3>
+<p>The following steps include instructions for <strong>Linux</strong> computers, and for Linux in a container, i.e. the <strong>Linux development environment</strong> on a Chromebook, or <strong>Windows Subsystem for Linux</strong> on a Windows PC. If you&#39;re using a fully-fledged Linux distribution installed on your computer, then skip to the next paragraph, just below ... however, if you&#39;re using a Chromebook or a Windows PC, please read on:</p>
+<p><strong>Chromebook</strong>: it is assumed that you have the <strong>Linux development environment</strong> installed.</p>
+<p><strong>Windows PC</strong>: it is assumed that you have the <strong>Windows Subsystem for Linux</strong> installed.</p>
+<p>If you need help with either of those installations, please refer to my <a href="https://mikaere66.github.io" target="_blank">other Codelabs</a> before continuing.</p>
+<h2 is-upgraded>About <strong>Codelab Tools</strong></h2>
+<p>If you&#39;re interested in authoring <strong>more than one</strong> codelab, it would be a good idea to consider a <strong>landing page</strong>. The <em>same</em> &#34;Googlers&#34; that maintain the CLaaT project, have a host of other tools available on GitHub for this very purpose, located in the <a href="https://github.com/googlecodelabs/tools" target="_blank">GoogleCodelabs/Tools</a> repository. Please read up to and including the note just below, <em>before</em> checking out the Tools repo on GitHub.</p>
+<p>If you look in the <code>site</code> sub-folder, you&#39;ll see that this is titled &#34;<strong>Codelabs Site</strong>&#34; and is described as &#34;<strong>A site for hosting codelabs content</strong>&#34; ... in other words, a landing page.</p>
+<p>Unless you actually intend to host on GCS, the use of the terms <em>site</em> and <em>hosting</em> might be a little misleading in this case, because <em>you</em> will have to work out where you&#39;d like to actually host/publish your website. Some possibilities include:</p>
+<ul>
+<li>Github Pages (&lt;username&gt;.github.io)</li>
+<li>Google App Engine</li>
+<li>Firebase Static Serving</li>
+<li>Google Cloud Storage</li>
+<li>Amazon Web Services S3</li>
+<li>Netlify</li>
+<li>Any open source web server (Nginx, Apache)</li>
+<li>python -m SimpleHTTPServer (Python 2)</li>
+<li>python3 -m http.server (Python 3)</li>
+</ul>
+<aside class="warning"><p>Note: unless you <em>do</em> actually intend to host your codelabs on GCS, please <strong>ignore</strong> all references to <strong>gsutil</strong> on the <strong>Codelabs Site</strong> page, as it is <em>not</em> required for any of the non-Google hosting solutions</p>
+</aside>
+<h3 is-upgraded><strong>Differences between CLaaT and Codelabs Site</strong></h3>
+<p>Where the <code>CLaaT</code> tool can easily export and serve a <em>single</em> codelab (as you may have done already), the tools under <code>Codelabs Site</code> can do all that, plus <em>much</em> more.</p>
+<p>One of those additional features is the ability for you to create/update a landing page after you run the <code>export</code> command on one or more codelabs.</p>
+<p>Instead of running <code>claat serve</code> in the <strong>how-to-write-a-codelab</strong> folder (for example), you would run <code>gulp serve ...</code> (with options) in the <strong>Projects </strong>folder (the parent folder to how-to-write-a-codelab).</p>
+<table>
+<tr><td colspan="1" rowspan="1"><p class="image-container"><img alt="Gulp logo" style="width: 128.00px" src="img/5a552d02a770539c.png"></p>
+</td><td colspan="1" rowspan="1"><p><strong>What is Gulp</strong>?</p>
+<p>Gulp is a toolkit to automate/enhance workflows. In our case, that workflow is defined in the <code>gulpfile.js</code> file, located in the <code>site</code> directory. You will install gulp soon.</p>
+</td></tr>
+</table>
+<p>Alternative forms of the <code>gulp serve</code> command are <code>gulp serve:dist</code> (as in distribution) and <code>gulp dist</code> ... where the <code>serve:dist</code> option would serve a completely <strong>compiled and minified</strong> (production) version, and the <code>dist</code> option does the same, but <em>without</em> starting a web server instance.</p>
+<p><strong>Notes</strong>:</p>
+<ul>
+<li>The <code>serve</code> option by itself creates a <code>build</code> folder under <code>site</code> which contains everything that you would <em>potentially</em> publish to your codelabs website, including the landing page ... think <code>testing</code></li>
+<li>In contrast, the <code>dist</code> option creates a <code>dist</code> folder containing a completely <strong>compiled and minified</strong> version ... think <code>production</code></li>
+</ul>
+<aside class="warning"><p>Important: both the <code>build</code> and the <code>dist</code> folders may be <strong>deleted</strong> and <strong>recreated</strong> by the <code>gulp</code> command at <strong>any time</strong> during development ... please do not store files that <em>you</em> create inside these folders. If you have files that need to be published alongside your codelab(s), then store them at a directory-level <em>within or above </em><code>site</code> and create a script that can <strong>copy</strong> them to the <code>dist</code> folder</p>
+</aside>
+<p>Hopefully, all the <code>claat this</code> and <code>gulp that</code> isn&#39;t <em>too</em> confusing. If it seems like it <em>is</em>, don&#39;t worry too much ... you&#39;ll gain a better understanding by actually using the tools</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Software installation" duration="4">
+        <h2 is-upgraded><strong>Codelabs &#34;site&#34; installation</strong></h2>
+<h3 is-upgraded><strong>Download the GoogleCodelabs/Tools archive</strong></h3>
+<p>Get the zipped archive by clicking this <a href="https://github.com/googlecodelabs/tools/archive/refs/heads/main.zip" target="_blank"><paper-button class="colored" raised>〈 〉Code</paper-button></a> button, <em>or</em> you can download it <em>directly</em> from the <a href="https://github.com/googlecodelabs/tools" target="_blank">GoogleCodelabs/Tools</a> repository ... toward the top of that web page is a similar button. After clicking that button, look for the Download ZIP link.<br>Either way, both methods result in the exact-same file.</p>
+<p>Locate the downloaded <code>.zip</code> file in your file manager application, then extract its contents into the <code>Projects</code> folder that contains your <code>how-to-write-a-codelab</code> folder, for example.</p>
+<p>Now go to the <code>Projects</code> folder in your file manager, and explore the top-level directories under <code>tools-main</code> ... you should see something like this:</p>
+<p>Home<br>|— Projects<br>|—|— how-to-write-a-codelab<br>|—|—|— img<br>|—|— <strong>tools-main<br></strong>|—|—|— claat<br>|—|—|— codelab-elements<br>|—|—|— sample<br>|—|—|— <strong>site<br></strong>|—|—|— ...</p>
+<p>Note the presence of the <code>claat</code> folder, which is the source-code for the CLaaT tool program file.</p>
+<h2 is-upgraded><strong>Node.js/npm installation</strong></h2>
+<p>In addition to the already installed <strong>Go</strong> and <strong>CLaaT</strong> software, you will need <strong>Node.js</strong> (v10 or greater req&#39;d) + <strong>NPM</strong>, if you want to create a landing page.</p>
+<h2 is-upgraded>About Node.js + NPM</h2>
+<p>Node.js is a platform built on Chrome&#39;s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model.</p>
+<p>NPM is the package manager for the Node JavaScript platform. It puts modules in place so that node can find them, and manages dependency conflicts intelligently</p>
+<h3 is-upgraded><strong>ChromeOS</strong></h3>
+<p>Please follow the instructions under the heading <strong>Installation Instructions (DEB)</strong> on this GitHub page: <a href="https://github.com/nodesource/distributions" target="_blank">NodeSource Binary Distributions</a> ... these instructions have been tested, and are working as of January 2025. There is no need to install <code>npm</code> separately, as it&#39;s included</p>
+<h3 is-upgraded><strong>All operating systems</strong></h3>
+<p>Start by checking your distro&#39;s repos for Node.js availability/version number:</p>
+<pre>apt-cache policy nodejs</pre>
+<p>If the correct version is available (v10+) then install using this command:</p>
+<pre>sudo apt update &amp;&amp; sudo apt install nodejs</pre>
+<p>Alternatively, you can install it directly from the <a href="https://nodejs.org/en/download/" target="_blank">Node.js website</a></p>
+<p>If nodejs was available in your repos, the npm package should be as well:</p>
+<pre>sudo apt install npm</pre>
+<p>Alternatively, install NPM from Node.js website, using the link above</p>
+<aside class="special"><p>After installing Node.js, you&#39;ll need to close/reopen any command prompt windows (if applicable)</p>
+</aside>
+<h2 is-upgraded><strong>Verify your Node.js and NPM installation</strong></h2>
+<h3 is-upgraded><strong>Check your Node.js installation</strong></h3>
+<pre>node -v</pre>
+<h3 is-upgraded><strong>Check your NPM installation</strong></h3>
+<pre>npm -v</pre>
+<h2 is-upgraded><strong>Creating your Landing page</strong></h2>
+<h3 is-upgraded><strong>Initialize the site folder with dependencies</strong></h3>
+<p>Open your terminal in (or <code>cd</code> into) the <code>site</code> folder and run these two commands, which will set up CLaaT to work alongside Gulp:</p>
+<pre>npm install
+npm install gulp-cli</pre>
+<aside class="warning"><p><strong>If you receive a multitude of errors</strong> when you run the <code>npm install</code> command, please refer to the GitHub commit linked below, where another user was able to get around the issue by patching 4 files. You&#39;ll need to download the 4 files, then copy them to their respective locations <strong>under</strong> the <strong>site</strong> folder. In all cases, click the ellipsis (<code>...</code>) menu alongside each file&#39;s heading, and select <strong>View file</strong> ... on the next page, <strong>right-click</strong> the <strong>Raw</strong> link and select <strong>Save link as</strong> ... click <strong>Back</strong> on your browser&#39;s toolbar after downloading each file.</p>
+<p><a href="https://github.com/googlecodelabs/tools/pull/831/files" target="_blank">https://github.com/googlecodelabs/tools/pull/831/files</a></p>
+<p>The two <code>.scss</code> files go in the <code>site/app/styles</code> folder, whereas the two <em>other</em> files go in the actual <code>site</code> folder</p>
+</aside>
+<p>Also in the terminal, <strong>create a new folder</strong> under <code>site</code> ... this is where you&#39;ll store your codelabs:</p>
+<pre>mkdir codelabs</pre>
+<p>Now move our original <code>how-to-write-a-codelab</code> folder into the <code>codelabs</code> folder, as follows (note that the <code>trailing slash</code> is important):</p>
+<pre>mv ../../how-to-write-a-codelab codelabs/</pre>
+<aside class="special"><p>If these commands look like they might as well be written in a foreign language, or if you just prefer a GUI, then feel free to create/move the folders in your favorite file manager application.</p>
+<p>Keep your <code>terminal</code> window open though ... we&#39;ll need it again soon</p>
+</aside>
+<p>Your folder hierarchy should now look similar to this:</p>
+<p>Home<br>|— Projects<br>|—|— <strong>tools-main<br></strong>|—|—|— claat<br>|—|—|— codelab-elements<br>|—|—|— sample<br>|—|—|— <strong>site<br></strong>|—|—|—|— app<br>|—|—|—|— <strong>codelabs<br></strong>|—|—|—|—|— how-to-write-a-codelab<br>|—|—|—|—|—|— img<br>|—|—|—|— node_modules<br>|—|—|— ...</p>
+<p><strong>Notes</strong>:</p>
+<ul>
+<li>the <em>top three</em> folder names are not so important, as long as you know where everything is</li>
+<li>the <strong>site</strong> directory contains tools for building your own custom landing page (and for publishing both landing page <em>and</em> codelabs to <strong>Google Cloud Storage</strong>, if applicable). The majority of our <code>claat</code> and/or <code>gulp</code> commands will be run from within the <code>site</code> <em>or </em><code>codelabs</code> directories</li>
+</ul>
+<p>If you have <em>another</em> hosting solution in mind, just ignore the mention of GCS above.<br>The same principles and procedures still apply for creating your own landing page.</p>
+<p>Open a <strong>second</strong> terminal window, in the <code>codelabs</code> folder this time, and run this command:</p>
+<pre>claat export 12ABC3DEFGHIJ456K7LMNOPQRS-TUVWXYZ890ABC1244
+(do not copy)</pre>
+<aside class="special"><p>Note: the specified document ID is totally fictitious. Please <strong>substitute it</strong> with <em>your</em> own 44-character document ID. Your doc ID can be found <em>after </em><strong>docs.google.com/document/d/</strong> and before the <strong>/edit?tab=t.0</strong> portion in the address bar URL for your exercises codelab</p>
+</aside>
+<p>If the <code>export</code> command was successful, you should receive a confirmation in the form:</p>
+<pre>ok        how-to-write-a-codelab</pre>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Preview/publish" duration="4">
+        <p>Back in the <strong>original</strong> terminal window (in the <code>site</code> folder), run this command:</p>
+<pre>gulp serve --codelabs-dir=codelabs</pre>
+<aside class="warning"><p>Running the <code>gulp</code> command processes the output from each of your <code>&lt;codelab&gt;</code> sub-folders, and depending on the option, creates either a <code>build</code> or a <code>dist</code> folder. Having a <code>codelabs</code> sub-folder <strong>under </strong><code>site</code> ensures that all <em>your</em> files are stored in one place, rather than allowing them to be scattered throughout the <code>site</code> folder with the CLaaT dependency files and folders</p>
+</aside>
+<p>Now for the defining moment ... as a result of running your <code>gulp serve ...</code> command, you should see a message saying <code>Webserver started at http://localhost:8000</code> (the default port).</p>
+<p>Some terminal applications will allow you to open a hyperlink from within the terminal ... you may have to press the <code>Ctrl</code> key while you click the link. Otherwise, just copy/paste the hyperlink into a new browser tab</p>
+<aside class="special"><p>Tip: when you have finished perusing your new landing page/codelab, keep the tab open, as you can continue to use it as you add/edit content. Each time you run the <code>claat export ...</code> command, you just need to click the Reload ↻ button on your browser&#39;s toolbar</p>
+</aside>
+<p>When you are <strong>nearly</strong> ready to publish your final HTML content to your chosen host platform, it is recommended to run this command:</p>
+<pre>gulp serve:dist --codelabs-dir=codelabs</pre>
+<p>Note the <em>addition</em> of the <code>dist</code> parameter ... this will give you the completely <strong>compiled and minified</strong> (production) version.</p>
+<p>When you are <strong>actually</strong> ready to publish, run the following command:</p>
+<pre>gulp dist --codelabs-dir=codelabs</pre>
+<h2 is-upgraded><strong>Let&#39;s publish!</strong></h2>
+<p>Now that you&#39;ve double-checked everything in the production version of your codelab(s), it&#39;s time to publish those files to your web host. The content that actually gets published is under the <code>dist</code> folder, which would have been created upon running the <code>gulp dist ...</code> command</p>
+<aside class="warning"><p>Important: both the <code>build</code> and the <code>dist</code> folders may be <strong>deleted</strong> and <strong>recreated</strong> by the <code>gulp</code> command at <strong>any time</strong> during development ... please do not store files that <em>you</em> create inside these folders. If you have files that need to be published alongside your codelab(s), then store them at a directory-level <em>within or above </em><code>site</code> and create a script that can <strong>copy</strong> them to the <code>dist</code> folder</p>
+</aside>
+<h3 is-upgraded><strong>Sample full path:</strong></h3>
+<p>$HOME/Projects/tools-main/site/dist/</p>
+<p>If you intend to publish your codelab(s) to <strong>GitHub Pages</strong>, please refer my <a href="https://mikaere66.github.io" target="_blank">other Codelabs</a></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Categories" duration="0">
+        <p>Within your <code>tools/site/app/styles</code> folder, you&#39;ll find several .scss files ... the one we&#39;re interested in for this section is named <code>_categories.scss</code> ... open it in a plain-text editor, and peruse its contents.</p>
+<p>You&#39;ll see there are already many &#34;default&#34; categories, as defined by the good people at Google. However, if you want to add your own, each category needs to have these three parameters:</p>
+<ol type="1" start="1">
+<li>category</li>
+<li>color</li>
+<li>icon</li>
+</ol>
+<p>Try adding your <em>own</em> category at the <em>end</em> of the file, to match the <code>my-first-docs-codelab</code> ... you&#39;ll need the <strong>Category</strong> from that codelab that you added at the top of the file (the default in the template was <code>codelabs</code>)</p>
+<pre><code>@include codelab-card([codelabs], #FF0000, &#39;codelabs.png&#39;);</code></pre>
+<p>Our example contains the following parameters:</p>
+<table>
+<tr><td colspan="1" rowspan="1"><p>Category:</p>
+</td><td colspan="1" rowspan="1"><p>codelabs</p>
+</td><td colspan="1" rowspan="1"><p>Must be lower-case</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Color:</p>
+</td><td colspan="1" rowspan="1"><p>#FF0000</p>
+</td><td colspan="1" rowspan="1"><p>(can be pre-defined)</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Icon:</p>
+</td><td colspan="1" rowspan="1"><p>codelabs.png</p>
+</td><td colspan="1" rowspan="1"><p>file in <code>images/icons</code></p>
+</td></tr>
+</table>
+<p><strong>Notes</strong>:</p>
+<ul>
+<li>As shown in the <code>_categories.scss</code> file, colors can be pre-defined using the format <code>$color-name: #FF0000;</code> and referenced using <code>$color-name</code> instead of its hex value</li>
+<li>Icon files should be stored in the <code>tools/site/app/images/icons</code> folder</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Views" duration="2">
+        <p>Within the codelab tools files, there are already two views, located in the <strong>default</strong> and <strong>vslive</strong> folders, under <code>tools/site/app/views</code>.</p>
+<p>The <code>default</code> folder contains a &#34;template&#34; that can be customized to a certain degree, and is used for your <strong>actual landing page</strong>. This folder contains two files ... <code>index.html</code> and <code>view.json</code>.</p>
+<p>These two files are based on Polymer, which uses variables provided by <em>both</em> the contents of the <code>view.json</code> file, and the output generated by the <code>gulp</code> command.</p>
+<aside class="warning"><p>If you are <strong>not interested</strong> in using views, <strong>delete</strong> the <strong>vslive</strong> sub-folder, and skip to the next section</p>
+</aside>
+<p>Within the <code>vslive</code> sub-folder, you&#39;ll find two <em>different</em> files: <strong>view.json</strong> and <strong>vslive-logo.jpg</strong> ...</p>
+<p>The logo file is self-explanatory, but here are the contents of the view.json file:</p>
+<pre><code>{
+  &#34;title&#34;: &#34;Visual Studio Live&#34;,
+  &#34;description&#34;: &#34;Come learn about Google Cloud Platform by completing codelabs and coding challenges! The following codelabs will step you through using different parts of Google Cloud Platform. These challenges cover a range of topics such as Compute Engine, App Engine, Kubernetes, Cloud Shell. Go to https://g.co/codelabs/vslive to find more codelabs you can try at home.&#34;,
+  &#34;logoUrl&#34;: &#34;/vslive/vslive-logo.jpg&#34;,
+  &#34;tags&#34;: [&#34;vslive&#34;],
+  &#34;exclude&#34;: [
+    &#34;.*-about$&#34;,
+    &#34;^lang-.*&#34;
+  ]
+}</code></pre>
+<h2 is-upgraded><strong>Explanation:</strong></h2>
+<ul>
+<li><strong>title</strong>: Required: page and view title</li>
+<li><strong>description</strong>: Required: Text description of the view. This will appear in the view landing page</li>
+<li><strong>logoUrl</strong>: Optional: URL to a custom logo for the codelab.</li>
+<li><strong>tags</strong>: Required: list of string tags by which to <em>include</em> codelabs</li>
+<li><strong>exclude</strong>: Optional: list of regular expressions to <em>exclude</em> particular codelabs</li>
+</ul>
+<p>There are <em>many</em> more keywords that can be used. Please refer to the original <a href="https://github.com/googlecodelabs/tools/tree/main/site#views" target="_blank">README</a> file under <strong>Views</strong></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="To summarize" duration="2">
+        <aside class="warning"><p><strong>Below</strong>: the names <em>before</em> the (<code>$</code>) sign indicate the <code>current directory</code> in your terminal</p>
+</aside>
+<h2 is-upgraded><strong>CLaaT tool commands</strong></h2>
+<p>Export your Google Docs <code>codelab.doc</code> as HTML to your <code>codelabs</code> folder:</p>
+<pre><code>codelabs $ claat export YOUR_DOCUMENT_ID_123</code></pre>
+<p>After exporting, start a <code>Web server</code> and open <code>./index.html</code> in a New tab:</p>
+<pre><code>how-to-write-a-codelab $ claat serve</code></pre>
+<h2 is-upgraded><strong>Gulp tool commands</strong></h2>
+<p>After exporting, start a <code>Web server</code> with <code>landing page</code> as <code>/index.html</code>:</p>
+<pre><code>codelabs $ gulp serve --codelabs-dir=codelabs</code></pre>
+<p>Start a <code>Web server</code> to test a <code>compiled</code> and <code>minified</code> version for publishing:</p>
+<pre><code>site $ gulp serve:dist --codelabs-dir=codelabs</code></pre>
+<p>To create the <code>production</code> version before publishing, but <em>without</em> the Web server:</p>
+<pre><code>site $ gulp dist --codelabs-dir=codelabs</code></pre>
+<aside class="special"><p>Tip: <code>gulp dist</code> is <strong>not</strong> required if you <em>just</em> ran the <code>gulp serve:dist</code> command</p>
+</aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Links/tools" duration="0">
+        <h2 is-upgraded><strong>Web links</strong></h2>
+<p>For further info, check out the official GitHub repo:</p>
+<ul>
+<li><a href="https://github.com/googlecodelabs/tools" target="_blank">Google Codelabs Tools</a></li>
+</ul>
+<p>For codelab hosting ideas, check out these links:</p>
+<ul>
+<li><a href="https://docs.github.com/en/pages/quickstart" target="_blank">Quickstart for GitHub Pages</a></li>
+<li><a href="https://github.com/googlecodelabs/tools#how-do-i-publish-my-codelabs" target="_blank">How do I Publish my Codelabs?</a></li>
+</ul>
+<h2 is-upgraded><strong>Bash script</strong></h2>
+<p>A few times in this guide, there has been mention of creating a script to help automate the <code>gulp</code> build/distribution process.</p>
+<p>There is a sample script available for download, within the repo for the <strong>Publish your codelabs to GitHub</strong> codelab ... please refer to my <a href="https://mikaere66.github.io" target="_blank">other Codelabs</a> for context (the script is mentioned in the <strong>Initialize Local Repo</strong> section)</p>
+
+
+      </google-codelab-step>
+    
+  </google-codelab>
+
+  <script src="https://storage.googleapis.com/claat-public/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/prettify.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/codelab-elements.js"></script>
+  <script src="//support.google.com/inapp/api.js"></script>
+
+</body>
+</html>
