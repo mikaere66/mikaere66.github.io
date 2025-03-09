@@ -1,0 +1,437 @@
+
+<!doctype html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <meta charset="UTF-8">
+  <title>Create a Codelab with Markdown</title>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://storage.googleapis.com/claat-public/codelab-elements.css">
+  <style>
+    .success {
+      color: #1e8e3e;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <google-codelab-analytics gaid="UA-49880327-14" ga4id=""></google-codelab-analytics>
+  <google-codelab codelab-gaid=""
+                  codelab-ga4id=""
+                  id="create-your-own-codelabs"
+                  title="Create a Codelab with Markdown"
+                  environment="web"
+                  feedback-link="https://github.com/mikaere66/mikaere66.github.io/issues">
+    
+      <google-codelab-step label="Codelabs Introduction" duration="2">
+        <p class="image-container"><img alt="Codelab logo" src="img/46dac5d4855c965f.png"></p>
+<h2 is-upgraded>About CLaaT (Codelabs as a Thing)</h2>
+<p>Code(what?) ... the concept of codelabs is a <strong>learning by doing</strong> approach to education and tutorials. <br> Rather than have your audience lose interest by presenting them with a long-winded &#34;how to&#34; or a tedious &#34;wiki page&#34;, you can format an easy-to-follow guide in the form of a step-by-step <code>codelab</code>.</p>
+<p>Developed and <strong>maintained by a small group of dedicated Googlers</strong> (Google employees), the <code>CLaaT</code> (Codelabs as a Thing) project is open source, and available for anyone to use.</p>
+<p>Also, this format is <strong>not restricted to just coding</strong>! You could author a codelab to represent <em>any</em> type of tutorial. It may be related to Car Maintenance, Home Improvement, Operating Systems, PC Upgrades ... the possibilities are endless.</p>
+<h2 is-upgraded>How do I create my own Codelabs?</h2>
+<p>There are actually <em>two</em> different formats supported: .doc (Google Docs) and .md (Markdown Syntax). However, <strong>we will only be discussing the </strong><code>Markdown</code> <strong>version</strong> ... please refer to my <a href="https://mikaere66.github.io" target="_blank">other Codelabs</a> for the <code>Google Docs</code> version.</p>
+<ul>
+<li><code>Google Documents</code>: the content for <em>this</em> type of codelab-authoring can be written in Google Docs, using some simple formatting conventions. Google docs files can be stored in your Google Drive account, but <em>not</em> hosted there ... refer to the Conclusion/Hosting section for more on that topic. <br> Google Docs has the advantage of supporting collaboration, so it would be great for a team</li>
+<li><code>Markdown Language</code>: you can also author codelabs using markdown syntax. Mark(what?) ... Wikipedia describes Markdown as a lightweight <em>markup</em> language for creating formatted text using a plain-text editor. <br> Markdown has the advantage of being stored locally, so it can be edited even when offline</li>
+</ul>
+<aside class="special"><p><strong>Markup</strong> is a generic term for <em>any language</em> that describes a document&#39;s formatting. <br><strong>Markdown</strong> is a specific <em>markup language</em>, originally created by John Gruber in 2004</p>
+</aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Software Installation" duration="10">
+        <p>To create and view Codelab pages on your computer, follow these instructions to get set up:</p>
+<aside class="warning"><p> Please read this page in it&#39;s entirety <strong>before installing anything<br></strong> so you&#39;ll get the <strong>big picture</strong> about what we&#39;re trying to achieve</p>
+</aside>
+<h2 is-upgraded>The following software is required:</h2>
+<ul>
+<li>Go (sometimes referred to as golang)</li>
+<li>Node.js (v10 or greater req&#39;d) + NPM</li>
+<li>CLaaT (codelabs command-line tool)</li>
+</ul>
+<aside class="special"><p> All external hyperlinks open in a new tab</p>
+</aside>
+<h3 is-upgraded>Check for Curl</h3>
+<p>Curl is a command-line tool for transferring data with URL syntax, supporting <em>many</em> web protocols ... it&#39;s required to install <code>Go</code> in the next step. To check if it&#39;s installed, run the following command in your terminal:</p>
+<pre><code language="language-bash" class="language-bash">$ which curl
+</code></pre>
+<p><strong>If you receive output</strong> showing the full-path to curl, then skip to the next step. <br> However, <strong>if there is no output</strong>, install curl from your distro&#39;s repos, as shown:</p>
+<pre><code language="language-bash" class="language-bash">$ sudo apt update &amp;&amp; sudo apt install curl
+</code></pre>
+<h3 is-upgraded>Install Go(lang)</h3>
+<p>Go is an open source project developed by a team at Google, as well as many contributors from the open source community. Go is distributed under a BSD-style license.</p>
+<ul>
+<li>Please follow the install instructions on the official <a href="https://go.dev/doc/install" target="_blank">Go website</a></li>
+</ul>
+<aside class="warning"><p> Note that (as of January 2025) the <em>full</em> one-liner found on the Go website <strong>will fail</strong> (as is) <strong>if</strong> you&#39;ve never installed Go before. Please <strong>run as two separate commands</strong> to avoid confusion: e.g. <br><code>rm -rf /usr/local/go</code><br> then <br><code>tar -C /usr/local -xzf go1.23.x.linux-amd64.tar.gz</code></p>
+<p>Also, note that <strong>both</strong> commands require <strong>elevated</strong> privileges (i.e. <code>sudo</code>)</p>
+</aside>
+<h3 is-upgraded>Install Node.js</h3>
+<p>Node.js is a platform built on Chrome&#39;s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model.</p>
+<p>Start by checking your distro&#39;s repos for availability and version number:</p>
+<pre><code language="language-bash" class="language-bash">$ apt-cache policy nodejs
+</code></pre>
+<p>If the correct version is available (v10+) then install using this command:</p>
+<pre><code language="language-bash" class="language-bash">$ sudo apt install nodejs
+</code></pre>
+<ul>
+<li>Alternatively, you can install it directly from the <a href="https://nodejs.org/en/download/" target="_blank">Node.js website</a></li>
+</ul>
+<h3 is-upgraded>Install NPM</h3>
+<p>NPM is the package manager for the Node JavaScript platform. It puts modules in place so that node can find them, and manages dependency conflicts intelligently.</p>
+<p>If nodejs was available in your repos, the <code>npm</code> package should be as well:</p>
+<pre><code language="language-bash" class="language-bash">$ sudo apt install npm
+</code></pre>
+<ul>
+<li>Alternatively, install NPM from Node.js website, using the link above</li>
+</ul>
+<h3 is-upgraded>Install CLaaT</h3>
+<p>The claat executable program converts your input file (.md) into the codelab format, which is HTML by default.</p>
+<p>Assuming you have Go successfully installed, this command will result in CLaaT having the full path: <code>$HOME/go/bin/claat</code> ... note that executable permissions will already be set, using this method</p>
+<pre><code language="language-bash" class="language-bash">$ go install github.com/googlecodelabs/tools/claat@latest
+</code></pre>
+<ul>
+<li>Or download directly from the <a href="https://github.com/googlecodelabs/tools/releases/latest" target="_blank">Google Codelabs</a> GitHub page. Be sure to select the correct architecture for your O/S</li>
+</ul>
+<aside class="warning"><p> Whether you choose to download CLaaT directly from GitHub, or install it using <code>go</code>, you&#39;ll need to add its path to <code>.bashrc</code> as mentioned in the Environment/Variables section. Remember to <em>grant permissions</em> to make the file executable, as shown in the example below (for ease-of-use, either <em>rename your downloaded file</em> to <code>claat</code> or <em>create an alias</em> for <code>claat-linux-amd64</code> or <code>claat-linux-amd64</code> as the case may be)</p>
+</aside>
+<pre><code language="language-bash" class="language-bash">$ chmod u+x path-to/claat
+</code></pre>
+<h3 is-upgraded>Install Google Codelab Tools</h3>
+<p>The final step in installing software is to <code>git clone</code> or <code>download</code> the Google Codelabs Tools repo</p>
+<aside class="special"><p> For the remainder of this codelab, <code>YOUR-PROJECTS</code> refers to the <strong>root of <br></strong><strong><em>your</em></strong><strong> projects folder</strong>, wherever you normally store your Current Project files</p>
+</aside>
+<p>If you have <code>git</code> installed, open your terminal in (or <code>cd</code> into) <code>YOUR-PROJECTS</code> and run the following command:</p>
+<pre>$ git clone https://github.com/googlecodelabs/tools.git CodelabTools
+</pre>
+<p>Note that after the <code>git clone &lt;url&gt;</code> command, we&#39;ve specifically added a <code>&lt;space&gt;</code> followed by the <code>CodelabTools</code> name ... this will first a create a folder named <code>CodelabTools</code>, then clone the contents of the <code>tools</code> repo into this folder</p>
+<ul>
+<li>Alternatively, manually <a href="https://github.com/googlecodelabs/tools/archive/refs/heads/main.zip" target="_blank">download the tools archive</a> and unzip it into the <code>YOUR-PROJECTS</code> folder, then rename <code>tools</code> or <code>tools-main</code> to <code>CodelabTools</code>, so that the instructions in this codelab match your folder hierarchy. The expected hierarchy is discussed in the next section</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Environment/Variables" duration="4">
+        <h2 is-upgraded>Verify your <em>Node.js</em> and <em>NPM</em> installation</h2>
+<h3 is-upgraded>Check your Node.js installation</h3>
+<pre><code language="language-bash" class="language-bash">$ node -v
+</code></pre>
+<h3 is-upgraded>Check your NPM installation</h3>
+<pre><code language="language-bash" class="language-bash">$ npm -v
+</code></pre>
+<h2 is-upgraded>Set up <em>Local Modules</em> with NPM</h2>
+<p>Gulp is an open-source Javascript toolkit and task runner, which is built on Node. js and NPM, and is used for the optimization of time-consuming and repetitive tasks.</p>
+<aside class="special"><p><code>YOUR-PROJECTS</code> refers to the root of <em>your</em> current projects folder,<br>where you cloned Google Codelabs Tools (or unzipped the archive)</p>
+</aside>
+<p>Open your terminal in (or <code>cd</code> into) <code>YOUR-PROJECTS/CodelabTools/site</code> and run these two commands, which will set up CLaaT to work locally, alongside gulp:</p>
+<pre><code language="language-bash" class="language-bash">$ npm install
+$ npm install gulp-cli
+</code></pre>
+<p>While you&#39;re in the terminal, <strong>create a new folder</strong> under the <code>site</code> directory, in which to store your <code>codelab.md</code> files. Also create a <strong>sub-folder</strong> in which to store images ... tip: both folders can be created using <code>mkdir</code> with the <code>-p</code> switch (no error if existing, make <strong>parent</strong> directories as needed)</p>
+<pre><code language="language-bash" class="language-bash">$ mkdir -p codelabs/assets
+</code></pre>
+<p>Your <code>projects</code> folder structure should now look similar to this:</p>
+<pre><code>YOUR-PROJECTS
+|-- CodelabTools
+|--|-- site
+|--|--|-- codelabs
+|--|--|--|-- assets
+</code></pre>
+<aside class="special"><p> Note: the <em>top two</em> folder names are not so important, as long as you know where everything is</p>
+</aside>
+<h2 is-upgraded>Set up your <em>Environment</em> variables</h2>
+<h3 is-upgraded>Check the path where Go was installed:</h3>
+<pre>$ ls /usr/local/go/bin
+</pre>
+<p>You should see two files: <code>go</code> and <code>gofmt</code></p>
+<aside class="warning"><p> If not, alter the paths above and below to match the Go path used for your Go installation</p>
+</aside>
+<h3 is-upgraded>Add the following to your .bashrc file:</h3>
+<pre>$ export PATH=$PATH:/usr/local/go/bin
+</pre>
+<aside class="special"><p> You may need to close and re-open your terminal window for these changes to take effect</p>
+</aside>
+<h3 is-upgraded>Add the path where CLaaT was saved:</h3>
+<p>If you <strong>installed CLaaT using Go</strong>, add the following to your <code>.bashrc</code> file:</p>
+<pre>$ export PATH=$PATH:$HOME/go/bin
+</pre>
+<p>If you <strong>downloaded directly</strong> from GitHub, add its path to your <code>.bashrc</code> file:</p>
+<pre>$ export PATH=$PATH:$HOME/bin
+</pre>
+<aside class="warning"><p> The paths to CLaaT shown here are examples only! Please adjust <br> the path to correctly point to the <code>claat</code> executable file&#39;s location</p>
+</aside>
+<h2 is-upgraded>Verify your <em>Go</em> and <em>CLaaT</em> installation</h2>
+<h3 is-upgraded>Check your Go installation</h3>
+<pre><code language="language-bash" class="language-bash">$ go version
+</code></pre>
+<h3 is-upgraded>Check your CLaaT installation</h3>
+<pre><code language="language-bash" class="language-bash">$ claat version
+</code></pre>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Metadata Format" duration="5">
+        <p>The top of your <code>codelab.md</code> file needs to have certain metadata, to enable a codelab to function correctly. Some of this metadata is <strong>required</strong> and some is <strong>optional</strong>, as follows:</p>
+<h2 is-upgraded>Required metadata</h2>
+<p><code>authors: your_name_here</code><br> At least one name, separated by commas <br><br><code>categories: android, kotlin</code><br> At least one category, separated by commas <br><br><code>feedback link: https://example.com</code><br> The hyperlink to open when &#34;Report a mistake&#34; is clicked at bottom-left <br><br><code>id: how-to-write-a-codelab</code><br> Must be <strong>unique</strong> within your codelabs directory. This is also <br> used as the folder name where exported files will be created <br><br><code>status: Published</code><br> Valid options: Draft, Published, Deprecated, Hidden</p>
+<h2 is-upgraded>Optional metadata</h2>
+<p><code>analytics account: project-id-123</code><br> This allows you to specify a custom Google Analytics ID for your codelab <br><br><code>environments: Web</code><br> A tag that allows CLaaT to output some codelabs for a specific environment. All codelabs default to the &#34;Web&#34; environment, but given some hardware constraints, we might only want to generate them for a &#34;Kiosk&#34; environment, where we know people will have the right hardware. You can also use this to target specific events, for instance: <code>Web, polymer-summit</code><br><br><code>summary: Create a Codelab using Markdown</code><br> A short summary of the codelab that will be shown in the codelab browser UI <br><br><code>tags: compose, coroutines</code><br> Add relevant tags to make your codelab easy to find</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Let&#39;s Get Started" duration="4">
+        <h2 is-upgraded>Metadata and Header 1</h2>
+<p>In the previous section, you learned about codelab metadata, required at the top of each <code>codelab.md</code> file. Based on that info, <strong>create a new file</strong> in the <code>YOUR-PROJECTS/CodelabTools/site/codelabs</code> folder ...</p>
+<p>Name it <code>my-first-markdown-codelab.md</code> ... this is a similar name to the <strong>id</strong> metadata, just to keep things simple for this tutorial. Using your favorite plain-text editor, add the following to outline your required <code>metadata</code> as well as the overall <code>document title</code> then save the file:</p>
+<pre><code>summary: My first Codelab using Markdown
+id: my-first-markdown-codelab
+categories: sample
+status: Published
+authors: your_name_here
+Feedback Link: https://example.com
+
+# My first Markdown codelab
+</code></pre>
+<p>In the code snippets above, we have used 6 of the 9 available <code>metadata</code> keywords, and provided an overall document title using the <code>Header 1</code> format.</p>
+<p>The hash symbol and text <code># My first Markdown codelab</code> are <strong>not a comment</strong> like you might find in a <code>bash</code> script, but is how <code>&lt;h1&gt;</code> is written in markdown. All header formats will be explained in the next section</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Headers/Header Levels" duration="4">
+        <p><strong>Header 1</strong> is reserved for the overall <strong>document title</strong>, in this case &#34;My first Markdown codelab&#34; as shown on this browser tab, and in the top left-hand corner. <br> It would also show on the landing page ... we will cover landing pages in a later step. <br><strong>Syntax:<br></strong><code># My first Markdown codelab</code></p>
+<p><strong>Header 2</strong> is reserved for individual <strong>section subtitles</strong>, in this case &#34;Headers/Header Levels&#34;, used in the Table of Contents to the left, and at the top of each section, as shown above <br><strong>Syntax</strong>: <br><code>## Headers/Header Levels</code></p>
+<p>Do you see a pattern emerging, with the number of hashes?</p>
+<p>Note that headers 2, 3 &amp; 4 markdown will get translated to <code>&lt;h2&gt;</code>, <code>&lt;h3&gt;</code> and <code>&lt;h4&gt;</code> respectively</p>
+<aside class="special"><p><strong>Numbering is generated automatically</strong>, for both the ToC and for each section header, by the CLaaT tool ... you do <em>not</em> need to number sections individually</p>
+</aside>
+<p><strong>Headers 3 and 4 use the following syntax</strong>:</p>
+<p><code>### Header 3</code> produces</p>
+<h2 is-upgraded>Header 3</h2>
+<p><code>#### Header 4</code> produces</p>
+<h3 is-upgraded>Header 4</h3>
+<p>Note that, unlike Headers 1 and 2, the Headers 3 and 4 have no bearing on the <em>overall</em> codelab</p>
+<h2 is-upgraded>Add your section headers</h2>
+<p>Since we already specified our Header 1 in the previous section, leave a blank line (just for readability), then <strong>add two Header 2</strong> entries, as follows:</p>
+<pre><code>## This is Section one
+
+## This is Section two
+</code></pre>
+<p>We&#39;ll expand on each of these in the next few sections ...</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Duration and Time" duration="1">
+        <p>Some participants are not fully committed to completing a codelab when they first start out. One of the ways that we can keep them engaged is by giving them accurate estimates, regarding how much additional effort is required to complete the codelab, at each step.</p>
+<p>In order to add this feature to your codelab, each section needs to have an estimated <strong>time to complete</strong>, in the form <code>Duration: H:MM:SS</code>, and it should be placed on the line immediately following the <strong>section</strong> header.</p>
+<p>Example markdown showing <code>section header</code> and <code>duration</code> for <em>this</em> section:</p>
+<pre><code>## Duration and Time
+Duration: 0:01:00
+(do not add this)
+</code></pre>
+<p>The total duration for <strong>all sections</strong> is calculated automatically by the CLaaT tool when a codelab is &#34;exported&#34; ... it appears at the beginning of all codelabs, opposite the codelab&#39;s title, where you&#39;ll see a timer icon followed by the total <strong>time remaining</strong> estimate. This time estimate is <em>also</em> used for each codelab on the &#34;landing page&#34; if applicable.</p>
+<aside class="special"><p> We will cover &#34;exporting&#34; the codelab and &#34;landing pages&#34; in later sections</p>
+</aside>
+<p>As the student progresses through each section in the codelab, the estimated time changes to reflect total <strong>time remaining</strong> for all sections not-yet completed.</p>
+<p>If you <em>forget</em> to add the duration for a section, the default of <strong>1 minute</strong> will be used.</p>
+<h3 is-upgraded>Notes</h3>
+<ul>
+<li>If you <strong>forget</strong> to add the duration for a section, the default of 1 minute will be used</li>
+<li>If only <strong>one</strong> colon is used (<code>M:SS</code>), then that duration is assumed to be minutes:seconds</li>
+<li>If the <strong>last</strong> section of your codelab is simply a <code>Congratulations</code> or <code>Summary</code> page, you should set the duration for that section to 0 (zero)</li>
+</ul>
+<h2 is-upgraded>Add your estimated duration</h2>
+<p>In the blank space immediately following <code>## This is Section one</code> add the following <code>Duration:</code> keyword, following by an estimated time in the form <code>H:MM:SS</code></p>
+<pre><code>Duration: 0:01:00
+</code></pre>
+<p>Do the same under <code>## This is Section two</code>, but this time <strong>make it 2 minutes</strong>.</p>
+<p>Save the file, and continue to the next section ...</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Bullets/Numbering" duration="1">
+        <h2 is-upgraded>How to create a Bulleted list</h2>
+<p><strong>Syntax</strong>:</p>
+<p><code>* Hello</code><br><code>* World</code><br><code>* Codelab</code></p>
+<p>This is plain text, immediately followed by bullets. No <em>additional</em> line breaks, but notice the formatting</p>
+<ul>
+<li>Hello</li>
+<li>World</li>
+<li>Codelab</li>
+</ul>
+<p>If you prefer, list items <em>can</em> be represented by the dash (<code>-</code>) character, instead of an asterix (<code>*</code>)</p>
+<h2 is-upgraded>How to create a Numbered list</h2>
+<p><strong>Syntax</strong>:</p>
+<p><code>1. List</code><br><code>2. Using</code><br><code>3. Numbers</code></p>
+<p>This is plain text, immediately followed by numbers. No <em>additional</em> line breaks, and similar formatting</p>
+<ol type="1">
+<li>List</li>
+<li>Using</li>
+<li>Numbers</li>
+</ol>
+<p>Note that your markdown numbers <strong>do not have to be sequential</strong>. You can simply have <code>1.</code> for <em>all</em> list items, meaning maintenance for long lists would be much easier</p>
+<h2 is-upgraded>Create your Bulleted list</h2>
+<p>Add the following to your file:</p>
+<pre>#### Shopping
+* Apples
+* Oranges
+* Bananas
+</pre>
+<h2 is-upgraded>Create your Numbered list</h2>
+<p>Add the following to your file:</p>
+<pre>#### Chores
+1. Mow the Lawns
+2. Put out Trash
+3. Wash the Car
+</pre>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Code Blocks/Images" duration="1">
+        <h2 is-upgraded>How to add a Code block</h2>
+<p>Notice how the syntax in the <code>code</code> block below both starts <em>and</em> finishes with three &#34;backticks&#34;. Everything within is considered <code>code</code> with syntax highlighting, and will be highlighted according to either the language you specify, or if omitted, the CLaaT tool will try to &#34;guess&#34; the code-type used.</p>
+<p>If you wish to have <strong>no formatting</strong>, simply use the keyword <code>console</code> in place of a language (console in this context means &#34;terminal output&#34;).</p>
+<p>Note that we&#39;re <strong>not</strong> using the <strong>actual backtick character</strong> below, as such. Just for this example, it has been substituted with the HTML <strong>backprime</strong> character. That&#39;s because the three backticks <em>themselves</em> are difficult to render correctly within a code block!</p>
+<aside class="special"><p> On an English (US) keyboard (US-International), the <strong>backtick</strong> (<code>&#96;</code>) character is located at top left, on the same key as the <strong>tilde</strong> (<code>~</code>) character. Worth noting is that the <em>proper</em> name for a code block is actually <code>fenced code block</code> and that each set of <strong>3 backticks</strong> is called a <code>fence</code></p>
+</aside>
+<p><strong>Syntax</strong>:</p>
+<pre><code language="language-bash" class="language-bash">‵‵‵ bash
+FILENAME=&#34;scores.log&#34;
+if [ ! -f $FILENAME ]; then
+    touch $FILENAME
+fi
+‵‵‵
+</code></pre>
+<p>Try adding your own <code>code</code> block, somewhere in your codelab file. Please <strong>do not copy/paste the example</strong> above, because (as is) it won&#39;t work!</p>
+<h2 is-upgraded>How to add an Image</h2>
+<p><strong>Syntax</strong>:</p>
+<p><code>![alt text](path-relative-to-markdown-file/puppy.jpg)</code></p>
+<p>Note the format: an exclamation mark, immediately followed by [square brackets containing the <code>alt text</code>] which is again followed immediately by (round brackets containing the <strong>relative</strong> path to the <code>assets/image-file.ext</code> file)</p>
+<p>In this case:</p>
+<pre><code>![Doggo image](assets/puppy.jpg)
+(do not add this)
+</code></pre>
+<p class="image-container"><img alt="Doggo image" src="img/afb216d18c40e4a7.jpg"></p>
+<h3 is-upgraded>Add your own Image</h3>
+<p>Search on Google (or whatever) for something that you have an interest in, then flip to the Images tab.</p>
+<p>Find something of medium size, i.e. the example above is 924x601 pixels ... if too big, you&#39;ll find that the image is actually downsized (if required) to match the <em>width</em> of the codelab&#39;s <em>main</em> section (this).</p>
+<p>For example, try dragging the right-hand edge of this window in and out to see how the image resizes (tip: when done, press ESC <em>while still holding the mouse button</em>, to restore the window&#39;s original size)</p>
+<p>Save and copy the file to your <code>YOUR-PROJECTS/CodelabTools/site/codelabs/assets</code> folder <br><strong>or<br></strong> just save it directly to that path/location, using a meaningful name, with no spaces</p>
+<aside class="warning"><p> Although long path names, and the ability to have spaces in filenames, is a wonderful feature in modern computing, please <strong>avoid having either</strong> when it comes to some programming projects</p>
+</aside>
+<p>Add the following to your codelab file, substituting everything in UPPER CASE with <em>your own</em> values:</p>
+<pre><code>![YOUR OWN ALT TEXT](assets/YOUR-OWN-FILENAME.EXT)
+</code></pre>
+<p>Add some text, either above or below, to accompany the image.</p>
+<p>Save the file, and continue to the next section ...</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Info Boxes/Text Styles" duration="1">
+        <h2 is-upgraded>Info Boxes</h2>
+<p>Info boxes are colored callouts that enclose special information in codelabs. Positive info boxes should contain positive information like best practices and time-saving tips. Negative info boxes should contain information like API usage restrictions or warnings.</p>
+<h3 is-upgraded>How to create a Positive info box</h3>
+<p><strong>Syntax</strong>:</p>
+<p><code>&lt;aside class="positive"&gt;</code><br><code>This is a positive info box. Opening and closing tags</code><br><code>may be placed on new lines, for markdown readability.</code><br><code>&lt;/aside&gt;</code></p>
+<aside class="special"><p> A positive info box should contain positive information like best practices and time-saving tips </p>
+</aside>
+<p>Add the following to your file:</p>
+<pre><code language="language-html" class="language-html">&lt;aside class=&#34;positive&#34;&gt;This is a positive info box&lt;/aside&gt;
+</code></pre>
+<h3 is-upgraded>How to create a Negative info box</h3>
+<p><strong>Syntax</strong>:</p>
+<p><code>&lt;aside class="negative"&gt;This is a negative info box&lt;/aside&gt;</code></p>
+<aside class="warning"><p> A negative info box should contain information like API usage restrictions or warnings </p>
+</aside>
+<p>Add the following to your file:</p>
+<pre><code language="language-html" class="language-html">&lt;aside class=&#34;negative&#34;&gt;This is a negative info box&lt;/aside&gt;
+</code></pre>
+<h2 is-upgraded>Text Styles</h2>
+<p>Fonts have no effect when authoring codelabs. Everything will be formatted using <strong>Roboto</strong> in the final codelab.</p>
+<p>However, there <em>are</em> some simple ways that you can add emphasis to certain parts of the text: <br><strong>Bolded</strong> and <em>Italicized</em> text will be passed through to the codelab markup as <code>&lt;strong&gt;</code> and <code>&lt;em&gt;</code> tags respectively. Also, small passages of text surrounded by backticks (<code>&backprime;</code>) will be passed through as an inline <code>&lt;code&gt;</code> tag in the markup, as demonstrated a few times in this paragraph.</p>
+<p>You might have to experiment with line breaks to get your pages looking just right. Also, while you <em>can</em> use <em>some</em> regular HTML, be aware that left and right angle brackets are special characters in markdown, so in this paragraph, we&#39;ve had to use the following to <strong>demonstate</strong> for example <strong>&lt;BR&gt;</strong> correctly:</p>
+<pre><code>&amp;lt;BR&amp;gt;
+</code></pre>
+<h2 is-upgraded>Download Buttons</h2>
+<p>Codelabs sometimes contain <strong>links to sample code</strong>, or SDKs, for example. The codelab renderer will apply special button-esque styling to any hyperlink formatted with the <code>button</code> tag.</p>
+<p><a href="https://www.google.com" target="_blank"><paper-button class="colored" raised>Google Search</paper-button></a></p>
+<p>Although the button above will just take you to the <code>google.com</code> website, buttons work for specific file-downloads as well.</p>
+<p>Add the following to your file:</p>
+<pre><code language="language-html" class="language-html">&lt;button&gt;[Download the Internet](https://www.example.com)&lt;/button&gt;
+</code></pre>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Export/Landing Pages" duration="1">
+        <h2 is-upgraded>How to Export your Codelab</h2>
+<p>Use the CLaaT tool to <strong>export</strong> your codelab for viewing/testing locally ... to do this, open your terminal in (or <code>cd</code> into) the <code>YOUR-PROJECTS/CodelabTools/site/codelabs</code> folder and run the following command:</p>
+<pre><code language="language-bash" class="language-bash">$ claat export name-of-your-codelab.md
+</code></pre>
+<p>Now you need to <code>cd ..</code> (up one level) to the <code>YOUR-PROJECTS/CodelabTools/site</code> folder and run the following command:</p>
+<pre><code language="language-bash" class="language-bash">$ gulp serve --codelabs-dir=codelabs
+</code></pre>
+<p>Then open your browser at <a href="http://localhost:8000" target="_blank">http://localhost:8000</a> to view your creation</p>
+<aside class="special"><p> Tip: while developing your codelab, you might find it helpful to create a <code>bash</code><br> script to run these commonly used commands, as they can be quite repetitive</p>
+</aside>
+<h2 is-upgraded>How to Distribute your Codelab</h2>
+<aside class="warning"><p> If you&#39;ve made <strong>changes since your last export</strong>, be sure to run <code>export</code> again, as shown above</p>
+</aside>
+<p>Use the Gulp tool to <strong>distribute</strong> your codelab before uploading it to your website ... to do this, open your terminal in (or <code>cd</code> into) the <code>YOUR-PROJECTS/CodelabTools/site</code> folder and run the following command:</p>
+<pre><code language="language-bash" class="language-bash">$ gulp dist --codelabs-dir=codelabs
+</code></pre>
+<p>This time, instead of creating a <strong>build</strong> folder containing your local web portal, the <code>gulp</code> command (with <code>dist</code> parameter) creates the <strong>dist</strong> folder, containing a <strong>minified</strong> version of your final codelab</p>
+<h2 is-upgraded>Landing Pages</h2>
+<p>An example of a &#34;landing page&#34; is what you may have already seen at the root of my GitHub Pages <a href="https://mikaere66.github.io/" target="_blank">Codelabs</a> website.</p>
+<p>A landing page for <em>your</em> codelabs is created automatically, in the <br><code>YOUR-PROJECTS/CodelabTools/site/[build|dist]</code> folder, when you <code>gulp serve</code> or <code>gulp dist</code> your codelab(s) ...</p>
+<p>The output for your landing page can be customized to suit your requirements by following the intructions here, at Google&#39;s GitHub <a href="https://github.com/googlecodelabs/tools/blob/main/site/README.md" target="_blank">Codelabs Site</a> repo.</p>
+<p>Specific <code>views</code> can also be created ... views are themed/styled collections of codelabs, meant to target a specific topic, for example Android, Linux, or Windows O/S</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Conclusion/Hosting" duration="0">
+        <h2 is-upgraded>Bonus Content</h2>
+<p>As a bonus for clicking through right to the end of this tutorial, here are some more interesting tricks for codelabs in general:</p>
+<h3 is-upgraded>Embed YouTube Videos</h3>
+<p>To embed a video uploaded to <strong>YouTube</strong> with this sample URL <code>https://www.youtube.com/watch?v=DWAinkJ54AP8</code> you can use an inline video tag, similar to the example in the code block, where <code>DWAinkJ54AP8</code> is the video ID in the sample URL:</p>
+<pre>&lt;video id=&#34;DWAinkJ54AP8&#34; /&gt;
+</pre>
+<h3 is-upgraded>Resumable Codelabs</h3>
+<p>A codelab remembers <strong>where the student left off</strong>, so that when they return at a later date or time, they are taken to their most recent point in the codelab. This makes it easier for the student to &#34;jump back in&#34;. This is simply part of the framework. There is nothing that you need to do as a codelab author to enable this feature.</p>
+<h2 is-upgraded>More Information</h2>
+<p>For an alternative perspective on this tutorial, check out this Medium article by Zarin Lokhandwala: <br><a href="https://medium.com/@zarinlo/publish-technical-tutorials-in-google-codelab-format-b07ef76972cd" target="_blank">Publish Technical Tutorials in Google Codelab Format</a></p>
+<p>For further info, check out the official GitHub repo: <a href="https://github.com/googlecodelabs/tools" target="_blank">Google Codelabs Tools</a></p>
+<p>For codelab hosting ideas, check out these helpful links:</p>
+<ul>
+<li><a href="https://docs.github.com/en/pages/quickstart" target="_blank">Quickstart for GitHub Pages</a></li>
+<li><a href="https://github.com/googlecodelabs/tools#how-do-i-publish-my-codelabs" target="_blank">How do I Publish my Codelabs?</a></li>
+</ul>
+
+
+      </google-codelab-step>
+    
+  </google-codelab>
+
+  <script src="https://storage.googleapis.com/claat-public/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/prettify.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/codelab-elements.js"></script>
+  <script src="//support.google.com/inapp/api.js"></script>
+
+</body>
+</html>
