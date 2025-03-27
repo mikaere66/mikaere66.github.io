@@ -1,0 +1,23 @@
+{
+  "environment": "web",
+  "format": "html",
+  "prefix": "https://storage.googleapis.com",
+  "mainga": "UA-49880327-14",
+  "updated": "2025-03-04T03:51:27+13:00",
+  "id": "create-your-own-codelabs",
+  "duration": 34,
+  "title": "Create a Codelab with Markdown",
+  "authors": "Michael Mossman",
+  "summary": "How to use Markdown Syntax to create your own Codelabs",
+  "source": "create-your-own-codelabs.md",
+  "theme": "",
+  "status": [
+    "published"
+  ],
+  "category": [
+    "markdown"
+  ],
+  "tags": [],
+  "feedback": "https://github.com/mikaere66/mikaere66.github.io/issues",
+  "url": "create-your-own-codelabs"
+}
