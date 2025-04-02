@@ -1,0 +1,25 @@
+{
+  "environment": "web",
+  "format": "html",
+  "prefix": "https://storage.googleapis.com",
+  "mainga": "UA-49880327-14",
+  "updated": "2025-04-02T02:09:51Z",
+  "id": "windows-in-qemu-kvm-cb",
+  "duration": 44,
+  "title": "Windows VM on a Chromebook",
+  "authors": "Michael Mossman",
+  "summary": "QEMU/KVM in a Linux container to run Windows on your Chromebook",
+  "source": "1Sitjm59fgayW8vSKv4VBHf4V14kc7gE0VsQoR-QoN7Q",
+  "theme": "kvm",
+  "status": [
+    "published"
+  ],
+  "category": [
+    "kvm"
+  ],
+  "tags": [
+    "web"
+  ],
+  "feedback": "https://github.com/mikaere66/mikaere66.github.io/issues",
+  "url": "windows-in-qemu-kvm-cb"
+}

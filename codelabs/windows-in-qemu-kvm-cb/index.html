@@ -1,0 +1,414 @@
+
+<!doctype html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <meta charset="UTF-8">
+  <title>Windows VM on a Chromebook</title>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://storage.googleapis.com/claat-public/codelab-elements.css">
+  <style>
+    .success {
+      color: #1e8e3e;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+  <google-codelab codelab-gaid=""
+                  id="windows-in-qemu-kvm-cb"
+                  title="Windows VM on a Chromebook"
+                  environment="web"
+                  feedback-link="https://github.com/mikaere66/mikaere66.github.io/issues">
+    
+      <google-codelab-step label="Introduction" duration="1">
+        <h2 is-upgraded><strong>Objectives</strong></h2>
+<table>
+<tr><td colspan="1" rowspan="1"><p class="image-container"><img alt="Windows logo" style="width: 112.00px" src="img/97aa8001c223ffde.png"></p>
+</td><td colspan="1" rowspan="1"><p>The aim of this guide is to help you set up the software required to facilitate running a <strong>Windows</strong> operating system in a <strong>virtual machine</strong> (VM) within <strong>ChromeOS</strong>.</p>
+<p>This is no easy feat, as there are many steps required to achieve this goal, especially to achieve it <em>successfully</em>, to a level where Windows is actually <em>usable</em>.</p>
+</td></tr>
+</table>
+<h2 is-upgraded><strong>Virtualization</strong></h2>
+<table>
+<tr><td colspan="1" rowspan="1"><p class="image-container"><img alt="qemu logo" style="width: 112.00px" src="img/dc5837ded2a74819.png"></p>
+</td><td colspan="1" rowspan="1"><p>Because of the way the <strong>Linux Development Environment</strong> is implemented in ChromeOS, effectively what we&#39;re doing here is setting up <em>Nested</em> virtualization.</p>
+<p>Nested virtualization basically means running one VM <em>inside</em> another VM ... refer to the following conceptual image:</p>
+</td></tr>
+</table>
+<p class="image-container"><img alt="Nested virtualization" style="width: 624.00px" src="img/80bf2e1419380aa0.png"></p>
+<aside class="special"><p>The concepts portrayed are extremely simplified ... ChromeOS is (by design) very secure, hence the <strong>host</strong> operating system is shielded from software running within your Linux environment</p>
+</aside>
+<h2 is-upgraded><strong>Prerequisites</strong></h2>
+<table>
+<tr><td colspan="1" rowspan="1"><p class="image-container"><img alt="Hardware info icon" style="width: 128.00px" src="img/2d1a6af3f2f328d8.png"></p>
+</td><td colspan="1" rowspan="1"><p>Running and using any virtual machine requires a lot of computer resources, like disk space and additional RAM, as well as a certain amount of patience and (in some cases) tinkering.</p>
+<p>This guide was tried and tested on a Dell Latitude 5400 running ChromeOS Flex 134.0.6998.130, with an Intel i5-8265U CPU, a 256 GB SSD, and 16 GB of RAM</p>
+</td></tr>
+</table>
+<p><strong>Important</strong>: this guide assumes that you have <em>already</em> set up the Linux Development Environment on your Chromebook. If not, please refer to my <a href="https://mikaere66.github.io" target="_blank">other Codelabs</a></p>
+<aside class="warning"><p>There&#39;s nothing stopping you from installing Windows in a VM on a Chromebook with lesser specifications, but be prepared for sluggish performance and a lot of potential heartache</p>
+</aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Technical terms" duration="3">
+        <p>Throughout this guide, you&#39;ll see certain words and phrases used to describe what we&#39;re trying to achieve here, as well as in the steps required to reach our goal. Here is a brief introduction for some of those terms:</p>
+<p><strong>Container</strong>: a self-contained package of software, essentially a virtualized environment, that allows you to run Linux applications on a ChromeOS device with isolation from the main system.</p>
+<p><strong>Crosh</strong>: think of this as Chrome Shell ... crosh is a command-shell environment for ChromeOS. Most Linux commands are locked down inside Crosh, i.e. sudo does <em>not</em> work.</p>
+<p><strong>Crostini</strong>: think of this as <em>true</em> Linux on ChromeOS. Allows you to run Linux apps (primarily for development) alongside your usual ChromeOS desktop and apps. Linux on Chromebooks offers developers the best of both worlds.</p>
+<p><strong>Domain</strong>: in this context, virtual machines are sometimes referred to (mainly in documentation) as domains.</p>
+<p><strong>Guest</strong>: in relation to Host below, a guest is a virtual machine running on a host machine.</p>
+<p><strong>Host</strong>: the bare-metal hardware on which a hypervisor will run &#34;guest&#34; virtual machines.</p>
+<p><strong>Hypervisor</strong>: a program used to run and manage one or more virtual machines on a computer.</p>
+<p><strong>KVM</strong>: Kernel-based Virtual Machine (KVM) is an open-source virtualization technology for Linux operating systems. With KVM, Linux can function as a hypervisor that runs multiple, isolated, virtual machines (VMs).</p>
+<p><strong>Libvirt</strong>: Libvirt is a collection of software that provides a convenient way to manage virtual machines and other virtualization functionality, such as storage and network interface management. These software implementations include an API library, a daemon (libvirtd), and a command-line utility (virsh).</p>
+<p><strong>Qcow2</strong>: (QEMU Copy-On-Write version 2) is a versatile disk-image format that supports features like compression, snapshots, and thin provisioning.</p>
+<p><strong>QEMU</strong>: the Quick Emulator (QEMU) is a free and open-source emulator that uses dynamic binary translation to emulate a computer&#39;s processor; that is, it translates the emulated binary codes to an equivalent binary format which is executed by the machine. It provides a variety of hardware and device models for the virtual machine, enabling it to run different guest operating systems.</p>
+<p><strong>Termina</strong> (not a typo ... mainly used internally): a VM image, with a stripped-down Linux kernel and user-land tools, developed by the ChromeOS team. Its only goal is to boot up as quickly as possible and start running containers.</p>
+<p><strong>Terminal</strong>: on ChromeOS, the Terminal is the main entry point into Linux, and the main way for you to interact with your development environment by running Linux command-line tools.</p>
+<p><strong>VHD</strong>: a Virtual Hard-Disk is a file format that acts as a virtual hard drive, allowing you to store operating systems and data as if it were a physical disk.</p>
+<p><strong>Virt-Manager</strong>: the virt-manager application (Virtual Machine Manager) is a desktop user interface for managing virtual machines through libvirt. It primarily targets KVM VMs, but also manages Xen and LXC (Linux Containers). It presents a summary view of running domains, with their live performance and resource utilization statistics. Wizards enable the creation of new domains, and configuration/adjustment of a domain&#39;s resource allocation and virtual hardware. An embedded VNC and SPICE client viewer presents a full graphical console to the guest domain.</p>
+<p><strong>VM</strong>: short for Virtual Machine, a VM is a <em>virtualized</em> operating system (or machine), in that the O/S is running as a <em>guest</em> on virtualized hardware, supplied and managed by the <em>host</em> (the actual computer that is running the hypervisor software).</p>
+<aside class="warning"><p><strong>Be aware</strong> of the difference between <strong>Crosh</strong> and <strong>Termina</strong> ... Crosh is the built-in command shell environment on ChromeOS, allowing users to run very basic commands directly within the operating system, while Termina refers to a specific virtual machine image used on ChromeOS for running containers, essentially providing a more robust Linux environment for advanced tasks, like container management</p>
+</aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Software install" duration="3">
+        <p><strong>Important</strong>: this guide assumes that you have <em>already</em> set up the Linux Development Environment on your Chromebook. If not, please refer to my <a href="https://mikaere66.github.io" target="_blank">other Codelabs</a></p>
+<h2 is-upgraded><strong>Time/space estimates</strong></h2>
+<table>
+<tr><td colspan="1" rowspan="1"><p>Update time</p>
+</td><td colspan="1" rowspan="1"><p>2 minutes</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Install time</p>
+</td><td colspan="1" rowspan="1"><p>2 minutes</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Disk space</p>
+</td><td colspan="1" rowspan="1"><p>766 MB</p>
+</td></tr>
+</table>
+<h2 is-upgraded><strong>Update system</strong></h2>
+<p>Before installing any major software, it&#39;s always a good idea to update your local packages/versions list, then carry out any system upgrades.</p>
+<p>Start by opening a Linux Terminal window and running the following commands:</p>
+<pre><code>sudo apt update &amp;&amp; sudo apt upgrade</code></pre>
+<h2 is-upgraded><strong>Install hypervisor</strong></h2>
+<p>Next, we&#39;ll install the required software and dependencies, using this command:</p>
+<pre><code>sudo apt install qemu-kvm virt-manager</code></pre>
+<p>When the installation is complete, you should see a new icon in the <strong>Linux apps</strong> folder in your ChromeOS menu. Do <strong>not</strong> start the program yet though ... there&#39;s just one step we have to perform first, in the next section.</p>
+<h2 is-upgraded><strong>Set up ISOs share</strong></h2>
+<p>To save space inside your VMs, and avoid possible duplicates, it&#39;s a good idea to store your <strong>.iso</strong> files in a separate folder in ChromeOS, then share that folder with Linux.</p>
+<p>To do that, start by opening the <strong>Files</strong> app, and creating a folder called <strong>ISOs</strong> under the <strong>Downloads</strong> directory, then right-click the folder and select <strong>Share with Linux</strong> from the menu.</p>
+<h2 is-upgraded><strong>Set up VMs share</strong></h2>
+<p>For similar reasons as above, and to make backups of your Linux environment smaller/quicker, we will store our virtual hard-disk (.qcow2) files in a separate folder in ChromeOS, and share that folder with Linux as well.</p>
+<p>This time, create a folder named <strong>VMs</strong> in the root of your home directory, i.e. under My files. You should end up with a folder hierarchy similar to the following:</p>
+<p><strong>My files</strong></p>
+<p>|-- Downloads</p>
+<p>|--|-- <strong>ISOs</strong></p>
+<p>|-- Linux files</p>
+<p>|-- <strong>VMs</strong></p>
+<p>When you are ready, right-click the folder and select <strong>Share with Linux</strong> from the menu.</p>
+<h2 is-upgraded><strong>Download Windows</strong></h2>
+<p>If you haven&#39;t done so already, now would be a good time to download the <strong>.iso</strong> file for whichever version of Windows you&#39;re going to install. These links might be helpful:</p>
+<p><a href="https://www.microsoft.com/en-us/software-download/windows10ISO" target="_blank">Windows 10</a></p>
+<p><a href="https://www.microsoft.com/en-us/software-download/windows11" target="_blank">Windows 11</a></p>
+<p>When you have the file, move it into the <strong>Downloads\ISOs</strong> folder that you created earlier. You should now have a file/folder hierarchy similar the following (the actual <em>filename</em> is not important):</p>
+<p><strong>My files<br></strong>|-- Downloads<br>|--|-- <strong>ISOs<br></strong>|--|--|-- Win11_24H2_English_x64.iso</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="QEMU Settings" duration="2">
+        <p>With qemu-kvm, virt-manager, and their dependencies installed, we need to make some alterations to the settings file for QEMU, specifically <strong>/etc/libvirt/qemu.conf</strong> before running virt-manager (Virtual Machine Manager) for the first time.</p>
+<p>In this demo, we will use the simple <strong>nano</strong> text-editor ... but, we&#39;ll need to install it first, as it&#39;s not included in the ChromeOS implementation of Debian.</p>
+<p>Open your terminal, and run the following command:</p>
+<pre><code>sudo apt install nano</code></pre>
+<p>Once it&#39;s installed, open the settings file with nano:</p>
+<pre><code>sudo nano /etc/libvirt/qemu.conf</code></pre>
+<p>For the following lines, uncomment each line (remove the preceding #), then edit their values to reflect the following settings:</p>
+<pre>security_driver = &#34;none&#34;
+user = &#34;root&#34;
+group = &#34;root&#34;
+remember_owner = 0
+cgroup_device_acl = []</pre>
+<aside class="special"><p><strong>Tip</strong>: as of this writing, <code>security_driver</code> appears on line number 493 ... use the<br><strong>Go To Line</strong> feature to jump down to that position in the <strong>/etc/libvirt/qemu.conf</strong> file.</p>
+<p>Also, you may leave the default values as is (for reference later) if you wish,<br>and just add a new line beneath each key/value pair with the desired value</p>
+</aside>
+<p>If you&#39;re interested in what each of these settings does, read the accompanying notes within the file</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Files/permissions" duration="2">
+        <h2 is-upgraded><strong>Group membership</strong></h2>
+<p>For convenience, the next thing you should do is add your <strong>Linux</strong> username to the <strong>libvirt</strong> group ... this will save you from having to enter your password when starting virt-manager. To achieve this, just type the following command in your Linux Terminal:</p>
+<pre><code>sudo usermod -a $USER -G libvirt</code></pre>
+<h2 is-upgraded><strong>Configure virt-manager</strong></h2>
+<table>
+<tr><td colspan="1" rowspan="1"><p class="image-container"><img alt="virt-manager icon" title="virt-manager icon" style="width: 48.00px" src="img/737659e1671a838d.png"></p>
+</td><td colspan="1" rowspan="1"><p>Now you can click the icon to start <strong>Virtual Machine Manager</strong> ... and, for future access, pin the program&#39;s icon to your dock</p>
+</td></tr>
+</table>
+<p>In the <strong>Virtual Machine Manager</strong> window, click the name <strong>QEMU/KVM</strong> once to highlight it, then from the <strong>Edit</strong> menu, select <strong>Connection Details</strong>.</p>
+<p>Click the <strong>Virtual Networks</strong> tab, and check the box for <strong>Autostart</strong> ✓ <strong>On Boot</strong> then click <strong>Apply</strong>.</p>
+<p>Next, click the <strong>Storage</strong> tab, and in the bottom-left corner, click the <strong>+</strong> for <strong>Add Pool</strong>.</p>
+<p>In the <strong>Add a New Storage Pool</strong> dialog, for name type <code>ISOs</code> then click the <strong>Browse</strong> button.</p>
+<p>Navigate to <strong>Other Locations | Computer | File System</strong> (whichever) so that you&#39;re looking at the contents of <strong>/mnt/chromeos/MyFiles/Downloads/ISOs</strong> (which is the folder you created/shared earlier) then click the <strong>Open</strong> button.</p>
+<p>Back in the <strong>Add a New Storage Pool</strong> dialog, click the <strong>Finish</strong> button.</p>
+<p>Back in the <strong>Connection Details</strong> window, with <strong>ISOs</strong> highlighted, you should now see the Windows .iso file that you downloaded earlier.</p>
+<p>Repeat similar steps (as required) to add <em>another</em> storage pool named <strong>VMs</strong> which points to <strong>/mnt/chromeos/MyFiles/VMs</strong> ... close the Connection Details window when done.</p>
+<aside class="special"><p><strong>Restart</strong> your Linux Development Environment, mainly for the <code>usermod</code> changes to take effect. To do that, right-click the Terminal icon on your ChromeOS dock and select <strong>Shut down Linux</strong> ... then, <strong>wait about 10 seconds</strong> before restarting your Linux Terminal</p>
+</aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Create new VM" duration="5">
+        <p>In the <strong>Virtual Machine Manager</strong> program, select <strong>New Virtual Machine</strong> from the <strong>File</strong> menu</p>
+<p class="image-container"><img style="width: 560.00px" src="img/7537e5e3e892bafc.png"></p>
+<p>Accept the default <strong>Local install media</strong> and click <strong>Forward</strong></p>
+<p class="image-container"><img style="width: 510.00px" src="img/63468b28c9fdbcd4.png"></p>
+<p>Next to <strong>Choose ISO or CDROM install media</strong>, click <strong>Browse</strong></p>
+<p class="image-container"><img style="width: 510.00px" src="img/d0b0b71a8b4b0cf3.png"></p>
+<p>In the <strong>Locate ISO media volume</strong> dialog, click <strong>ISOs</strong> once to highlight it, and click the <strong>Windows .iso</strong> file (that you downloaded earlier) to select it, then click <strong>Choose Volume</strong></p>
+<p class="image-container"><img style="width: 624.00px" src="img/d184a19defea7f67.png"></p>
+<p>When the <strong>Automatically detect from the installation media/source</strong> checkbox is selected, the installer should be able to detect the correct Windows version. <strong>If not</strong>, uncheck the box, start typing <strong>Windows</strong> then select your version from the list. Click the <strong>Forward</strong> button when ready</p>
+<aside class="special"><p><strong>Tip</strong>: for Windows 11, you must select the Windows 11 machine type to meet system requirements, but for Windows 10, if you just want a basic BIOS based VM, select Windows 10 ... if you want a more advanced UEFI based setup, then select Windows 11 as the machine type</p>
+</aside>
+<p class="image-container"><img style="width: 510.00px" src="img/8eb1641163ba0521.png"></p>
+<p>For the <strong>Choose Memory and CPU settings</strong> section, give at least 8 GB of RAM and at least 4 CPU cores</p>
+<p class="image-container"><img style="width: 510.00px" src="img/355013692c7b7b56.png"></p>
+<p>In the next step of the wizard, choose the <strong>Select or create custom storage</strong> option, then click the <strong>Manage</strong> button:</p>
+<p class="image-container"><img style="width: 578.00px" src="img/e6b990aac942aeb8.png"></p>
+<p>Click the <strong>VMs</strong> pool that we added earlier, then click the <strong>+</strong> button to <strong>Create new volume</strong></p>
+<p class="image-container"><img style="width: 624.00px" src="img/7dad2cc4765393a9.png"></p>
+<p>In the <strong>Create storage volume</strong> dialog, change the <strong>Capacity</strong> to at least <strong>60 GB</strong> ...<br>Change the filename (if desired ... no spaces) and click <strong>Finish</strong> when ready:</p>
+<aside class="special"><p>When specifying the <strong>disk size</strong> for a VM, be aware that the space you allocate represents the <strong>maximum</strong> size. A virtual hard-disk (.qcow2) file for your VM can start out as little as 20 MB in <em>actual</em> size, <em>before</em> an O/S is installed. It grows in size only when new data is added to the VHD.</p>
+<p>Also, note in the screenshot that the <strong>available space</strong> represents your <strong>ChromeOS</strong> free space, <em>not</em> the free space within your Linux Development Environment</p>
+</aside>
+<p class="image-container"><img style="width: 612.00px" src="img/19a5482e1228bd99.png"></p>
+<p>Once added, your new .qcow2 file will be listed in the Volumes pane ... click your new file once to highlight it, then hit the <strong>Choose Volume</strong> button</p>
+<p class="image-container"><img style="width: 624.00px" src="img/134a4c724337debf.png"></p>
+<p>You&#39;ll be returned to the <strong>New VM</strong> wizard ... click <strong>Forward</strong> when ready:<br>(note that this screenshot has been <em>edited</em> to show full path/filename)</p>
+<p class="image-container"><img style="width: 578.00px" src="img/5559150a070505ba.png"></p>
+<p>The final step for the KVM install wizard allows you to name your VM (no spaces) and shows a summary of the selections you&#39;ve made ... if you just click <strong>Finish</strong> now <strong>without</strong> selecting the <strong>Customize configuration before install</strong> checkbox, then the VM (and the Windows installer) will start automatically ... however, if you <strong>do</strong> select the checkbox, you will see the window presented in the <strong>next</strong> screenshot:</p>
+<p class="image-container"><img style="width: 578.00px" src="img/e49d41711af89272.png"></p>
+<p>This is the window you are presented with if you selected the <strong>Customize configuration before install</strong> checkbox ... here, you can double-check/customize settings before beginning the installation process</p>
+<aside class="warning"><p>Be aware that <strong>you still need to click the Begin Installation button</strong> to finish the New VM wizard</p>
+</aside>
+<p class="image-container"><img style="width: 624.00px" src="img/1f16e3bbb72fbf98.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Install Windows" duration="20">
+        <p>You&#39;ll need to click <em>inside</em> the window to give it focus, then press the <em>any</em> key to boot from ISO:</p>
+<p class="image-container"><img style="width: 624.00px" src="img/97ae19690231d62c.png"></p>
+<h2 is-upgraded><strong>Time/space estimates</strong></h2>
+<table>
+<tr><td colspan="1" rowspan="1"><p><strong>Install phase</strong></p>
+</td><td colspan="1" rowspan="1"><p><strong>Windows 10</strong></p>
+</td><td colspan="1" rowspan="1"><p><strong>Windows 11</strong></p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Initial installation</p>
+</td><td colspan="1" rowspan="1"><p>4 minutes</p>
+</td><td colspan="1" rowspan="1"><p>6 minutes</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>First run experience</p>
+</td><td colspan="1" rowspan="1"><p>2 minutes</p>
+</td><td colspan="1" rowspan="1"><p>4 minutes</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Finalize installation</p>
+</td><td colspan="1" rowspan="1"><p>4 minutes</p>
+</td><td colspan="1" rowspan="1"><p>6 minutes</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p><strong>Total estimated time</strong></p>
+</td><td colspan="1" rowspan="1"><p><strong>10 minutes</strong></p>
+</td><td colspan="1" rowspan="1"><p><strong>16 minutes</strong></p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Disk space (incl drivers)</p>
+</td><td colspan="1" rowspan="1"><p>10.3 GB</p>
+</td><td colspan="1" rowspan="1"><p>15.7 GB</p>
+</td></tr>
+</table>
+<aside class="special"><p>If you are happy installing Windows on your own/unassisted, then just skip to the next section</p>
+</aside>
+<p>For language settings, select your <strong>language</strong>, then <strong>time and currency</strong> format:</p>
+<aside class="warning"><p>Even if you&#39;re happy with English/US, select the <em>correct</em> time and currency, as this will help later</p>
+</aside>
+<p class="image-container"><img style="width: 624.00px" src="img/da8c860d2adebfc6.png"></p>
+<p>Now select your desired keyboard layout, if it&#39;s not already selected:</p>
+<p class="image-container"><img style="width: 624.00px" src="img/4653d6849c48014.png"></p>
+<p>Because this is a clean install, the checkbox is hardly relevant, but you still need to select &#34;<strong>I agree everything will be deleted including files, apps, and settings</strong>&#34; before you can click the <strong>Next</strong> button:</p>
+<p class="image-container"><img style="width: 624.00px" src="img/7690bb46f2d3257e.png"></p>
+<p>If you <em>do</em> have a product key for <em>this</em> copy of Windows, enter it now ... do <strong>not</strong> be tempted to use the one from your main PC. If you don&#39;t yet have a product key, just click <strong>I don&#39;t have a product key</strong>:</p>
+<p class="image-container"><img style="width: 624.00px" src="img/a0b3576fbcab8e68.png"></p>
+<p>Select your desired <strong>Windows flavor</strong> ... Windows <strong>Pro is best</strong> for a <em>nested</em> VM. More on that later:</p>
+<p class="image-container"><img style="width: 624.00px" src="img/59aa03d6198bdf13.png"></p>
+<p>You&#39;ll need to <strong>Accept</strong> the licensing terms before continuing:</p>
+<p class="image-container"><img style="width: 624.00px" src="img/434555db74dfa56c.png"></p>
+<p>Again, if this is a clean install, then all disk space is currently <em>unallocated</em> ... just click <strong>Next</strong> and the Windows installer will create all the required disk partitions automatically:</p>
+<p class="image-container"><img style="width: 624.00px" src="img/1f409e89c013d2f7.png"></p>
+<p>That&#39;s it ... you are now ready to click <strong>Install</strong>:</p>
+<p class="image-container"><img style="width: 624.00px" src="img/5100f8f00dba20e4.png"></p>
+<p>The installation will take up to 20 minutes to complete ... the VM will restart several times:</p>
+<aside class="warning"><p>If possible, to help speed things along, try <strong>not</strong> to use your Chromebook during this time</p>
+</aside>
+<p class="image-container"><img style="width: 624.00px" src="img/1d41ff2f4e1599a4.png"></p>
+<p>Getting there ...</p>
+<p class="image-container"><img style="width: 624.00px" src="img/cae4e2d365fb49b8.png"></p>
+<aside class="special"><p><strong>Tip</strong>: you may want to <strong>prevent updates</strong> during the First Run Experience ... to do this, follow the next step (optional). If you don&#39;t mind the updates, skip to the &#34;<strong>Country or Region</strong>&#34; screenshot</p>
+</aside>
+<p><strong>Windows 11 only</strong>: to skip all Windows Updates during the <em>installation process</em>, when you first get to the <strong>Country or Region</strong> prompt, on your Chromebook keyboard, press Shift + Search + 0 (zero) ... (this is equivalent to Shift + F10 on a conventional keyboard) ... once <strong>Command Prompt</strong> opens, click the window once to give it focus, then type <strong>oobe\bypassnro</strong></p>
+<p>Ensure you are in the <em>correct directory</em>, as shown:<br>C:\Windows\System32&gt;<strong>oobe\bypassnro</strong></p>
+<p>As soon as you press the Enter key, the Windows installer will restart, but this time without the requirement for a network connection:</p>
+<p class="image-container"><img style="width: 624.00px" src="img/68e1cc2807da8e39.png"></p>
+<h3 is-upgraded>While installer in Restarting</h3>
+<p><strong>Windows 10 and 11</strong>: in Virtual Machine Manager, select <strong>Details</strong> from the <strong>View</strong> menu, and in the left-hand column, select your NIC, then in the main section, <strong>uncheck</strong> the box next to <strong>Active</strong>. Now, you can switch back to the VM by selecting <strong>Console</strong> from the <strong>View</strong> menu.</p>
+<p>Now that the installer phase is complete, Windows will ask you for a few details. Start by choosing your <strong>Country or Region</strong>, if not already selected, then click <strong>Yes</strong>:</p>
+<p class="image-container"><img style="width: 624.00px" src="img/492d75e781aeb5bb.png"></p>
+<p>Next, select your <strong>keyboard layout</strong>, and click <strong>Yes</strong> when ready:</p>
+<p class="image-container"><img style="width: 624.00px" src="img/d5c3ece69a00985d.png"></p>
+<p>Add a <strong>second keyboard layout</strong> (if desired) ... or just click <strong>Skip</strong>:</p>
+<p class="image-container"><img style="width: 624.00px" src="img/92bcf391bdd24466.png"></p>
+<p>When you reach the <strong>Networking</strong> section, if you followed the steps to disable updates during install, you&#39;ll be able to choose <strong>I don&#39;t have Internet</strong>:</p>
+<p class="image-container"><img style="width: 624.00px" src="img/7961badc70b950a3.png"></p>
+<p>However, if networking is <em>still</em> active, then you&#39;ll be prompted for a computer name (for the network). Enter a <strong>name</strong> for this PC, then click <strong>Next</strong> ... the installer will restart:</p>
+<p class="image-container"><img style="width: 624.00px" src="img/e994421f93e48050.png"></p>
+<p>Select the <strong>primary use</strong> for this PC, then click <strong>Next</strong>:</p>
+<p class="image-container"><img style="width: 624.00px" src="img/ea67691f282b37ec.png"></p>
+<p>Enter a <strong>username</strong> ... by default, this user will be added to the Administrator&#39;s group:</p>
+<p class="image-container"><img style="width: 624.00px" src="img/bd8f293b63055963.png"></p>
+<p>Enter a <strong>password</strong> (if desired) and click <strong>Next</strong>:</p>
+<p class="image-container"><img style="width: 624.00px" src="img/873aef36f9384e20.png"></p>
+<p>Enable or disable your preferred <strong>Privacy settings</strong> and click <strong>Next</strong>:</p>
+<p class="image-container"><img style="width: 624.00px" src="img/7809dde330be6708.png"></p>
+<p>That&#39;s it ... you are now running Windows within your Chromebook:</p>
+<p class="image-container"><img style="width: 624.00px" src="img/4748f2405223198e.png"></p>
+<p>Open a <strong>Windows Explorer</strong> window and go to <strong>This PC</strong> ... <strong>eject the Windows installer</strong> &#34;CD-ROM&#34; then go to the next section, where you&#39;ll download and insert <em>another</em> .iso file as a virtual CD-ROM:</p>
+<p class="image-container"><img style="width: 624.00px" src="img/ed25824041ea9b89.png"></p>
+<aside class="special"><p>Note in the screenshot how much disk space is used by a new VM running Windows 11 Pro (no updates during install) ... 16.7 GB vs 19.7 GB (updated during install, and can take up to 1 hour)</p>
+</aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="VirtIO drivers" duration="4">
+        <p>Please read <em>at least</em> the first 4 paragraphs on this page, so you can get an overview of what we&#39;re trying to achieve in this section.</p>
+<p>For any operating system to function at its peak, it needs to have the correct drivers installed, <em>and</em> we want to ensure that we download those drivers from a reputable source. The good people at the Fedora Project have a VirtIO drivers ISO file that we can download, then use to install these drivers.</p>
+<aside class="warning"><p>You might be thinking ... hang on, we&#39;re installing on a Debian based O/S ... yes, our VM is running on top of a Linux hypervisor, but these drivers are for the Windows operating system</p>
+</aside>
+<p>Start by going to this <a href="https://docs.fedoraproject.org/en-US/quick-docs/creating-windows-virtual-machines-using-virtio-drivers/index.html" target="_blank">Fedora Project</a> webpage using your ChromeOS browser, and follow the link next to <strong>For details on downloading the drivers</strong> ... this will take you to their GitHub page for the VirtIO drivers.</p>
+<p>On their GitHub page, under the <strong>Downloads</strong> heading, click the link for <strong>Stable virt-win ISO</strong> ... save the file to the <em>same</em> folder as your Windows ISO file.</p>
+<aside class="special"><p>The drivers are available on <em>other</em> websites across the web, but we&#39;re doing it <em>this</em> way so that you can see that these files are being obtained from a reputable source</p>
+</aside>
+<p>Assuming your Windows virtual machine is still running, and you ejected the Windows installer CD-ROM gracefully, you can now adjust the settings for this VM by going to <strong>Virtual Machine Manager</strong> and selecting <strong>Details</strong> from the <strong>View</strong> menu ... in the left-hand column, select <strong>SATA CDROM 1</strong> then click the <strong>Browse</strong> button on the right.</p>
+<p>In the same way that we selected the Windows .iso earlier, in the <strong>Locate ISO media volume</strong> dialog, click <strong>ISOs</strong> once to highlight it, then <strong>double-click</strong> the <strong>virtio-win-x.x.xxx.iso</strong> file that you just downloaded ... this will effectively insert the ISO image as a virtual CD-ROM.</p>
+<aside class="warning"><p>You may have to click the <strong>Refresh</strong> button to show all files, including the new .iso</p>
+</aside>
+<p>Back in the Windows VM, open <strong>Windows Explorer</strong> and navigate to the <strong>CD-ROM</strong> drive ... there, you should see the <strong>virtio-win-guest-tools.exe</strong> installer. Double-click this file to launch it. Follow the prompts to install the drivers, just like installing any other software:</p>
+<p class="image-container"><img style="width: 624.00px" src="img/aae7e190ea2b00f1.png"></p>
+<p>You&#39;ll need to <strong>Accept</strong> the licensing terms before continuing</p>
+<p class="image-container"><img style="width: 624.00px" src="img/db856f473dcae045.png"></p>
+<p>Accept the defaults, or pick and choose which drivers to install</p>
+<p class="image-container"><img style="width: 624.00px" src="img/6ecb2c78ed59a6e5.png"></p>
+<p>Windows will show a User Account Control prompt ... click <strong>Yes</strong> to continue</p>
+<p class="image-container"><img style="width: 624.00px" src="img/7cee735003a84fb7.png"></p>
+<p>When the installation if complete, restart the VM for all changes to take effect</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Advanced/CLI" duration="2">
+        <h2 is-upgraded><strong>Automated install or Script</strong></h2>
+<p>You might want to test various O/S versions, or be able to quickly create a VM using a bash script. Here is a sample command to automate a VM installation:</p>
+<p><strong>Notes</strong>:</p>
+<ul>
+<li>each VM <strong>name</strong> and .qcow2 <strong>filename</strong> must be unique</li>
+<li>the backslashes allow breaking up (what would otherwise be) a <strong>very long command-line</strong> into several human-readable lines</li>
+<li>although the VM <em>does</em> still start automatically, the <code>noautoconsole</code> parameter just prevents virt-manager from opening the VM in a not-very-helpful Virtual Machine Viewer</li>
+</ul>
+<pre><code>virt-install \
+  --name Win11 \
+  --ram 8192 \
+  --disk path=/mnt/chromeos/MyFiles/VMs/win11.qcow2,size=60 \
+  --check disk_size=off \
+  --vcpus 4 \
+  --os-variant win11 \
+  --cdrom /mnt/chromeos/ISOs/Win11_24H2_English_x64.iso \
+  --noautoconsole</code></pre>
+<p>For more details on this command and available options, type <code>virt-install --help</code> in your Linux Terminal</p>
+<aside class="special"><p><strong>Tip</strong>: pipe the help output to a text file, for future reference</p>
+</aside>
+<h2 is-upgraded><strong>Clone a Virtual Machine</strong></h2>
+<p>Here is a sample command to make an exact copy of an existing VM (new <strong>name</strong> and <strong>filename</strong> must be unique):</p>
+<pre><code>virt-clone \
+  --original Win11 \
+  --name Win11v2 \
+  --file /mnt/chromeos/MyFiles/VMs/win11v2.qcow2</code></pre>
+<p>For more details on this command and available options, type <code>virt-clone --help</code> in your Linux Terminal</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Tips &amp; Tricks" duration="1">
+        <h2 is-upgraded><strong>Actual file sizes</strong></h2>
+<p>With the .qcow2 file format, Linux only displays the <strong>total disk size</strong>, in both file managers and on the command-line. To find out the <strong>actual disk space</strong> used, use the <strong>qemu-img</strong> command, as shown in this example:</p>
+<pre><code>sudo qemu-img info /mnt/chromeos/MyFiles/VMs/win11.qcow2</code></pre>
+<p>Sample output:</p>
+<pre>image: win11.qcow2
+file format: qcow2
+virtual size: 128 GiB (137438953472 bytes)
+disk size: 16.3 GiB
+cluster_size: 65536
+Snapshot list:
+ID      TAG             VM SIZE              DATE   VM CLOCK   ICOUNT
+1       FreshInstall        0 B 2025-03-10 08:20:13 00:00:00.000  0
+Format specific information:
+    compat: 1.1
+    compression type: zlib
+    lazy refcounts: true
+    refcount bits: 16
+    corrupt: false
+    extended l2: false</pre>
+<p>Note the just-created <strong>snapshot</strong> information, about halfway down</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Sources/Links" duration="1">
+        <h2 is-upgraded><strong>Relating specifically to this guide</strong></h2>
+<p>Original tux image by <a href="https://pixabay.com/users/openclipart-vectors-30363/?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=2025130" target="_blank">OpenClipart-Vectors</a> from <a href="https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=2025130" target="_blank">Pixabay</a></p>
+<p>https://www.redhat.com/en/topics/virtualization/what-is-KVM</p>
+<p>https://wiki.libvirt.org/FAQ.html#what-is-libvirt</p>
+<p>https://en.wikipedia.org/wiki/QEMU</p>
+<p>https://virt-manager.org/</p>
+<p><a href="https://www.microsoft.com/en-us/software-download/windows10ISO" target="_blank">Windows 10 ISO</a></p>
+<p><a href="https://www.microsoft.com/en-us/software-download/windows11" target="_blank">Windows 11 ISO</a></p>
+<p><a href="https://docs.fedoraproject.org/en-US/quick-docs/creating-windows-virtual-machines-using-virtio-drivers/index.html" target="_blank">VirtIO drivers ISO</a></p>
+<h2 is-upgraded><strong>General links you might find helpful</strong></h2>
+<p><a href="https://chromeos.dev/en/productivity/terminal" target="_blank">ChromeOS : Productivity Features / Terminal</a></p>
+<p><a href="https://chromium.googlesource.com/chromiumos/docs/+/master/containers_and_vms.md" target="_blank">Running custom Containers under ChromeOS</a></p>
+
+
+      </google-codelab-step>
+    
+  </google-codelab>
+
+  <script src="https://storage.googleapis.com/claat-public/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/prettify.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/codelab-elements.js"></script>
+  <script src="//support.google.com/inapp/api.js"></script>
+
+</body>
+</html>

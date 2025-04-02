@@ -1,0 +1,259 @@
+
+<!doctype html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <meta charset="UTF-8">
+  <title>Recovery USB for a Chromebook</title>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://storage.googleapis.com/claat-public/codelab-elements.css">
+  <style>
+    .success {
+      color: #1e8e3e;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+  <google-codelab codelab-gaid=""
+                  id="chromebook-recovery-util"
+                  title="Recovery USB for a Chromebook"
+                  environment="web"
+                  feedback-link="https://github.com/mikaere66/mikaere66.github.io/issues">
+    
+      <google-codelab-step label="Who needs this?" duration="2">
+        <p class="image-container"><img alt="Chromebook recovery logo" title="Chromebook recovery logo" style="width: 488.00px" src="img/ff089c4972e09bd2.png"></p>
+<p>You might just <strong>want</strong> to have a plan, which will allow you to recover your Chromebook <strong>in case</strong> disaster strikes, especially if your Chromebook is the <strong>only</strong> computer that you have access to.</p>
+<p>You might <strong>need</strong> to perform a recovery if:</p>
+<ul>
+<li>You get an error message saying <strong>ChromeOS is missing or damaged</strong></li>
+<li>You&#39;ve already tried the suggested steps under <a href="https://support.google.com/chromebook/answer/6309225" target="_blank">Fix System Problems</a></li>
+<li>You&#39;ve asked experts in the <a href="https://support.google.com/chromebook/community" target="_blank">Help Forum</a> about your particular issue,<br>and they <strong>recommended</strong> that you do a complete System Recovery</li>
+</ul>
+<h2 is-upgraded><strong>Prerequisites</strong></h2>
+<h3 is-upgraded><strong>Boot media</strong></h3>
+<p>You will need a microSD card <strong>or</strong> USB thumb drive with at least an <strong>8 GB</strong> capacity.<br>Any/<strong>all data on the drive will be lost</strong> during the recovery disk creation process.</p>
+<aside class="special"><p>For <strong>faster read/write times</strong>, the microSD card should be <strong>Class 6</strong> or greater, or for the USB thumb drive, it should be <strong>USB3</strong> ... slower devices will <em>still</em> work however, just not as efficiently</p>
+</aside>
+<aside class="warning"><p>The <strong>microSD</strong> card method is only relevant <strong>if your Chromebook has a microSD card slot</strong></p>
+</aside>
+<p>From here on, in this guide, we&#39;ll refer to <strong>both</strong> microSD card and USB thumb drive as <strong>recovery media</strong>.</p>
+<h3 is-upgraded><strong>Linux, macOS, and Windows</strong></h3>
+<p>For computers <strong>other than</strong> Chromebooks, both methods outlined here will require <strong>elevated privileges</strong>, in order to write to the recovery media:</p>
+<p><strong>Linux and macOS</strong></p>
+<ul>
+<li>sudo access</li>
+</ul>
+<p><strong>Windows</strong></p>
+<ul>
+<li>Administrator</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Chrome method" duration="20">
+        <p><strong>Recommended</strong> for Chromebooks, macOS, and Windows ...<br>* macOS / Windows require a <a href="https://www.google.com/chrome/" target="_blank">Chrome</a> or <a href="https://www.microsoft.com/edge/download" target="_blank">Edge</a> web browser</p>
+<aside class="warning"><p>Unfortunately, the <strong>Linux</strong> platform is <strong>not supported</strong> at this time. Please refer to the Linux method</p>
+</aside>
+<p><strong>Time/space estimates</strong>:</p>
+<table>
+<tr><td colspan="1" rowspan="1"><p><strong>Phase</strong></p>
+</td><td colspan="1" rowspan="1"><p><strong>mm:ss</strong></p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Downloading</p>
+</td><td colspan="1" rowspan="1"><p>2:20</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Verifying</p>
+</td><td colspan="1" rowspan="1"><p>0:06</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Unpacking</p>
+</td><td colspan="1" rowspan="1"><p>0:10</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Writing to USB</p>
+</td><td colspan="1" rowspan="1"><p>12:00</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Verifying USB</p>
+</td><td colspan="1" rowspan="1"><p>2:30</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p><strong>Total time</strong></p>
+</td><td colspan="1" rowspan="1"><p><strong>17:06</strong></p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Free disk space</p>
+</td><td colspan="1" rowspan="1"><p>15 GB</p>
+</td></tr>
+</table>
+<p>Prepare your recovery media by <strong>backing up any files you want</strong> to keep, because this process will <strong>wipe the entire contents</strong> during creation of the recovery disk.</p>
+<p>Start by opening your Chrome browser, and going to the <a href="https://chromewebstore.google.com/detail/chromebook-recovery-utili/pocpnlppkickgojjlmhdmidojbmbodfm" target="_blank">Chromebook Recovery Utility</a> extension page in the <strong>Chrome Web Store</strong> ... alternatively, in the three-dot menu at top-right of Chrome, select <strong>Extensions</strong> | <strong>Visit Chrome Web Store</strong> and search for <strong>Chromebook Recovery Utility</strong>.</p>
+<table>
+<tr><td colspan="1" rowspan="1"><p class="image-container"><img style="width: 128.00px" src="img/5fa5bae11939450d.jpeg"></p>
+</td><td colspan="1" rowspan="1"><p>Install the extension ... it&#39;s icon should match the one shown at left</p>
+</td></tr>
+</table>
+<p>When you&#39;re ready, start the <strong>Chromebook Recovery Utility</strong> and click <strong>Get started</strong>:</p>
+<p class="image-container"><img style="width: 624.00px" src="img/f91c0d2570ea36ed.png"></p>
+<p>Click the <strong>Select a model from a list</strong> button:</p>
+<p class="image-container"><img style="width: 624.00px" src="img/5f66a0c63cd19831.png"></p>
+<aside class="special"><p>If you&#39;re creating this recovery media on the Chromebook you intend to repair, the Chromebook Recovery Utility will most likely list your Chromebook automatically. Select it, then click Continue</p>
+</aside>
+<p>Click the <strong>Select a manufacturer</strong> drop-down list, then select <strong>your</strong> manufacturer.<br>Repeat this for the <strong>Select a product</strong> menu, selecting <strong>your</strong> Chromebook model.<br>For this guide, we&#39;re going to use the <strong>HP Chromebook 14-db0</strong> as an example:</p>
+<p class="image-container"><img style="width: 624.00px" src="img/78b881a28ebc52e3.png"></p>
+<p>On the next screen, select your <strong>recovery media</strong> from the menu.<br>Take care to ensure that it&#39;s the <strong>correct</strong> disk, as it <strong>will be wiped</strong>:</p>
+<p class="image-container"><img style="width: 624.00px" src="img/be438b802b954d43.png"></p>
+<p>Note that in this example, the recovery media is a <strong>microSD</strong> card. If you are<br>using a USB thumb drive, it will show the <strong>type</strong> of drive &amp; the drive&#39;s <strong>capacity</strong>:</p>
+<p class="image-container"><img style="width: 624.00px" src="img/2e4ff78f1dcf560b.png"></p>
+<p>When you are ready, click the <strong>Create now</strong> button:</p>
+<p class="image-container"><img style="width: 624.00px" src="img/6a95334c429267e5.png"></p>
+<aside class="warning"><p>Try to refrain from using your computer during this time, to avoid any hiccups</p>
+</aside>
+<p>The process will take about 17 minutes, in 5 phases ...<br>Download, verify, unpack, write USB, &amp; then verify USB.</p>
+<p>Phase 1 ... downloading:</p>
+<p class="image-container"><img style="width: 624.00px" src="img/bca00c884f48acf3.png"></p>
+<p>Phase 2 ... verifying download:</p>
+<p class="image-container"><img style="width: 624.00px" src="img/ac4d9f27c423613d.png"></p>
+<p>Phase 3 ... unpacking archive:</p>
+<p class="image-container"><img style="width: 624.00px" src="img/3ba3996c58ca2578.png"></p>
+<p><strong>Windows</strong> will prompt you with a <strong>User Access Control</strong> dialog ...<br>Click the <strong>Yes</strong> button to allowing writing to your recovery media:</p>
+<p class="image-container"><img style="width: 570.00px" src="img/46c3aa088ca4832b.png"></p>
+<p>Phase 4 ... writing USB:</p>
+<p class="image-container"><img style="width: 624.00px" src="img/97e8f2e462120d44.png"></p>
+<p>Phase 5 ... verifying USB:</p>
+<p class="image-container"><img style="width: 624.00px" src="img/96f13077f3005bf7.png"></p>
+<p>Click the <strong>Done</strong> button to quit the Chromebook Recovery Utility:</p>
+<p class="image-container"><img style="width: 624.00px" src="img/4b49eae8c1622173.png"></p>
+<p><strong>Optional</strong>: when the disk has been written, it&#39;s time to clean up. You may want to <strong>remove the temporary folder</strong> created by the Chromebook Recovery Utility ... to do so, please refer to the <strong>Troubleshooting</strong> section, where this is covered in detail.</p>
+<p>That&#39;s it ... you are now ready to use your recovery media to repair your Chromebook.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Linux method" duration="0">
+        <p>While not tested, this method <em>may</em> work within the <strong>Linux Development Environment</strong> on ChromeOS, and/or the <strong>Windows Subsystem for Linux</strong> on Windows, but be aware of your disk space limitations.</p>
+<p><strong>Time/space estimates</strong>:</p>
+<table>
+<tr><td colspan="1" rowspan="1"><p><strong>Phase</strong></p>
+</td><td colspan="1" rowspan="1"><p><strong>Minutes</strong></p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Downloading</p>
+</td><td colspan="1" rowspan="1"><p>3</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Writing to USB</p>
+</td><td colspan="1" rowspan="1"><p>18</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Verifying USB</p>
+</td><td colspan="1" rowspan="1"><p>3</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p><strong>Total time</strong></p>
+</td><td colspan="1" rowspan="1"><p><strong>24</strong></p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Free disk space</p>
+</td><td colspan="1" rowspan="1"><p>6.5 GB</p>
+</td></tr>
+</table>
+<p>This method is a <em>hybrid</em> solution ... while <strong>not</strong> exactly &#34;Google approved&#34;, it gets the job done just fine. There are two distinct parts here:</p>
+<ol type="1" start="1">
+<li>Use the Google <strong>Recovery Tool</strong> script to download the <strong>default</strong> recovery image archive.<br>Alternatively, you can review <em>different</em> versions, and <strong>download manually</strong>, using Part 1b</li>
+<li>Use the well-known <strong>Balena Etcher</strong> utility to write the image to your recovery media</li>
+</ol>
+<p>* <strong>Image</strong> in this context refers to an exact copy of a computer&#39;s hard disk, for <strong>setting up new disks</strong>.</p>
+<p>The first thing you will need is your Chromebook&#39;s <strong>hardware identifier</strong> (HWID):</p>
+<ul>
+<li>if you <em>can</em> get into ChromeOS, just type <strong>chrome://system</strong> into your browser&#39;s address bar, and look for <strong>HWID</strong> ... the first word before the series of dashed numbers is your device code name</li>
+<li>if your Chromebook is stuck at the <strong>recovery screen</strong>, along the bottom you&#39;ll see your Chromebook&#39;s <strong>HWID</strong> printed in the center of the screen</li>
+<li>The last resort is to go to this <a href="https://www.chromium.org/chromium-os/developer-library/reference/development/developer-information-for-chrome-os-devices/" target="_blank">Developer Information for ChromeOS Devices</a> page, scroll down to <strong>Notebooks and Desktops</strong> and start looking for your <strong>make/model</strong> by name. Some hints may be provided by turning your Chromebook upside-down and looking at the manufacturer&#39;s label</li>
+</ul>
+<p>Either way, make a note of your HWID, because you&#39;ll need to type it in when you run the Recovery Tool script ... for this example, we&#39;re going to use the <strong>HP Chromebook 14-db0</strong>, code name: <strong>careena</strong></p>
+<aside class="special"><p>If you prefer to download the recovery image <strong>manually</strong>, or you wish to choose a <strong>different version</strong>, skip to <strong>Part 1b</strong>, where there&#39;s a link to the various <strong>makes/models</strong> and their <strong>available</strong> versions</p>
+</aside>
+<p>The next step is to download the script, referred to by Google as the Recovery Tool:</p>
+<p><a href="https://dl.google.com/dl/edgedl/chromeos/recovery/linux_recovery.sh" target="_blank"><paper-button class="colored" raised><iron-icon icon="file-download"></iron-icon>Download the Recovery Tool</paper-button></a></p>
+<p><strong>Save the file</strong> somewhere logical, so you can find it again, then go to that folder and <strong>grant execute permissions</strong> for the script:</p>
+<ul>
+<li>In your file manager, right-click the file, click the Permissions tab, then check the box next to <strong>Allow executing file as program</strong></li>
+<li>Open your Terminal in the same directory as (or cd into) the location where you saved the file ... type this command to give execute permissions: <code>chmod u+x linux_recovery.sh</code></li>
+</ul>
+<h2 is-upgraded><strong>Part 1</strong></h2>
+<p><strong>Part 1a</strong> uses the <strong>Recovery Tool</strong> script to download the disk image specific to <strong>your</strong> Chromebook:</p>
+<ol type="1" start="1">
+<li>With your terminal open in the folder where you saved the recovery script, run this command: <code>sudo bash linux_recovery.sh</code></li>
+<li>Enter your user password to grant elevated privileges</li>
+<li>When prompted for your <strong>Model string</strong>, type in your hardware ID, then press Enter.<br>The script will download the appropriate recovery archive, then it will unzip the file</li>
+<li>Next, you&#39;ll be prompted for your recovery media ... type <strong>0</strong> then press Enter to quit</li>
+</ol>
+<p><strong>Note</strong> the three separate inputs to prompts from the script ...<br>Remember to substitute <strong>careena</strong> and <strong>237</strong> with <strong>your</strong> values:</p>
+<p class="image-container"><img style="width: 624.00px" src="img/f1a7c895a9b2f24e.png"></p>
+<p><strong>Part 1b</strong> uses a slightly different approach to downloading the recovery image file, and subject to your point of view, is either easier or more advanced, depending on your skill level.</p>
+<p>Go to this <a href="https://chromiumdash.appspot.com/serving-builds?deviceCategory=Chrome%20OS" target="_blank">Chromium Dash</a> web page, then next to the Search icon, type in either your Chromebook <strong>make/model</strong> ... <strong>or</strong> the actual <strong>Hardware ID</strong> itself (HWID).</p>
+<p>It should list your device, and when you click on it, you will be presented with a page outlining the different versions available.</p>
+<p>You will need to <strong>maximize your browser window</strong> to see the full output, including the download links.</p>
+<p>Download the recovery image archive to a folder of your choosing, then unzip the file and proceed to the next step.</p>
+<h2 is-upgraded><strong>Part 2</strong></h2>
+<p>Part 2 involves using <strong>Balena Etcher</strong> to write the recovery image to your recovery media:</p>
+<p><strong>Download Balena Etcher</strong>:</p>
+<p>Go to <a href="https://etcher.balena.io/" target="_blank">https://etcher.balena.io/</a> to download the latest version ... you&#39;ll see a <strong>Download</strong> button at top center. Download the <strong>Etcher for Linux x64 (64-bit) (zip)</strong> version.</p>
+<p>Unzip the file, then open a terminal window (or <code>cd</code> into) the <strong>balenaEtcher-linux-x64</strong> folder ...</p>
+<p>To run the Balena Etcher executable program, type this command, then press the Enter key:</p>
+<pre><code>./balena-etcher</code></pre>
+<p>Follow these steps to flash the recovery image to your recovery media:</p>
+<ul>
+<li>Insert your removable media into the appropriate slot or port</li>
+<li>Click the <strong>Flash from file</strong> button in Balena Etcher</li>
+<li>Navigate to the folder containing the <strong>.bin<br></strong>image file, most likely <strong>/tmp/tmp.crosrec</strong></li>
+<li>Double-click the file to select it. Balena Etcher will open the file</li>
+<li>Now click the <strong>Select target</strong> button in Balena Etcher</li>
+<li>Check the box next to <strong>your removable media</strong>, then click <strong>Select 1</strong></li>
+<li>When you happy to proceed, click the <strong>Flash!</strong> button</li>
+</ul>
+<aside class="warning"><p>Try to refrain from using your PC during this time, to avoid any hiccups</p>
+</aside>
+<p><strong>Optional</strong>: when the disk has been written, it&#39;s time to clean up. You may want to <strong>remove the temporary folder</strong> created by the script ... to do so, run this command in your terminal (adjust the path if required):</p>
+<pre><code>sudo rm -rf /tmp/tmp.crosrec</code></pre>
+<aside class="special"><p>Linux will remove the entire /tmp/ folder on the next reboot anyway</p>
+</aside>
+<p>That&#39;s it ... you are now ready to use your recovery media to repair your Chromebook</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Troubleshooting" duration="2">
+        <h2 is-upgraded><strong>Chrome method</strong></h2>
+<h3 is-upgraded><strong>Windows</strong></h3>
+<aside class="special"><p>If you&#39;ve successfully created your recovery media &amp; want to tidy up, skip over the image, etc.</p>
+</aside>
+<p>If the <strong>Chromebook Recovery Utility</strong> fails with a message similar to the following, you&#39;ll need to free up some disk space on the drive where your user files are stored ... usually C:</p>
+<p class="image-container"><img style="width: 624.00px" src="img/9480839e8a9d07da.png"></p>
+<p><strong>Tidy up</strong>: by default, the <strong>Chromebook Recovery Utility</strong> will download temporary files to a subfolder under <strong>%USERPROFILE%\AppData\Local\Temp</strong></p>
+<p>Note that %USERPROFILE% is a <em>system</em> variable that represents <em>your</em> user subfolder under the main Users folder ... normally C:\Users</p>
+<aside class="warning"><p>By default, <strong>AppData is a hidden folder</strong> ... either copy/paste the path shown above (in bold, ending in Temp) into the <strong>Windows Explorer</strong> address bar, <strong>or</strong> in <strong>Windows Explorer</strong> go to <strong>Options </strong>| <strong>View </strong>and click the checkbox next to <strong>Show hidden files, folders, and drives</strong> and click OK. Now you should be able to navigate your way to the <strong>C:\Users\%USERNAME%\AppData\Local\Temp</strong> folder, as normal</p>
+</aside>
+<p>If you go to this folder, delete all subfolders<strong> beginning with</strong> the name <strong>scoped_dir</strong></p>
+<p>Hopefully, you will now have at least 15 GB free on your %USERPROFILE% drive.</p>
+<p>If not, then you might need to move some files/folders to external storage, even if it&#39;s just temporarily.</p>
+<h3 is-upgraded><strong>Chromebook and macOS</strong></h3>
+<p>To free up disk space on your Chromebook or MacBook, <strong>restart the O/S</strong> ... it should remove any temporary files created in previous sessions.</p>
+<h2 is-upgraded><strong>Linux method</strong></h2>
+<p>Similarly, if you receive an error message about low disk space, you will need to either backup/remove some files, or use another drive as temporary storage for the recovery downloads.</p>
+<p>The script will actually tell you how much disk space there is now, how much is needed, as well as the actually path being used to store temporary files.</p>
+<p>Another thing the script tells you is how to change the path that&#39;s used to store temporary files ... type this command into your terminal just before you run the script:</p>
+<pre>WORKDIR=/path/to/some/dir</pre>
+<p>where <strong>/path/to/some/dir</strong> is the actual full path to the temporary location you wish to use instead.</p>
+
+
+      </google-codelab-step>
+    
+  </google-codelab>
+
+  <script src="https://storage.googleapis.com/claat-public/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/prettify.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/codelab-elements.js"></script>
+  <script src="//support.google.com/inapp/api.js"></script>
+
+</body>
+</html>
