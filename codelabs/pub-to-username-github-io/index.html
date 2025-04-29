@@ -1,0 +1,213 @@
+
+<!doctype html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <meta charset="UTF-8">
+  <title>Publish your codelabs to GitHub</title>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://storage.googleapis.com/claat-public/codelab-elements.css">
+  <style>
+    .success {
+      color: #1e8e3e;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <google-codelab-analytics gaid="UA-49880327-14" ga4id=""></google-codelab-analytics>
+  <google-codelab codelab-gaid=""
+                  codelab-ga4id=""
+                  id="pub-to-username-github-io"
+                  title="Publish your codelabs to GitHub"
+                  environment="web"
+                  feedback-link="https://github.com/mikaere66/mikaere66.github.io/issues">
+    
+      <google-codelab-step label="Check Prerequisites" duration="2">
+        <p>These instructions assume that you have successfully run both the <code>export</code> and <code>dist</code> commands on your own codelab, as outlined in my <a href="https://mikaere66.github.io" target="_blank">other Codelabs</a> and are ready to <em>commit the artifacts into your preferred serving vehicle</em>, in this case <strong>GitHub</strong>.</p>
+<p>It&#39;s also assumed that you <strong>have a GitHub account</strong> already set up and <em>can </em><strong>log in</strong>!</p>
+<h2 is-upgraded>Next Steps</h2>
+<p>These are the steps that we&#39;re going to cover in this tutorial:</p>
+<ol type="1">
+<li><code>git</code> package is installed</li>
+<li>Create a GitHub Pages repo</li>
+<li>Generate an Access token</li>
+<li>Create local ReadMe file</li>
+<li>Initialize your Local repo</li>
+<li>Push files to GitHub repo</li>
+<li>Test upload success</li>
+<li>Troubleshooting, if req&#39;d</li>
+</ol>
+<aside class="warning"><p> Important: in <em>all</em> cases throughout this tutorial, please substitute <strong>&lt;username&gt;</strong> (including the angle brackets) with <em>your</em> actual GitHub username</p>
+</aside>
+<h2 is-upgraded>Check for Git package</h2>
+<p>Run the following command in your terminal to check if the <code>git</code> package is installed:</p>
+<pre><code language="language-bash" class="language-bash">$ which git
+</code></pre>
+<p>If you <strong>get output showing the full path</strong> to the <code>git</code> executable, then skip to the next section.</p>
+<p>However, if you <strong>get no output</strong> whatsoever, then you need to install the <code>git</code> package from your distro&#39;s repositories.</p>
+<p>To do that, run the following command in your terminal:</p>
+<pre><code language="language-bash" class="language-bash">$ sudo apt update &amp;&amp; sudo apt install git
+</code></pre>
+<p>You should now be able to move on to the next section ...</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="GitHub Pages Repo" duration="2">
+        <aside class="special"><p> The big green button below will actually take you to the correct GitHub page for creating a new repository: <strong>https://github.com/new</strong></p>
+<p>Tip: right-click the button and select <strong>Open link in new window</strong> so that <em>this</em> and <em>that</em> page can be positioned side-by-side</p>
+</aside>
+<p>Start by going to <a href="https://github.com/new" target="_blank"><paper-button class="colored" raised>Create a new repository</paper-button></a></p>
+<p>Under <strong>Repository name</strong> enter <code>&lt;username&gt;.github.io</code></p>
+<p>Once your <strong>Repository name</strong> is verified as <strong>available</strong>, leave all other fields with their defaults, then scroll down and click the <strong>Create repository</strong> button at bottom-right</p>
+<p>As soon as GitHub creates your new repository, you&#39;ll be presented with a few suggestions to get you started.</p>
+<p>If you would like to save these steps for future reference, then copy/paste them into an empty text-file <strong>now</strong>, before moving on with next steps, because once you navigate away from that page, you&#39;ll never see them again!</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Generate an Access token" duration="5">
+        <p>Obviously, your GitHub account is password protected, which is a good thing. Not only does this protect unauthorized access in a web browser, but also at the command-line.</p>
+<p>In order to publish files to your new GitHub repository, you need a secure mechanism to allow <strong>only you</strong> to access your account, however just typing in your password is not secure enough!</p>
+<p>This is where GitHub access tokens come into play. By creating an access token on the GitHub website itself, then using that token in lieu of your password at the command-line, you increase your security-level exponentially.</p>
+<p>You may have seen this mentioned in Linux before: <strong>With great power comes great responsibility</strong></p>
+<aside class="special"><p> Tip: once you get to the <strong>Personal access tokens (classic)</strong> step below, create a Bookmark in your browser, so that you can quickly get back to that page in future ... the bookmark would point to <strong>https://github.com/settings/tokens</strong></p>
+</aside>
+<p>To create a GitHub access token, you need to go to Developer Settings. To do this, follow these steps:</p>
+<ul>
+<li>Once logged in, click your profile pic in the top-right corner of the GitHub website</li>
+<li>Select ✶ Settings about 2/3 of the way down the menu</li>
+<li>Scroll down and select ⟨⟩ Developer Settings on the left</li>
+<li>Once in Developer Settings, click the drop-down arrow next to <strong>Personal access tokens</strong> and select <strong>Tokens (classic)</strong></li>
+<li>Find the <strong>Generate new token</strong> menu, either at top-right or in the middle of the page, then click it and select <strong>Generate new token (classic)</strong></li>
+</ul>
+<p>At this point, you <em>may</em> be asked to re-enter your GitHub password ... remember, this is a good thing =)</p>
+<p>Once you&#39;ve reached the <strong>New personal access token (classic)</strong> section, you are presented with <em>alot</em> of choices, but don&#39;t worry ... you&#39;re only interested in a few!</p>
+<ul>
+<li>Start by entering a reference/note regarding this particular access token ... usually something like the current <em>stage</em> of your project. Just for today, type in <code>First commit</code></li>
+<li>Next, you want to set an Expiration date ... it&#39;s best to keep this as <em>short</em> as possible, so click the drop-down menu and select <strong>Custom...</strong></li>
+<li>Click the little calendar icon for <strong>Show date picker</strong>, and select <code>tomorrow's date</code> which is the minimum allowed (it will be highlighted with a gray square)</li>
+<li>Now, at the top of the list (under <strong>Select scopes</strong>) click the first checkbox to select-all in the <strong>repo</strong> scope (Full control of private repositories)</li>
+<li>Scroll down a little, and under the <strong>admin:org</strong> scope, select only the <strong>read:org</strong> checkbox (Read org and team membership, read org projects)</li>
+<li>Scroll down some more, and click the checkbox to select <strong>gist</strong> (Create gists)</li>
+</ul>
+<p>That&#39;s it ... now, scroll to the bottom of the list and click the <strong>Generate token</strong> button</p>
+<p>Next, you will be presented with the original <strong>Personal access tokens (classic)</strong> page, but now it will list your current token(s)</p>
+<aside class="warning"><p> Important: be aware that by <em>coming back</em> to the <strong>Personal access tokens</strong> page at a later time, the access tokens <em>themselves</em> will <strong>not be visible</strong> ... so, either keep that browser tab open while you work, or copy/paste the new access token to a temporary file</p>
+</aside>
+<p>Please keep this information safe, and <strong>do not share</strong> access tokens, as that could pose a huge security risk (no so much from your friend/colleague, but from the information transfer)</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Create local ReadMe file" duration="1">
+        <p>Remember when GitHub created your new repository, and you were presented with a few suggestions to get you started?</p>
+<p>In this section, we&#39;re going to follow the suggestions that were outlined under <strong>Create a new repository on the command line</strong>, but with a few minor changes ...</p>
+<p>Open your terminal in (or <code>cd</code> into) the <strong>parent</strong> directory containing your <code>dist</code> folder, which should be <code>site</code> ... if you <strong>don&#39;t</strong> see a <code>dist</code> folder, you may need to re-run the <code>claat export ...</code> command.</p>
+<p>Remove the existing <code>README.md</code> file by running the following command:</p>
+<pre><code language="language-bash" class="language-bash">$ rm README.md
+</code></pre>
+<p>Now run the following command to create a new <code>README.md</code> file (copy/paste everything, from <code>cat</code> to <code>EOF</code> inclusive, to your terminal):</p>
+<pre><code language="language-bash" class="language-bash">cat &lt;&lt; EOF &gt; README.md
+This repository contains the source files for
+&lt;BR&gt;
+the Codelabs at [https://&lt;username&gt;.github.io](https://&lt;username&gt;.github.io)
+EOF
+</code></pre>
+<aside class="special"><p> The reason you create your <code>README.md</code> file in the <strong>parent</strong> folder is that the <code>build</code> and <code>dist</code> folders are <strong>removed</strong> then <strong>recreated</strong> by the <code>CLaaT</code> tool <em>multiple times</em> during development. By storing the file <em>outside</em> the <code>dist</code> folder, there is little risk of it also being removed</p>
+</aside>
+<p><strong>Note</strong>: you will only have to create this <code>README.md</code> file <strong>once</strong>.</p>
+<p>Alternatively, you can just copy/paste this version straight into a new <code>README.md</code> file, using your favorite text editor:</p>
+<pre>This repository contains the source files for
+&lt;BR&gt;
+the Codelabs at [https://&lt;username&gt;.github.io](https://&lt;username&gt;.github.io)
+</pre>
+<p>Remember to replace <code>&lt;username&gt;</code> with your <em>actual</em> GitHub username</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Initialize Local Repo" duration="2">
+        <p>Now, you need to initialize your local <code>dist</code> folder <strong>as a Git repository</strong>. Initializing as a <strong>git repo</strong> means preparing the <em>unversioned</em> project so that it&#39;s recognized as a legitimate Git repository. The <code>git init</code> command achieves this by creating a (normally hidden) .git folder containing the git &#34;plumbing&#34; and version information</p>
+<aside class="warning"><p> Don&#39;t be too concerned about <em>why</em> you need to do this, but rather that it has to be done <strong>each &amp; every time </strong><code>gulp dist</code> is executed. As previously mentioned, the <code>build</code> and <code>dist</code> folders are <strong>removed</strong> then <strong>recreated</strong> by the <code>CLaaT</code> tool <em>multiple times</em> during development</p>
+</aside>
+<p>Open your terminal in (or <code>cd</code> into) your <code>dist</code> folder, and run the following commands:</p>
+<pre><code>git init
+git add .
+git commit -m &#34;First commit&#34;
+git branch -M master
+git remote add origin https://github.com/&lt;username&gt;/&lt;username&gt;.github.io.git
+
+</code></pre>
+<aside class="special"><p> Note the slight variation from the <em>suggested</em> GitHub commands. In our case, we replaced <br><strong>git add README.md</strong> with <strong>git add .</strong> (dot) ... the dot means <strong>all</strong> modified files &amp; sub-folders. <br> Also, each <code>commit</code> should have a unique <code>message</code> that describes the latest changes. In this case, our commit message matches our access token&#39;s <strong>Note</strong> field, but only to keep it simple</p>
+</aside>
+<p>Also, remember that these five commands (or a variation thereof) will need to be run <strong>each &amp; every time </strong><code>gulp dist</code> is executed, so now might be a good time to create a <code>bash</code> script containing the commands. Tip: replace &#34;First commit&#34; above with <code>$1</code> and ensure that your script has been called with this <code>message</code> parameter!</p>
+<p>There is a <a href="https://raw.githubusercontent.com/mikaere66/mikaere66.github.io/refs/heads/main/codelabs/pub-to-username-github-io/scr/gulp-dist.sh" target="_blank">sample script</a> available for download, within the repo for <a href="https://github.com/mikaere66/mikaere66.github.io" target="_blank">these codelabs</a> ... to <em>view</em> the script, just click the <strong>sample script</strong> link above, or to <em>save</em> the script to your computer, right-click the <strong>sample script</strong> link and select <strong>Save link as</strong> ...</p>
+<p>Keep your terminal open, as you will need it for the next step</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Push files to GitHub" duration="1">
+        <p>The final step in publishing your codelab(s) is to <strong>push</strong> (or upload) your files to the GitHub repository that you created earlier.</p>
+<p>This step assumes that you have run the <code>git add</code> | <code>git commit</code> and other commands on your local repo.</p>
+<p>To <code>push</code> any changes to your remote repository, ensure that you are in the <code>dist</code> directory within your terminal, and run the following command:</p>
+<pre><code language="language-bash" class="language-bash">$ git push -f origin master
+</code></pre>
+<p>The <code>-f</code> switch is required, to forcefully overwrite the remote files, since our <strong>entire</strong> local repo is rewritten each &amp; every time</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Test upload success" duration="1">
+        <p>Once you&#39;ve pushed your files to GitHub, it&#39;s time to check to see if everything works as expected</p>
+<aside class="special"><p> Tip: once you get to the <strong>Pages</strong> step below, create a Bookmark in your browser, so that you can quickly get back to that page in future ... the bookmark would point to <strong>https://github.com/&lt;username&gt;/&lt;username&gt;.github.io/settings/pages</strong></p>
+</aside>
+<p>Start by going to your <strong>https://github.com/&lt;username&gt;/&lt;username&gt;.github.io</strong> repository on GitHub.</p>
+<p>Now click ✶ <strong>Settings</strong> at top-right (if your window is too small, this may be hidden within an ellipsis menu (<code>&hellip;</code>) with the tooltip <em>Additional navigation options</em>). Note that this is <strong>not</strong> the settings for your GitHub account, but the settings for <strong>this</strong> repo.</p>
+<p>Once in Settings, click <strong>Pages</strong> under the <strong>Code, planning, and automation</strong> section at left.</p>
+<p>Under the <strong>GitHub Pages</strong> heading, you should see a message that says <strong>Your site is live at https://&lt;username&gt;.github.io/</strong> with a <code>Visit site</code> button to the right. Click the button to visit your newly published website, which should open in a new tab.</p>
+<aside class="warning"><p> If the GitHub servers are busy, it might take a minute or two for your site to come online. If this is your second or subsequent <strong>push</strong> to GitHub, you&#39;ll see a message under <strong>GitHub Pages</strong> saying <strong>Last deployed by &lt;username&gt; x [minutes | hours] ago</strong>. <br> Refresh this page every 15 seconds or so, until the time-frame changes to <strong>now</strong>. Then, you can view your site using the <code>View site</code> button</p>
+</aside>
+<p>You should now be viewing your codelab(s) ... if not, please review the next section for Troubleshooting</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Troubleshooting Tips" duration="1">
+        <p>Some users have experienced 404 messages when attempting to host a static website on GitHub Pages.</p>
+<p>Here are some suggestions that are proven to be successful, depending on your GitHub setup:</p>
+<h2 is-upgraded>Plan A</h2>
+<p>Open your terminal in (or <code>cd</code> into) the <code>dist</code> folder, then create an empty <code>.nojekyll</code> file by running the following command:</p>
+<pre><code language="language-bash" class="language-bash">$ touch .nojekyll
+</code></pre>
+<p>Next, <code>commit</code> your changes, give it a minute or two, then check your Pages website to see of this solution helped</p>
+<h2 is-upgraded>Plan B</h2>
+<p>If the solution above doesn&#39;t work, you <em>may</em> need to change a few Settings, specifically for your Pages repo.</p>
+<p>Start by going to your <strong>https://github.com/&lt;username&gt;/&lt;username&gt;.github.io</strong> repository on GitHub.</p>
+<p>Now click ✶ <strong>Settings</strong> at top-right (if your window is too small, this may be hidden within an ... ellipsis menu)</p>
+<aside class="special"><p> Note that <em>these</em> Settings are specific to <em>this</em> repo, i.e. they are not global</p>
+</aside>
+<p>Once in Settings, click the ⊝ <strong>Actions</strong> drop-down at left, and select <strong>General</strong>.</p>
+<p>Under the <strong>Actions permissions</strong> heading, select <strong>Disable actions</strong> then click the <strong>Save</strong> button just below it.</p>
+<p>Give it a minute or two, then check your Pages website to see of this solution helped. You <em>may</em> have to recommit your repo (this suggestion is untested)</p>
+
+
+      </google-codelab-step>
+    
+  </google-codelab>
+
+  <script src="https://storage.googleapis.com/claat-public/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/prettify.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/codelab-elements.js"></script>
+  <script src="//support.google.com/inapp/api.js"></script>
+
+</body>
+</html>

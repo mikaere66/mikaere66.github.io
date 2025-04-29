@@ -1,0 +1,262 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="Codelabs provide a guided, tutorial, hands-on coding experience. Most codelabs will step you through the process of building a small application, or adding a new feature to an existing application.">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="generator" content="Codelabs and Guides">
+<meta name="application-name" content="Codelabs and Guides">
+<link rel="canonical" href="https://example.com/">
+<link rel="preconnect" href="https://www.google-analytics.com">
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+    ga('create', 'UA-49880327-14', 'auto');
+    ga('send', 'pageview');
+    
+    ga('create', 'G-173NKJ16L6', 'auto', { name: 'view' });
+    ga('view.send', 'pageview');
+</script>
+<script async src="https://www.google-analytics.com/analytics.js"></script>
+<title>Codelabs and Guides</title>
+<link rel="stylesheet" href="/styles/main.css">
+<link rel="import" href="/elements/elements.html">
+<style is="custom-style">
+:root{--paper-input-container-underline:{ display:none; };--paper-input-container-underline-focus:{ display:none; };--paper-tabs-selection-bar-color:currentcolor}.dropdown-filter{--paper-input-container:{ padding:8px; } }
+</style>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#455a64">
+<meta name="apple-mobile-web-app-title" content="Codelabs and Guides">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/favicons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/images/favicons/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="194x194" href="/images/favicons/favicon-194x194.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/images/favicons/android-chrome-192x192.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/images/favicons/favicon-16x16.png">
+<link rel="manifest" href="site.webmanifest">
+<link rel="mask-icon" href="/images/favicons/safari-pinned-tab.svg" color="#455a64">
+<meta name="msapplication-TileColor" content="#455a64">
+<meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+<meta name="theme-color" content="#455a64">
+<meta name="og:type" property="og:type" content="website">
+<meta name="og:title" property="og:title" content="Codelabs and Guides">
+<meta name="og:description" property="og:description" content="Codelabs provide a guided, tutorial, hands-on coding experience. Most codelabs will step you through the process of building a small application, or adding a new feature to an existing application.">
+<meta name="og:url" property="og:url" content="https://example.com/">
+<meta name="og:site_name" property="og:site_name" content="Codelabs">
+<meta name="og:determiner" property="og:determiner" content="the">
+<meta name="og:locale" property="og:locale" content="en_US">
+<meta name="og:image" property="og:image" content="/images/og-image.png">
+<meta name="og:image:url" property="og:image:url" content="/images/og-image.png">
+<meta name="og:image:type" property="og:image:type" content="image/png">
+<meta name="og:image:width" property="og:image:width" content="1200">
+<meta name="og:image:height" property="og:image:height" content="1200">
+<meta name="og:image:alt" property="og:image:alt" content="Codelabs">
+<meta name="twitter:card" property="twitter:card" content="summary_large_image">
+<meta name="twitter:title" property="twitter:title" content="Codelabs and Guides">
+<meta name="twitter:description" property="twitter:description" content="Codelabs provide a guided, tutorial, hands-on coding experience. Most codelabs will step you through the process of building a small application, or adding a new feature to an existing application.">
+<meta name="twitter:image" property="twitter:image" content="/images/og-image.png">
+<meta name="twitter:url" property="twitter:url" content="https://example.com/">
+</head>
+<body id="app" is="body-bind" class="loading fullbleed">
+<paper-header-panel id="main" mode="standard" main>
+<div id="mainToolbar" class="paper-header">
+<div class="site-width layout horizontal">
+<a href="/">
+<img src="/images/logo.png" class="logo-devs" alt="Codelabs Logo">
+</a>
+<div id="searchbar">
+<paper-input-container no-label-float>
+<paper-icon-button prefix icon="search"></paper-icon-button>
+<label>Search by Name</label>
+<input is="iron-input" bind-value="{{searchVal}}" on-keydown="onSearchKeyDown">
+</paper-input-container>
+</div>
+</div>
+</div>
+<header id="banner" down$="[[_toBoolean(selectedFilter)]]">
+<div class="site-width">
+<h2 class="banner-title">Welcome to Codelabs and Guides</h2>
+<div class="banner-description" data-filter-selected$="[[_toBoolean(selectedFilter)]]">
+<p class="banner-info">
+<b>Codelabs</b> use a combination of code samples, screenshots, and natural language to help users learn how to write and understand code. Most codelabs will step you through the process of building a small application, or adding a new feature to an existing application.
+<br>
+<b>Guides</b> are for topics <i>other than</i> coding, but use the same look &amp; feel as codelabs, along with samples, screenshots, and natural language. Here, we cover a variety of topics; in some cases, not specific to an O/S. New topics are added occasionally, so keep coming back.
+</p>
+</div>
+</div>
+</header>
+<main>
+<div id="filters" class="site-width layout horizontal center justified">
+<div id="sortby">
+<paper-tabs selected="0" noink on-iron-activate="sortBy">
+<paper-tab>A-Z</paper-tab>
+<paper-tab>Recent</paper-tab>
+<paper-tab>Duration</paper-tab>
+</paper-tabs>
+</div>
+</div>
+<card-sorter id="cards" class="site-width">
+<a href="/codelabs/android-studio-on-chromeos/index.html?index=..%2F..index&viewga=G-173NKJ16L6" on-tap="navigate" class="codelab-card category-android" data-category="android" data-title="Android Studio on ChromeOS" data-duration="20" data-updated="2025-04-05T21:22:17Z" data-tags="web" data-pin="">
+<div class="description">Android Studio on ChromeOS</div>
+<div class="card-duration">
+<span>20 min </span>
+<span>Updated Apr 5, 2025</span>
+</div>
+<div class="card-footer">
+<div class="category-icon android-icon"></div>
+<paper-button class="android-bg">Start</paper-button>
+</div>
+</a>
+<a href="/codelabs/chromeos-flex-on-a-pc/index.html?index=..%2F..index&viewga=G-173NKJ16L6" on-tap="navigate" class="codelab-card category-chromeos-flex" data-category="chromeos-flex" data-title="ChromeOS Flex on an x86_64 PC" data-duration="38" data-updated="2025-04-08T23:36:47Z" data-tags="web" data-pin="">
+<div class="description">ChromeOS Flex on an x86_64 PC</div>
+<div class="card-duration">
+<span>38 min </span>
+<span>Updated Apr 8, 2025</span>
+</div>
+<div class="card-footer">
+<div class="category-icon chromeos-flex-icon"></div>
+<paper-button class="chromeos-flex-bg">Start</paper-button>
+</div>
+</a>
+<a href="/codelabs/chromeos-play-on-a-pc/index.html?index=..%2F..index&viewga=G-173NKJ16L6" on-tap="navigate" class="codelab-card category-chromeos-play" data-category="chromeos-play" data-title="ChromeOS/Play on an x86_64 PC" data-duration="92" data-updated="2025-04-09T05:31:13Z" data-tags="web" data-pin="">
+<div class="description">ChromeOS/Play on an x86_64 PC</div>
+<div class="card-duration">
+<span>92 min </span>
+<span>Updated Apr 9, 2025</span>
+</div>
+<div class="card-footer">
+<div class="category-icon chromeos-play-icon"></div>
+<paper-button class="chromeos-play-bg">Start</paper-button>
+</div>
+</a>
+<a href="/codelabs/add-linux-on-chromebook/index.html?index=..%2F..index&viewga=G-173NKJ16L6" on-tap="navigate" class="codelab-card category-crostini" data-category="crostini" data-title="Add a Linux setup on ChromeOS" data-duration="30" data-updated="2025-02-13T22:52:08Z" data-tags="web" data-pin="">
+<div class="description">Add a Linux setup on ChromeOS</div>
+<div class="card-duration">
+<span>30 min </span>
+<span>Updated Feb 13, 2025</span>
+</div>
+<div class="card-footer">
+<div class="category-icon crostini-icon"></div>
+<paper-button class="crostini-bg">Start</paper-button>
+</div>
+</a>
+<a href="/codelabs/author-your-own-codelabs/index.html?index=..%2F..index&viewga=G-173NKJ16L6" on-tap="navigate" class="codelab-card category-docs" data-category="docs" data-title="Create a Codelab in Google Docs" data-duration="42" data-updated="2025-02-10T19:55:44Z" data-tags="web" data-pin="">
+<div class="description">Create a Codelab in Google Docs</div>
+<div class="card-duration">
+<span>42 min </span>
+<span>Updated Feb 10, 2025</span>
+</div>
+<div class="card-footer">
+<div class="category-icon docs-icon"></div>
+<paper-button class="docs-bg">Start</paper-button>
+</div>
+</a>
+<a href="/codelabs/pub-to-username-github-io/index.html?index=..%2F..index&viewga=G-173NKJ16L6" on-tap="navigate" class="codelab-card category-github" data-category="github" data-title="Publish your codelabs to GitHub" data-duration="15" data-updated="2025-03-04T03:52:01+13:00" data-tags="" data-pin="">
+<div class="description">Publish your codelabs to GitHub</div>
+<div class="card-duration">
+<span>15 min </span>
+<span>Updated Mar 3, 2025</span>
+</div>
+<div class="card-footer">
+<div class="category-icon github-icon"></div>
+<paper-button class="github-bg">Start</paper-button>
+</div>
+</a>
+<a href="/codelabs/landing-page-customization/index.html?index=..%2F..index&viewga=G-173NKJ16L6" on-tap="navigate" class="codelab-card category-html" data-category="html" data-title="Custom Codelabs Landing Page" data-duration="14" data-updated="2025-02-10T20:36:39Z" data-tags="web" data-pin="">
+<div class="description">Custom Codelabs Landing Page</div>
+<div class="card-duration">
+<span>14 min </span>
+<span>Updated Feb 10, 2025</span>
+</div>
+<div class="card-footer">
+<div class="category-icon html-icon"></div>
+<paper-button class="html-bg">Start</paper-button>
+</div>
+</a>
+<a href="/codelabs/windows-in-qemu-kvm-cb/index.html?index=..%2F..index&viewga=G-173NKJ16L6" on-tap="navigate" class="codelab-card category-kvm" data-category="kvm" data-title="Windows VM on a Chromebook" data-duration="44" data-updated="2025-04-02T02:09:51Z" data-tags="web" data-pin="">
+<div class="description">Windows VM on a Chromebook</div>
+<div class="card-duration">
+<span>44 min </span>
+<span>Updated Apr 2, 2025</span>
+</div>
+<div class="card-footer">
+<div class="category-icon kvm-icon"></div>
+<paper-button class="kvm-bg">Start</paper-button>
+</div>
+</a>
+<a href="/codelabs/create-your-own-codelabs/index.html?index=..%2F..index&viewga=G-173NKJ16L6" on-tap="navigate" class="codelab-card category-markdown" data-category="markdown" data-title="Create a Codelab with Markdown" data-duration="34" data-updated="2025-03-04T03:51:27+13:00" data-tags="" data-pin="">
+<div class="description">Create a Codelab with Markdown</div>
+<div class="card-duration">
+<span>34 min </span>
+<span>Updated Mar 3, 2025</span>
+</div>
+<div class="card-footer">
+<div class="category-icon markdown-icon"></div>
+<paper-button class="markdown-bg">Start</paper-button>
+</div>
+</a>
+<a href="/codelabs/chromebook-recovery-util/index.html?index=..%2F..index&viewga=G-173NKJ16L6" on-tap="navigate" class="codelab-card category-recovery" data-category="recovery" data-title="Recovery USB for a Chromebook" data-duration="24" data-updated="2025-03-26T23:59:18Z" data-tags="web" data-pin="">
+<div class="description">Recovery USB for a Chromebook</div>
+<div class="card-duration">
+<span>24 min </span>
+<span>Updated Mar 26, 2025</span>
+</div>
+<div class="card-footer">
+<div class="category-icon recovery-icon"></div>
+<paper-button class="recovery-bg">Start</paper-button>
+</div>
+</a>
+<a href="/codelabs/install-wsl-2-in-windows/index.html?index=..%2F..index&viewga=G-173NKJ16L6" on-tap="navigate" class="codelab-card category-wsl" data-category="wsl" data-title="Install/manage WSL2 in Windows" data-duration="36" data-updated="2025-02-13T22:16:31Z" data-tags="web" data-pin="">
+<div class="description">Install/manage WSL2 in Windows</div>
+<div class="card-duration">
+<span>36 min </span>
+<span>Updated Feb 13, 2025</span>
+</div>
+<div class="card-footer">
+<div class="category-icon wsl-icon"></div>
+<paper-button class="wsl-bg">Start</paper-button>
+</div>
+</a>
+</card-sorter>
+<div id="loading-placeholder" class="site-width">
+Loading Codelabs, please wait...
+</div>
+</main>
+<footer id="footer">
+<div class="footer-wrapper site-width">
+<div class="link-list">
+<label>About Author</label>
+<ul>
+<li><a href="https://about.me/mikaere66" target="_blank">on Web</a></li>
+</ul>
+</div>
+<div class="link-list">
+<label>Author Profile</label>
+<ul>
+<li><a href="https://github.com/mikaere66" target="_blank">on GitHub</a></li>
+</ul>
+</div>
+<div class="link-list">
+<label>Codelab Tools</label>
+<ul>
+<li><a href="https://github.com/googlecodelabs/tools" target="_blank">on GitHub</a></li>
+</ul>
+</div>
+<div class="link-list">
+<label>Google Codelabs</label>
+<ul>
+<li><a href="https://codelabs.developers.google.com/" target="_blank">on Web</a></li>
+</ul>
+</div>
+</div>
+</footer>
+<div class="footerbar">
+<div class="site-width layout horizontal center justified">
+<span>
+<a href="https://iconscout.com/icons/html" class="text-underline font-size-sm" target="_blank">Html</a> icon by <a href="https://iconscout.com/contributors/ravindra-kalkani" class="text-underline font-size-sm" target="_blank">Ravindra Kalkani</a>
+</span>
+</div>
+</div>
+</paper-header-panel>
+<script src="/scripts/main.js"></script>
+</body>
+</html>

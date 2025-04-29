@@ -1,0 +1,909 @@
+
+<!doctype html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <meta charset="UTF-8">
+  <title>Install/manage WSL2 in Windows</title>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://storage.googleapis.com/claat-public/codelab-elements.css">
+  <style>
+    .success {
+      color: #1e8e3e;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+  <google-codelab codelab-gaid=""
+                  id="install-wsl-2-in-windows"
+                  title="Install/manage WSL2 in Windows"
+                  environment="web"
+                  feedback-link="https://github.com/mikaere66/mikaere66.github.io/issues">
+    
+      <google-codelab-step label="Introducing WSL" duration="5">
+        <h3 is-upgraded>On this page: Preface | What is virtualization? | What is WSL? |<br>But, is it for me? | What is a Linux distribution? | Prerequisites</h3>
+<h3 is-upgraded><strong>Preface:</strong></h3>
+<ul>
+<li>Throughout this guide, there are certain tasks for you to carry out. This will help with your understanding, by giving you first-hand experience with these commands, etc.</li>
+<li><code>wsl</code> command-line arguments/options are displayed in their <strong>full</strong> iteration. Some (but <em>not</em> all) args/options like <code>--distribution</code> have a shortened version (<code>-d</code>) ... see Help and Links</li>
+<li>All images contain a &#34;title&#34; tag, meaning that if you hover your mouse-cursor over an image, you&#39;ll see a little tooltip with a brief description of what the image portrays.</li>
+<li>To view <em>any</em> image in <strong>full size</strong>, right-click the image, and select <code>Open image in new tab</code></li>
+</ul>
+<p><img alt="Windows WSL Penguins" title="Windows WSL Penguins" style="width: 624.00px" src="img/2ffeef381e1b5f60.png"><br>The image titled &#34;Windows Beware the Penguins&#34; (<a href="https://www.ctrl.blog/entry/lxss-lxrun.html" target="_blank">attribution link</a>) by<br>© 2016 <a href="https://www.daniel.priv.no/" target="_blank">Daniel Aleksandersen</a> is licensed under a <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank">CC BY 4.0 License</a>.</p>
+<h2 is-upgraded><strong>What is virtualization?</strong></h2>
+<p>Virtualization in computing is a <strong>combination</strong> of <strong>hardware</strong> and <strong>software</strong> technologies that allows you to basically run one (or more) operating system(s) on-top-of (or within) another operating system. These operating systems are known as the <strong>host OS</strong> (bare metal) and the <strong>guest OS(s)</strong> (virtual) respectively. Guest operating systems are colloquially referred to as virtual machines (VMs).</p>
+<p>Normally, you&#39;d start by installing special software (called a hypervisor) on the <em>host</em> OS, which manages not only its <em>own</em> program settings, but also the settings for <em>each</em> VM, regarding resource allocation, etc.</p>
+<p>By resources, we&#39;re talking about the CPU, RAM, and HDD/SSD disk space ... these resources are allocated to each virtual machine according to options that you configure, <em>usually</em> within the hypervisor.</p>
+<aside class="special"><p>The above concepts apply to virtualization on <em>all</em> platforms, not just WSL</p>
+</aside>
+<h2 is-upgraded><strong>What is WSL?</strong></h2>
+<p>Windows Subsystem for Linux was first introduced in Windows 10 (Anniversary Update, August 2016). Since then, it has come a <em>long</em> way ... latest iterations are referred to as <strong>WSL 2</strong>. However, we&#39;ll just call it WSL from here on.</p>
+<p>Where third-party solutions focus on providing their own <em>UNIX-like</em> experience, WSL aims for <em>native</em> Linux compatibility. For example, it&#39;s reported that WSL 2 in Windows 11 retains 95% of the performance of native Ubuntu 20.04 LTS.</p>
+<p>The <strong>bottom line</strong> is that WSL provides the <em>software</em> component of virtualization, for all <em>currently-supported</em> Windows versions (including *Home) to run not only a Linux <em>operating systems</em> within Windows, but Linux **<em>GUI apps</em> as well.</p>
+<aside class="warning"><p>* While testing instructions for this guide using Windows 10 within <strong>VMware</strong>, I did run into an issue importing a Windows 11 exported Debian instance. This may be a nested virtualization issue, or it may be that I was unable to install Hyper-V, since Home doesn&#39;t include that feature.</p>
+<p>Edit: although slightly off-topic, I <em>was</em> able to get around this issue by installing Windows 10 Home as a <strong>Qemu-KVM</strong> virtual machine, and editing its configuration file to &#34;hide&#34; that it was in-fact a VM. If interested, please refer to the source article in the Help and Links section</p>
+</aside>
+<aside class="special"><p>** You will need to be on Windows 10 Build 19044+ or Windows 11 to access this feature.</p>
+<p>Please see the link to Microsoft Learn article <strong>Run Linux GUI apps with WSL</strong> in Help/Links</p>
+</aside>
+<h2 is-upgraded><strong>But, is it for me?</strong></h2>
+<p>You may just want to experiment with Linux as a hobby, or you may need to learn it as part of your school curriculum, or for a work project. You might need to test something within a Linux environment, or you may need to run up a Docker container or two.</p>
+<p>If any of these scenarios sound like you, then by all means, give WSL a try. It doesn&#39;t cost you anything, and you might even find it useful.</p>
+<h2 is-upgraded><strong>What is a Linux distribution?</strong></h2>
+<p>To use the Linux <em>lingo</em>, a distribution is often referred to simply as a <strong>distro</strong>. A distro is <strong>one version</strong> of the GNU/Linux operating system. Note the addition of the GNU prefix now, which stands for <strong>GNU&#39;s Not Unix</strong> (GNU is a <em>recursive</em> acronym, where one of the letters stands for the acronym itself).</p>
+<p><strong>Linux</strong> is a <strong>kernel</strong>, developed by Linus Torvalds starting in 1991, while he was still a student at the University of Helsinki in Finland. Originally referred to in several well-known communications as a new &#34;operating system&#34;, technically Linux is &#34;just&#34; the <em>kernel</em> itself (albeit, a<em> very good</em> kernel, powering approximately 96% of servers on the Internet).</p>
+<aside class="special"><p>A kernel is the main (software) interface between the OS and the computer&#39;s hardware.</p>
+<p>Windows itself <em>also</em> has a kernel, but it&#39;s often referred to as the Hardware Abstraction Layer (HAL), a nod to Arthur C. Clarke&#39;s <em>Space Odyssey</em> series</p>
+</aside>
+<p><strong>GNU</strong> makes up the <em>rest</em> of the components required to form a fully-fledged operating system ... everyday software and utilities found in any modern OS.<br>GNU was developed by Richard Stallman ... he first announced the project in 1993.</p>
+<p>For simplicity, we will just use the terms &#34;linux&#34; and &#34;distro&#34; interchangeably, much to the chagrin of many die-hard Linux enthusiasts, no doubt! It&#39;s important to recognize the differences in terminology though, because it helps with your understanding about what Linux <em>is</em>, and is <em>not</em>.</p>
+<p>Back to the <strong>distros</strong>, of which there are <em>many</em> ... there are approximately 200 actively-maintained Linux distributions in the wild. Thankfully with WSL, as of January 2025, there are just 14 to choose from.</p>
+<h2 is-upgraded><strong>Prerequisites</strong></h2>
+<ul>
+<li>A reasonably modern desktop/laptop computer</li>
+<li>Virtualization must be enabled in the BIOS/UEFI<br>(this is the <em>hardware</em> component of virtualization)</li>
+<li>Windows 10 (build 1607 or later) or Windows 11</li>
+<li>Internet access (while installing the software)</li>
+</ul>
+<p><strong>Explanation</strong>:</p>
+<p>The <strong>virtualization</strong> feature built into your hardware&#39;s CPU must be <strong>enabled</strong> in order to use WSL. As well as consisting of <em>software</em>, virtualization is a <em>hardware</em> feature, provided by your computer&#39;s Central Processing Unit. For the <em>Intel</em> brand of CPUs, this feature is known as <strong>VT-x</strong>, whereas for the <em>AMD</em> brand, it&#39;s called <strong>AMD-V</strong>.</p>
+<p>Guiding you through how to actually enable this setting in your BIOS/UEFI setup is beyond the scope of this tutorial, because every PC brand is slightly different. What we can do, however, is show you <strong>how to check, within Windows, whether hardware virtualization is enabled or not</strong> ...</p>
+<p><strong>in Windows 10</strong>:</p>
+<ul>
+<li>Right-click an empty area of the Taskbar and select <code>Task Manager</code></li>
+<li>Click the <code>More details</code> button to expand the window (if applicable)</li>
+<li>Along the top row of Task Manager, select the <code>Performance</code> tab</li>
+<li>Ensure that <code>CPU</code> is selected, then at bottom right, you&#39;ll see Virtualization<br>(you may have to resize or maximize the window to see all the text)</li>
+<li>If it says <em>Enabled</em> next to <code>Virtualization</code>, then all is well</li>
+</ul>
+<p class="image-container"><img alt="Windows 10 Task Manager" title="Windows 10 Task Manager" style="width: 624.00px" src="img/3d484b7bcb8fe62b.png"></p>
+<p>If virtualization is <strong>not</strong> enabled for your PC, please search on Google for <strong>&lt;your-make&gt; &lt;your-model&gt; enable virtualization BIOS UEFI</strong> ... you will need to restart your computer to complete these steps.</p>
+<p><strong>in Windows 11</strong>:</p>
+<ul>
+<li>Right-click an empty area of the Taskbar and select <code>Task Manager</code></li>
+<li>In the left column of Task Manager, select the <code>Performance</code> tab</li>
+<li>Ensure that <code>CPU</code> is selected, then at bottom right, you&#39;ll see Virtualization<br>(you may have to resize or maximize the window to see all the text)</li>
+<li>If it says <em>Enabled</em> next to <code>Virtualization</code>, then all is well</li>
+</ul>
+<p class="image-container"><img alt="Windows 11 Task Manager" title="Windows 11 Task Manager" style="width: 624.00px" src="img/efd7fbf5dd0654d0.png"></p>
+<p>If virtualization is <strong>not</strong> enabled for your PC, please search on Google for <strong>&lt;your-make&gt; &lt;your-model&gt; enable virtualization BIOS UEFI</strong> ... you will need to restart your computer to complete these steps</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Glossary of terms" duration="2">
+        <p>Usually, the Glossary comes after-the-fact, i.e. at the <em>end</em> of a book, but here we&#39;ll cover these technical terms early, so that you have a better understanding <em>before</em> we dive in ...</p>
+<table>
+<tr><td colspan="1" rowspan="1"><p><strong>Term</strong></p>
+</td><td colspan="1" rowspan="1"><p><strong><em>PoS</em></strong></p>
+</td><td colspan="1" rowspan="1"><p><strong>Definition</strong></p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>bash</p>
+</td><td colspan="1" rowspan="1"><p><em>n.</em></p>
+</td><td colspan="1" rowspan="1"><p>An interactive command-interpreter, the default in many Linux distros</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>clone</p>
+</td><td colspan="1" rowspan="1"><p><em>v.</em></p>
+</td><td colspan="1" rowspan="1"><p>In this context, create an <strong>exact copy</strong> of a distro *<em>instance (*</em> see below)</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>distro</p>
+</td><td colspan="1" rowspan="1"><p><em>n.</em></p>
+</td><td colspan="1" rowspan="1"><p>Short for distribution (<em>n.</em>) ... <strong>one version</strong> of the GNU/Linux operating system</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>friendly name</p>
+</td><td colspan="1" rowspan="1"><p><em>n.</em></p>
+</td><td colspan="1" rowspan="1"><p>A name for use by <em>humans</em>; in this context, applied to a distribution by its developers</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Home</p>
+</td><td colspan="1" rowspan="1"><p><em>a.</em></p>
+</td><td colspan="1" rowspan="1"><p>If someone mentions Windows <strong>Home</strong>, they&#39;re referring to Microsoft&#39;s <strong>consumer version</strong> of the Windows operating system, as opposed to Windows Professional or Server, for example</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>$HOME</p>
+</td><td colspan="1" rowspan="1"><p><em>n.</em></p>
+</td><td colspan="1" rowspan="1"><p>In all Linux distros exists the <strong>/home</strong> folder, which contains each user&#39;s own <code>$HOME</code> directory, which (when logged in) equates to <code>/home/&lt;username&gt;</code></p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>installation</p>
+</td><td colspan="1" rowspan="1"><p><em>n.</em></p>
+</td><td colspan="1" rowspan="1"><p>When we use <code>wsl</code> to install an actual Linux distribution, e.g. Debian or Ubuntu (or install one from the Microsoft Store) this will be referred to within this tutorial as an <strong>installation</strong></p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>instance</p>
+</td><td colspan="1" rowspan="1"><p><em>n.</em></p>
+</td><td colspan="1" rowspan="1"><p>When we run the <code>wsl --list</code> command, each <em>listing</em> is an <strong>instance</strong> ... you <em>may</em> have more than one <em>copy</em> of the same <em>installation</em> but with a different name</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Linux</p>
+</td><td colspan="1" rowspan="1"><p><em>n.</em></p>
+</td><td colspan="1" rowspan="1"><p>GNU/Linux (commonly shortened to Linux) ... an open-source operating system, commonly used for servers, but can also be used as a <strong>desktop</strong> OS</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p><code>$PATH</code></p>
+</td><td colspan="1" rowspan="1"><p><em>n.</em></p>
+</td><td colspan="1" rowspan="1"><p>An environment variable that contains multiple <em>paths</em> (separated by <code>:</code>) to many <em>(usually) system</em> directories. Each path is searched in turn, so that you don&#39;t have to type the full path AND filename for system (and potentially your own) executable files. Windows has a PATH variable, except that it&#39;s referenced as <code>%PATH%</code></p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>virtualization</p>
+</td><td colspan="1" rowspan="1"><p><em>n.</em></p>
+</td><td colspan="1" rowspan="1"><p>A computing technology that creates virtual versions of physical hardware, software, and networking</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>wsl</p>
+</td><td colspan="1" rowspan="1"><p><em>n.</em></p>
+</td><td colspan="1" rowspan="1"><p>Windows Subsystem for Linux ... a feature of the <em>modern</em> Windows operating system that allows you to run a Linux environment on your Windows machine, without the need for a separate virtual machine or dual booting. It&#39;s also the name of the executable program file: <code>wsl.exe</code></p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>wsl-name</p>
+</td><td colspan="1" rowspan="1"><p><em>n.</em></p>
+</td><td colspan="1" rowspan="1"><p>A name for use by <em>computers</em>; or in this case, the <code>wsl</code> executable program. Notice that there are <strong>no spaces</strong> in these names (covered in the next section)</p>
+</td></tr>
+</table>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Distros available" duration="1">
+        <p>As mentioned in a previous section, as of January 2025, there are 14 different Linux distributions available for installation with WSL ... remember to get an <em>updated</em> list before choosing a distro. To do so, run the following command in your <code>terminal</code>:</p>
+<pre><code>wsl --list --online</code></pre>
+<aside class="special"><p>Notes: <strong>MOTD</strong> = Message of the Day, <strong>PKG</strong> = Package Manager, <strong>Updated</strong> = MB <em>after</em> Updates</p>
+</aside>
+<aside class="warning"><p>Important: both the SUSE <strong>Enterprise</strong> versions require registration to be eligible for updates</p>
+</aside>
+<p>To install a particular distro, <strong>wsl-name</strong> should be used, e.g. <code>--distribution &lt;wsl-name&gt;</code></p>
+<table>
+<tr><td colspan="1" rowspan="1"><p><strong>wsl-name</strong></p>
+</td><td colspan="1" rowspan="1"><p><strong>Friendly name</strong></p>
+</td><td colspan="1" rowspan="1"><p><strong>MOTD</strong></p>
+</td><td colspan="1" rowspan="1"><p><strong>PKG</strong></p>
+</td><td colspan="1" rowspan="1"><p><strong>MB</strong></p>
+</td><td colspan="1" rowspan="1"><p><strong>Updated</strong></p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Ubuntu</p>
+</td><td colspan="1" rowspan="1"><p>Ubuntu</p>
+</td><td colspan="1" rowspan="1"><p>Y</p>
+</td><td colspan="1" rowspan="1"><p>apt</p>
+</td><td colspan="1" rowspan="1"><p>1669</p>
+</td><td colspan="1" rowspan="1"><p>Y</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Debian</p>
+</td><td colspan="1" rowspan="1"><p>Debian GNU/Linux</p>
+</td><td colspan="1" rowspan="1"><p>N</p>
+</td><td colspan="1" rowspan="1"><p>apt</p>
+</td><td colspan="1" rowspan="1"><p>545</p>
+</td><td colspan="1" rowspan="1"><p>Y</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>kali-linux</p>
+</td><td colspan="1" rowspan="1"><p>Kali Linux Rolling</p>
+</td><td colspan="1" rowspan="1"><p>Y</p>
+</td><td colspan="1" rowspan="1"><p>apt</p>
+</td><td colspan="1" rowspan="1"><p>972</p>
+</td><td colspan="1" rowspan="1"><p>Y</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Ubuntu-18.04</p>
+</td><td colspan="1" rowspan="1"><p>Ubuntu 18.04 LTS</p>
+</td><td colspan="1" rowspan="1"><p>N</p>
+</td><td colspan="1" rowspan="1"><p>apt</p>
+</td><td colspan="1" rowspan="1"><p>1382</p>
+</td><td colspan="1" rowspan="1"><p>Y</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Ubuntu-20.04</p>
+</td><td colspan="1" rowspan="1"><p>Ubuntu 20.04 LTS</p>
+</td><td colspan="1" rowspan="1"><p>Y</p>
+</td><td colspan="1" rowspan="1"><p>apt</p>
+</td><td colspan="1" rowspan="1"><p>2499</p>
+</td><td colspan="1" rowspan="1"><p>Y</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Ubuntu-22.04</p>
+</td><td colspan="1" rowspan="1"><p>Ubuntu 22.04 LTS</p>
+</td><td colspan="1" rowspan="1"><p>Y</p>
+</td><td colspan="1" rowspan="1"><p>apt</p>
+</td><td colspan="1" rowspan="1"><p>1444</p>
+</td><td colspan="1" rowspan="1"><p>Y</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Ubuntu-24.04</p>
+</td><td colspan="1" rowspan="1"><p>Ubuntu 24.04 LTS</p>
+</td><td colspan="1" rowspan="1"><p>Y</p>
+</td><td colspan="1" rowspan="1"><p>apt</p>
+</td><td colspan="1" rowspan="1"><p>1638</p>
+</td><td colspan="1" rowspan="1"><p>Y</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>OracleLinux_7_9</p>
+</td><td colspan="1" rowspan="1"><p>Oracle Linux 7.9</p>
+</td><td colspan="1" rowspan="1"><p>N</p>
+</td><td colspan="1" rowspan="1"><p>yum</p>
+</td><td colspan="1" rowspan="1"><p>1065</p>
+</td><td colspan="1" rowspan="1"><p>Y</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>OracleLinux_8_7</p>
+</td><td colspan="1" rowspan="1"><p>Oracle Linux 8.7</p>
+</td><td colspan="1" rowspan="1"><p>N</p>
+</td><td colspan="1" rowspan="1"><p>yum</p>
+</td><td colspan="1" rowspan="1"><p>1126</p>
+</td><td colspan="1" rowspan="1"><p>Y</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>OracleLinux_9_1</p>
+</td><td colspan="1" rowspan="1"><p>Oracle Linux 9.1</p>
+</td><td colspan="1" rowspan="1"><p>N</p>
+</td><td colspan="1" rowspan="1"><p>yum</p>
+</td><td colspan="1" rowspan="1"><p>1157</p>
+</td><td colspan="1" rowspan="1"><p>Y</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>openSUSE-Leap-15.6</p>
+</td><td colspan="1" rowspan="1"><p>openSUSE Leap 15.6</p>
+</td><td colspan="1" rowspan="1"><p>N</p>
+</td><td colspan="1" rowspan="1"><p>zypper</p>
+</td><td colspan="1" rowspan="1"><p>940</p>
+</td><td colspan="1" rowspan="1"><p>Y</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>SUSE-Linux-Enterprise-15-SP5</p>
+</td><td colspan="1" rowspan="1"><p>SUSE Linux Enterprise 15 SP5</p>
+</td><td colspan="1" rowspan="1"><p>N</p>
+</td><td colspan="1" rowspan="1"><p>zypper</p>
+</td><td colspan="1" rowspan="1"><p><strong>780</strong></p>
+</td><td colspan="1" rowspan="1"><p><strong>N</strong></p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>SUSE-Linux-Enterprise-15-SP6</p>
+</td><td colspan="1" rowspan="1"><p>SUSE Linux Enterprise 15 SP6</p>
+</td><td colspan="1" rowspan="1"><p>N</p>
+</td><td colspan="1" rowspan="1"><p>zypper</p>
+</td><td colspan="1" rowspan="1"><p><strong>812</strong></p>
+</td><td colspan="1" rowspan="1"><p><strong>N</strong></p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>openSUSE-Tumbleweed</p>
+</td><td colspan="1" rowspan="1"><p>openSUSE Tumbleweed</p>
+</td><td colspan="1" rowspan="1"><p>N</p>
+</td><td colspan="1" rowspan="1"><p>zypper</p>
+</td><td colspan="1" rowspan="1"><p>556</p>
+</td><td colspan="1" rowspan="1"><p>Y</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p><strong>Just for fun</strong></p>
+</td><td colspan="1" rowspan="1"><p><strong>All distros</strong></p>
+</td><td colspan="1" rowspan="1"><p>N/A</p>
+</td><td colspan="1" rowspan="1"><p><strong>Total</strong></p>
+</td><td colspan="1" rowspan="1"><p><strong>16586</strong></p>
+</td><td colspan="1" rowspan="1"></td></tr>
+</table>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="How to install WSL" duration="5">
+        <h3 is-upgraded><strong>On this page: Using the command-line | Post-install tasks (Updates | Hostname)</strong></h3>
+<p>For the remainder of this tutorial, please substitute <em>any/all</em> mentions of <strong>&lt;username&gt;</strong> with <em>your</em> own actual Linux/Windows <code>username</code> (as the case may be, and <em>without</em> the angle brackets).<br>Note that these two usernames are not necessarily the same:</p>
+<ul>
+<li>your <strong>Windows 10</strong> username appears when you hover your mouse-cursor over the User icon at the left-hand edge of the Start Menu</li>
+<li>your <strong>Windows 11</strong> username appears at the bottom-left corner of the Start Menu</li>
+<li>your <strong>Linux</strong> distro&#39;s username is the one that you assigned when you first set up that distro, and is visible at the Linux command-prompt</li>
+</ul>
+<h2 is-upgraded><strong>Using the command-line</strong></h2>
+<p>While it <em>is</em> possible to install WSL using mainly GUI methods, it&#39;s a good idea to start gaining some familiarity with the command-prompt, as that&#39;s a <em>lot</em> of what WSL is about.<br>Another good reason for installing WSL on the command-line is that it requires one less <em>major</em> step, and thus, one less reboot!</p>
+<aside class="special"><p>Tip: throughout this tutorial, we will refer to the <strong>Windows Terminal</strong> app as simply <code>terminal</code>, just to get you familiar with the name. When using the Linux command-line, long-time users often refer to this as simply &#34;opening a terminal&#34; or they&#39;ll say &#34;run this command in terminal&#34;. For this tutorial, you may choose to use either the original <strong>Command Prompt</strong>, or the more feature-rich <strong>PowerShell</strong>, but it <em>really</em> doesn&#39;t matter ... whichever you prefer. Note that we&#39;ll be using the terms command-line, command-prompt, and the terminal interchangeably, <em>unless</em> otherwise specified</p>
+</aside>
+<h3 is-upgraded>Please do NOT run these commands <strong><em>yet</em></strong></h3>
+<p>To get an <em>updated</em> list of available distros before installing, open your Windows <code>terminal</code> and run the following command:</p>
+<pre><code>wsl --list --online</code></pre>
+<p>To install WSL for the <strong>first time</strong>, run the following command, allowing <strong>Ubuntu</strong> as default:</p>
+<pre><code>wsl --install</code></pre>
+<aside class="warning"><p>Note: if you install WSL <em>without</em> specifying a distribution, <strong>Ubuntu</strong> will be installed by <strong>default</strong></p>
+</aside>
+<p>To install WSL for the <strong>first time</strong>, specifying a <strong>&lt;different-distro&gt;</strong>, run the following command:</p>
+<pre><code>wsl --install --distribution Debian</code></pre>
+<p>Task: now that you&#39;ve read through the options available, follow these steps to install WSL on your computer:</p>
+<ul>
+<li>view the distros <em>currently</em> available by listing those available online, as above</li>
+<li>decide which one you&#39;d like (taking note of the <strong>wsl-name</strong> in the first column)</li>
+<li>install it (together with WSL itself) using the command-syntax outlined below</li>
+</ul>
+<pre><code>wsl --install --distribution &lt;distro-name&gt;</code></pre>
+<p>You&#39;ll notice that the installation proceeds in <em>two</em> distinct phases ... WSL itself first, then your &lt;distro&gt; ... please note the message regarding <strong>changes will not be effective until the system is rebooted</strong></p>
+<p class="image-container"><img alt="WSL install Debian w/Installation" title="WSL install Debian w/Installation" style="width: 624.00px" src="img/5de8db3ae2670853.png"></p>
+<table>
+<tr><td colspan="1" rowspan="1"><p class="image-container"><img alt="Windows 10 UAC Dialog 1" title="Windows 10 UAC Dialog 1" style="width: 298.00px" src="img/7a81c6ae8dd91d10.png"></p>
+</td><td colspan="1" rowspan="1"><p class="image-container"><img alt="Windows 10 UAC Dialog 2" title="Windows 10 UAC Dialog 2" style="width: 298.00px" src="img/d55b7076749d6d6e.png"></p>
+</td></tr>
+</table>
+<aside class="warning"><p>Important: not just for WSL installation, but in general, whenever you see a message prompting you to restart your computer after installing/updating either the OS itself or software, please heed this &#34;warning&#34; and restart your PC before attempting to use your new software</p>
+</aside>
+<h2 is-upgraded><strong>Post-install tasks</strong></h2>
+<h3 is-upgraded><strong>Install any system updates</strong></h3>
+<p>Remember that a Linux distro (even in WSL) is <em>still</em> an operating system ... and just like any other OS, it needs to be updated so that it&#39;s able to run at its best.</p>
+<p>The first thing you should do is update the package source files (if applicable), then install any updates. To do so, run the appropriate command, based on your distro&#39;s package management system:</p>
+<table>
+<tr><td colspan="1" rowspan="1"><p><strong>Package Management</strong></p>
+</td><td colspan="1" rowspan="1"><p><strong>Commands</strong></p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>apt</p>
+</td><td colspan="1" rowspan="1"><p><code>sudo apt update && sudo apt upgrade</code></p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>yum</p>
+</td><td colspan="1" rowspan="1"><p><code>sudo yum update</code></p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>zypper</p>
+</td><td colspan="1" rowspan="1"><p><code>sudo zypper up</code></p>
+</td></tr>
+</table>
+<aside class="special"><p>Notes: yum update <em>also</em> runs yum upgrade.</p>
+<p>SUSE distros update <em>automatically</em> upon install, however Enterprise versions require registration</p>
+</aside>
+<pre>Task: if you&#39;re not using an Enterprise version without registration,
+have a go at updating the system using the appropriate command(s)
+within Linux ... don&#39;t worry about breaking your distro,
+you&#39;ll learn how to remove it in the next step</pre>
+<h3 is-upgraded><strong>Not keen on that hostname?</strong></h3>
+<p>If your Windows computer uses a default-style Computer name, like DESKTOP-ABC123W1, you <em>can</em> change it, either in Windows, in Linux, or both. Note that this is <strong>not simply a cosmetic change</strong>, because it&#39;s also your system&#39;s hostname within both operating systems. Some people have the opinion that it&#39;s a good idea to have the <em>same</em> Linux hostname as the Windows PC.</p>
+<p>However, if you&#39;re not one of those people, then here&#39;s how to change the hostname on Linux:<br>Start the distro on which you wish to change the hostname, and on the Linux command-line, type the following command:</p>
+<pre><code>sudo nano /etc/wsl.conf</code></pre>
+<p>(using <code>elevated privileges</code> run the <code>nano</code> text editor to open the <code>/etc/wsl.conf</code> file)</p>
+<p>Add this content to the <strong>end</strong> of the file, where <code>&lt;desired-hostname&gt;</code> is your preferred <code>hostname</code> :</p>
+<pre><code>[network]
+hostname = &lt;desired-hostname&gt;
+generateHosts = false</code></pre>
+<aside class="warning"><p>Important: if your file <strong>already</strong> contains <em>any</em> of these lines, be mindful about editing values for the <em>current</em> entries. Regarding the <strong>[network]</strong> line, please do <strong>not</strong> add it a <em>second</em> time, if it already exists</p>
+</aside>
+<aside class="special"><p>To save a file in <code>nano</code> press <code>Ctrl</code> + <code>O</code> simultaneously ... to quit <code>nano</code> press <code>Ctrl</code> + <code>X</code></p>
+<p>Tip: to save &amp; exit <strong>all in one</strong> smooth move, press <code>Ctrl</code> + <code>X</code> <em>without</em> saving, then <code>Y</code> for yes</p>
+</aside>
+<p>Next, you need to edit the <code>/etc/hosts</code> file, and change the hostname there as well.<br>To do so, run the following command, also on the Linux command-line:</p>
+<pre><code>sudo nano /etc/hosts</code></pre>
+<p>Replace all occurrences of DESKTOP-ABC123W1 (or whatever) with <code>&lt;desired-hostname&gt;</code> where <code>&lt;desired-hostname&gt;</code> is your preferred <code>hostname</code> :</p>
+<table>
+<tr><td colspan="1" rowspan="1"><p><strong>Before</strong>:</p>
+</td><td colspan="1" rowspan="1"></td><td colspan="1" rowspan="1"></td></tr>
+<tr><td colspan="1" rowspan="1"><p>127.0.0.1</p>
+</td><td colspan="1" rowspan="1"><p>DESKTOP-ABC123W1.</p>
+</td><td colspan="1" rowspan="1"><p>DESKTOP-ABC123W1</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p><strong>After</strong>:</p>
+</td><td colspan="1" rowspan="1"></td><td colspan="1" rowspan="1"></td></tr>
+<tr><td colspan="1" rowspan="1"><p>127.0.0.1</p>
+</td><td colspan="1" rowspan="1"><p><code>&lt;desired-hostname&gt;.</code></p>
+</td><td colspan="1" rowspan="1"><p><code>&lt;desired-hostname&gt;</code></p>
+</td></tr>
+</table>
+<p>Save the file and exit nano, using the same techniques for saving/exiting the previous file ...<br>Now, you need to exit the distro by typing the <code>exit</code> command on your Linux command-line.</p>
+<p>If the distro&#39;s window closes upon exiting, please start a new Windows <code>terminal</code> ...<br>Back at the Windows <code>terminal</code> command-prompt, now run the following command:</p>
+<pre><code>wsl --terminate &lt;distro-name&gt;</code></pre>
+<p>This will ensure that the distro completely shuts down ... we want to effectively <em>reboot</em> the distro.</p>
+<p>Next, still in your Windows <code>terminal</code> type the following command:</p>
+<pre><code>wsl --list --verbose</code></pre>
+<p>Ensure that the <code>&lt;distro-name&gt;</code> (that we just edited above) is in the <strong>Stopped</strong> state.<br>If it&#39;s not, re-run the above command every 10 seconds or so until WSL reports it as Stopped.</p>
+<p class="image-container"><img alt="Debian distro Stopped state" title="Debian distro Stopped state" style="width: 346.00px" src="img/16e15f6a903d835.png"></p>
+<p>You can then <strong>relaunch</strong> your distro by running the following command:</p>
+<pre><code>wsl --distribution &lt;distro-name&gt;</code></pre>
+<p>You should now see your new <code>&lt;desired-hostname&gt;</code> as part of the Linux command-prompt, <strong>and</strong> you can check that <code>/etc/hosts</code> is <em>still</em> as you edited it, by running the following command:</p>
+<pre><code>cat /etc/hosts</code></pre>
+<p class="image-container"><img alt="Debian custom hostname" title="Debian custom hostname" style="width: 624.00px" src="img/adba0dace313512a.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Backup and restore" duration="5">
+        <table>
+<tr><td colspan="1" rowspan="1"><h3 is-upgraded><strong>On this page:</strong></h3>
+</td><td colspan="1" rowspan="1"><h3 is-upgraded><strong>Back up an instance | Restore an instance |</strong><br><strong>Rename an instance | Move an instance</strong></h3>
+</td></tr>
+</table>
+<p>This section comes <em>before</em> Add/remove Distros because one of our <strong>tasks</strong> here is to <strong>back up an instance</strong> before we <em>remove</em> the distro (a task in the next section)</p>
+<aside class="warning"><p>Important: for <strong>all</strong> backup/restore operations, please ensure that the distro is <strong>not</strong> Running.</p>
+<p>Even after properly exiting a distro instance, it can take up to 15 seconds for it to shut down</p>
+</aside>
+<p>To view a list of <em>your</em> distro <strong>instances</strong>, including <strong>state</strong>, run this command in <code>terminal</code>:</p>
+<pre><code>wsl --list --verbose</code></pre>
+<aside class="special"><p>For backup/restore commands, view the appropriate table for arguments/option requirements</p>
+</aside>
+<h2 is-upgraded><strong>Back up an instance</strong></h2>
+<table>
+<tr><td colspan="1" rowspan="1"><p><strong>Executable</strong></p>
+</td><td colspan="1" rowspan="1"><p><strong>Argument</strong></p>
+</td><td colspan="1" rowspan="1"><p><strong>Option</strong></p>
+</td><td colspan="1" rowspan="1"><p><strong>Destination path\filename</strong></p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>wsl.exe</p>
+</td><td colspan="1" rowspan="1"><p>--export</p>
+</td><td colspan="1" rowspan="1"><p>&lt;distro-name&gt;</p>
+</td><td colspan="1" rowspan="1"><p>&lt;c:\path\to\filename.tar&gt;</p>
+</td></tr>
+</table>
+<p>Backup filenames must have the <code>.tar</code> file extension</p>
+<p><strong>Tasks</strong>:</p>
+<ul>
+<li>Back up your instance of the distro that you installed along with WSL itself. To achieve this, start by creating a folder in Windows in which to store your backups</li>
+<li>Then run the <code>wsl</code> command with the <code>--export</code> argument accompanied by the <code>&lt;distro-name&gt;</code> option and finally, the required <code>&lt;path\filename&gt;</code> ... all in your Windows <code>terminal</code><br></li>
+</ul>
+<p>Let&#39;s carry out <em>both</em> of those tasks on the Windows command-line:</p>
+<pre>cd \
+md Backups
+wsl --export debian C:\Backups\Debian20250127.tar</pre>
+<aside class="special"><p>Tip: notice that <em>most</em> commands/paths at the Windows command-prompt are <strong>not</strong> case-sensitive</p>
+</aside>
+<p class="image-container"><img alt="Export Debian to Backups folder" title="Export Debian to Backups folder" style="width: 464.00px" src="img/1df1fc522f218bd8.png"></p>
+<p>You&#39;ll notice that our <code>.tar</code> file has a size of 268 MB, which is slightly smaller than the sum of its files</p>
+<h2 is-upgraded><strong>Restore an instance</strong></h2>
+<table>
+<tr><td colspan="1" rowspan="1"><p><strong>Executable</strong></p>
+</td><td colspan="1" rowspan="1"><p><strong>Argument</strong></p>
+</td><td colspan="1" rowspan="1"><p><strong>Option</strong></p>
+</td><td colspan="1" rowspan="1"><p><strong>Destination folder</strong></p>
+</td><td colspan="1" rowspan="1"><p><strong>Source path\filename</strong></p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>wsl.exe</p>
+</td><td colspan="1" rowspan="1"><p>--import</p>
+</td><td colspan="1" rowspan="1"><p>&lt;distro-name&gt;</p>
+</td><td colspan="1" rowspan="1"><p>&lt;c:\path\to\folder&gt;</p>
+</td><td colspan="1" rowspan="1"><p>&lt;c:\path\to\filename.tar&gt;</p>
+</td></tr>
+</table>
+<h2 is-upgraded><strong>Clone an instance</strong></h2>
+<p>Back up an instance and then <strong>restore</strong> the backup <strong>with</strong> a <strong>different</strong> name</p>
+<h2 is-upgraded><strong>Rename an instance</strong></h2>
+<p>Back up an instance, unregister the original (if desired), then <strong>restore</strong> backup <strong>with</strong> a <strong>different name</strong> ... please refer to Add/remove distros for the <em>unregister</em> option</p>
+<p class="image-container"><img alt="Restore/Clone/Rename Successful" title="Restore/Clone/Rename Successful" style="width: 624.00px" src="img/3c47c94b313801a5.png"></p>
+<h2 is-upgraded><strong>Move an instance</strong></h2>
+<table>
+<tr><td colspan="1" rowspan="1"><p><strong>Executable</strong></p>
+</td><td colspan="1" rowspan="1"><p><strong>Argument</strong></p>
+</td><td colspan="1" rowspan="1"><p><strong>Option</strong></p>
+</td><td colspan="1" rowspan="1"><p><strong>Argument</strong></p>
+</td><td colspan="1" rowspan="1"><p><strong>Destination folder</strong></p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>wsl.exe</p>
+</td><td colspan="1" rowspan="1"><p>--manage</p>
+</td><td colspan="1" rowspan="1"><p>&lt;distro-name&gt;</p>
+</td><td colspan="1" rowspan="1"><p>--move</p>
+</td><td colspan="1" rowspan="1"><p>&lt;c:\path\to\folder&gt;</p>
+</td></tr>
+</table>
+<aside class="warning"><p>If you view the <strong>%LocalAppData%\Packages</strong> folder <em>and</em> your <strong>destination</strong> folder after moving<br>a distro instance, you&#39;ll notice that <em>only</em> the <code>.vhdx</code> file is moved, <em>not</em> the configuration files.</p>
+<p>Because (technically) the configuration files are part of the &#34;<strong>installation</strong>&#34; not your &#34;<strong>instance</strong>&#34;</p>
+</aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Add/remove Distros" duration="2">
+        <h3 is-upgraded><strong>On this page: To add another distro | Remove installed distro</strong></h3>
+<p>Once the WSL component is installed, you can add or remove Linux distros with &#34;just a few clicks&#34; by following these simple steps:</p>
+<h2 is-upgraded><strong>To add another distro</strong></h2>
+<p>Open the Windows <code>terminal</code> and get a <code>list</code> of distros available <code>online</code><br>then run <code>wsl</code> with the <code>install</code> argument, and the <code>distribution</code> option:</p>
+<pre><code>wsl --list --online
+wsl --install --distribution &lt;distro-name&gt;</code></pre>
+<h2 is-upgraded>R<strong>emove installed distro</strong></h2>
+<p>A <em>lot</em> of searches on &#34;how to remove WSL distro&#34; will tell you to just unregister the distro ... be aware that this will remove the <strong>instance</strong>, but this will <strong>not</strong> uninstall the <strong>actual distribution</strong> itself</p>
+<aside class="warning"><p>Important: just like you can&#39;t uninstall an app while it&#39;s in use, be sure to completely <strong>exit</strong> the distro that you wish to remove. A simple way to ensure that you&#39;ve quit successfully is to run the following command in your Windows <code>terminal</code>:</p>
+<p><code>wsl --terminate &lt;distro-name&gt;</code></p>
+<p>where &lt;distro-name&gt; is the <strong>wsl-name</strong> for the instance that you wish to remove</p>
+</aside>
+<p>To <strong>just</strong> remove an <strong>instance</strong>, run the following command in a <code>terminal</code> window:</p>
+<pre><code>wsl --unregister &lt;distro-name&gt;</code></pre>
+<aside class="special"><p>Note: the methods outlined <strong>below</strong> are preferable to right-clicking the distro Start Menu entry under <code>Recommended</code> because <strong>the Uninstaller will not explicitly remove that icon</strong> upon completion, leaving you wondering if the distro <em>was</em> actually removed</p>
+</aside>
+<p>To <strong>fully</strong> remove a distro <strong>installation</strong>, use the <code>Win</code> + <code>i</code> keyboard shortcut to open the <code>Settings</code> app (or right-click the <code>Start Menu</code> icon and select <code>Settings</code>). Then ...</p>
+<p><strong>in Windows 10</strong>:</p>
+<p>Scroll down (if needed) and click <strong>Apps</strong>. Ensure that the <strong>Filter by</strong> option is set to <code>All drives</code> then click the drop-down menu next to <strong>Sort by</strong> and select <code>Size</code> ... you will now see the largest apps listed at the top, and your various Linux distributions will most-likely be among them.</p>
+<p>Select the <strong>distribution</strong> that you wish to remove, then click the <code>Uninstall</code> button</p>
+<p class="image-container"><img alt="Windows 10 installed apps by Size" title="Windows 10 installed apps by Size" style="width: 624.00px" src="img/e8a7a783f8b0d9a8.png"></p>
+<table>
+<tr><td colspan="1" rowspan="1"><p class="image-container"><img alt="Uninstall app Confirmation dialog" title="Uninstall app Confirmation dialog" style="width: 296.00px" src="img/5975478ec0a3bbe3.png"></p>
+</td><td colspan="1" rowspan="1"><p>When uninstalling a distro, all of its <em>own</em> configuration info will be removed, <em>but</em> all your own distro instances will remain, unaffected</p>
+</td></tr>
+</table>
+<p><strong>in Windows 11</strong>:</p>
+<p>In the left pane, click <strong>Apps</strong> then at the top of the resulting list, select <strong>Installed apps</strong>. Ensure that the <strong>Filter by</strong> option is set to <code>All drives</code> then click the drop-down menu next to <strong>Sort by</strong> and select <code>Size (Large to small)</code> ... you will now see the largest apps listed at the top, and your various Linux distributions will most-likely be among them.</p>
+<p>Click the <code>&hellip;</code> menu next to the <strong>distribution</strong> you wish to remove, then click the <code>Uninstall</code> button</p>
+<p class="image-container"><img alt="Windows 11 installed apps by Size" title="Windows 11 installed apps by Size" style="width: 624.00px" src="img/83e007d4b02e4072.png"></p>
+<table>
+<tr><td colspan="1" rowspan="1"><p class="image-container"><img alt="Uninstall app Confirmation dialog" title="Uninstall app Confirmation dialog" style="width: 298.00px" src="img/5fbbbca0118492dd.png"></p>
+</td><td colspan="1" rowspan="1"><p>When uninstalling a distro, all of its <em>own</em> configuration info will be removed, <em>but</em> all your own distro instances will remain, unaffected</p>
+</td></tr>
+</table>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Global options for WSL" duration="2">
+        <p>Remember in the introduction where is was mentioned that resources are allocated to each virtual machine according to options that you configure. Normally this would be done within the hypervisor software, but for WSL, it&#39;s slightly different. <strong>WSL Settings</strong> has its <em>own</em> app, with an interface very similar to Windows Settings.</p>
+<p>To view/change these settings, start by opening the <code>Start Menu</code> in Windows, and searching for <code>wsl</code> ... when you see it, click <code>WSL Settings</code></p>
+<p class="image-container"><img alt="WSL Settings for Memory and processor" title="WSL Settings for Memory and processor" style="width: 624.00px" src="img/6ec8f220abf88997.png"></p>
+<aside class="special"><p>Note: screenshots taken on an 8 core/16 thread computer, with 32 GB of RAM.<br>You may want to adjust these values, especially if running <em>more</em> than one VM</p>
+</aside>
+<p class="image-container"><img alt="WSL Settings for File System" title="WSL Settings for File System" style="width: 624.00px" src="img/b5511a54e2611c75.png"></p>
+<aside class="warning"><p>Note: the Default VHD Size represents the <strong>maximum</strong> size. The virtual hard disk (<code>.vmdx</code>) file for your distro <em>instance</em> can start out as small as 350 MB in size, when a distro is <em>first</em> installed. It <em>expands</em> in size when new data is added to the VHD. Unfortunately, it does <strong>not </strong><em>shrink</em> in size however, when data is deleted (removed) from within the VM. This is another concept that is common-place within virtualization ... BTW: yes, that&#39;s 1 TB in the screenshot</p>
+</aside>
+<p class="image-container"><img alt="WSL Settings for Networking" title="WSL Settings for Networking" style="width: 624.00px" src="img/34ed3de2026e2d31.png"></p>
+<p class="image-container"><img alt="WSL Settings for Optional Features" title="WSL Settings for Optional Features" style="width: 624.00px" src="img/a84478453ab23abe.png"></p>
+<p class="image-container"><img alt="WSL Settings for Developer" title="WSL Settings for Developer" style="width: 624.00px" src="img/acdb99ec92836d6b.png"></p>
+<p class="image-container"><img alt="WSL Settings for About | Version" title="WSL Settings for About | Version" style="width: 624.00px" src="img/cb7fbfb5f043ff49.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Bidirectional fs access" duration="2">
+        <table>
+<tr><td colspan="1" rowspan="1"><h3 is-upgraded><strong>On this page:</strong></h3>
+</td><td colspan="1" rowspan="1"><h3 is-upgraded><strong>Accessing your Distros&#39; file systems from within Windows |</strong><br><strong>Accessing your Windows file systems from within Distros</strong></h3>
+</td></tr>
+</table>
+<h2 is-upgraded><strong>Accessing your Distros&#39; file systems from within Windows</strong></h2>
+<p>Interestingly, each installed distro <strong>instance</strong> has its Linux file system mapped as a network share within Windows itself. Using our installed <code>Debian</code> distro as an example, we can explore its <code>$HOME</code> folder by going to <code>\\wsl.localhost\Debian\home\&lt;username&gt;</code> in Windows File Explorer, where <code>&lt;username&gt;</code> is your Linux username.</p>
+<p><strong>Notes</strong>:</p>
+<ul>
+<li>If the chosen distro is <em>not</em> running, it will take a second or two after pressing <code>Enter</code> for the files to show, as Windows needs to start WSL <em>before</em> displaying these files</li>
+<li>You can also click the <strong>Linux</strong> icon, shown under <strong>Network</strong> in the screenshot below. This will show <em>all</em> your instances, and (as above) if you double-click on one, it&#39;ll take a second or two before you find yourself at the root (<code>/</code>) of the Linux file system for <em>that</em> distro instance</li>
+</ul>
+<aside class="warning"><p>Please do <strong>not</strong> add/edit/remove your distro&#39;s files within Windows File Explorer, unless you<br><em>really</em> know what you&#39;re doing. All file operations are best performed <em>within</em> the distro itself</p>
+</aside>
+<p class="image-container"><img alt="File Explorer showing Home folder" title="File Explorer showing Home folder" style="width: 624.00px" src="img/4509ecb06f6bf35c.png"></p>
+<aside class="special"><p>Note: there are not many files in this <code>$HOME</code> folder at the moment, but ironically, the files that you <em>do</em> see are <em>all</em> actually &#34;hidden&#34; files. Notice how their filenames all start with a dot (<code>.</code>) ... this is how the Linux file system determines hidden files (known as dot files), rather than with the <em>hidden attribute</em> used in Windows, for example. All these files are visible in Windows File Explorer because (as far as Windows is concerned) these are perfectly legitimate files, <em>not</em> hidden at all.</p>
+<p>Having said that, there <em>are</em> simple ways to view these hidden files, within all Linux distributions</p>
+</aside>
+<p>Here&#39;s a cool trick ... from within your distro, type the following command:<br>(yes ... that&#39;s a <code>space</code> and a <code>dot</code> after the executable name)</p>
+<pre><code>explorer.exe .</code></pre>
+<p>This runs a <strong>Windows</strong> command (the File Explorer command)<br><code>explorer.exe</code> with the current directory (<code>.</code>) as its target</p>
+<h2 is-upgraded><strong>Accessing your Windows file systems from within Distros</strong></h2>
+<p>Similar to how Windows &#34;maps&#34; your various distros&#39; file systems to network shares available in Windows File Explorer, each distro also &#34;mounts&#34; your various Windows partitions under the <code>/mnt</code> folder.</p>
+<p>Check this out for yourself, by running the following command on the Linux command-line:</p>
+<pre><code>ls -l /mnt</code></pre>
+<p>(<code>list</code> files/folders (using the <code>long</code> format) under the <code>/mnt</code> folder)</p>
+<p class="image-container"><img alt="Contents of /mnt folder" title="Contents of /mnt folder" style="width: 622.00px" src="img/f8fbac94f6354fe2.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="WSL (Default) Distro" duration="3">
+        <p>Since there are a number of ways to get to a Linux command-line, WSL needs to have a &#34;go to&#34; distro, so that you don&#39;t have to explicitly launch (or even specify) one.</p>
+<p>By default (if you&#39;ll pardon the pun) the very <em>first</em> distro that you install will <em>automatically</em> become the &#34;default&#34; distribution in WSL.</p>
+<p>Such ways to start a Linux shell include:</p>
+<ol type="1" start="1">
+<li>By running one of the following commands in a Windows <code>terminal</code>:</li>
+</ol>
+<pre><code>bash</code></pre>
+<pre><code>wsl</code></pre>
+<ol type="1" start="2">
+<li>By opening the Windows terminal and choosing from the drop-down menu<br>(or by just right-clicking the Terminal icon itself):</li>
+</ol>
+<p class="image-container"><img alt="Start Linux from Terminal" title="Start Linux from Terminal" style="width: 279.00px" src="img/23afc19570f465d5.png"></p>
+<ol type="1" start="3">
+<li>By launching a Distro or WSL itself from the Start Menu<br>(or other shortcut), for example:<br><br><img alt="Start Menu icon Debian" title="Start Menu icon Debian" style="width: 155.00px" src="img/795a8594c846beb5.png"><br><br><img alt="Start Menu icon WSL" title="Start Menu icon WSL" style="width: 154.00px" src="img/d8cfa4a435b4746d.png"></li>
+</ol>
+<p><strong>Tasks</strong>:</p>
+<ul>
+<li>Open your Windows <code>terminal</code> and try the <code>bash</code> and <code>wsl</code> commands, respectively</li>
+<li>After logging in to each bash shell in turn, type <code>exit</code> to quit the shell</li>
+</ul>
+<p>Now you see that <em>some</em> of these methods allowed you to start WSL directly, <em>without</em> specifying <em>which</em> distro, hence the need for a &#34;default&#34; ... you can check which is your <em>current</em> default by typing the following command in Windows <code>terminal</code>:</p>
+<pre><code>wsl --list</code></pre>
+<p class="image-container"><img style="width: 387.00px" src="img/ac6a8a86c64d4781.png"></p>
+<aside class="warning"><p>If you use the <code>--verbose</code> switch to list distros, the default is indicated by an asterisk (<code>*</code>)</p>
+</aside>
+<p class="image-container"><img alt="Debian distro is Default" title="Debian distro is Default" style="width: 346.00px" src="img/16e15f6a903d835.png"></p>
+<p>You can <em>change</em> the default distro using this command:</p>
+<pre>wsl --set-default &lt;distro-name&gt;</pre>
+<p>where <code>&lt;distro-name&gt;</code> is the <strong>wsl-name</strong> for your desired (Default) distribution</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Bash/Windows\Bash" duration="3">
+        <h3 is-upgraded><strong>On this page: Bash within Windows | Windows within Bash</strong></h3>
+<p>Bash (from <strong>B</strong>ourne <strong>A</strong>gain <strong>Sh</strong>ell) has been around since 1989, and is one of those many utilities that make up the GNU Project (remember GNU/Linux?). And it&#39;s not just a Linux thing either ... it&#39;s available on nearly <em>all</em> modern operating systems.</p>
+<h2 is-upgraded><strong>Bash within Windows</strong></h2>
+<p>Yes, you can run <code>bash</code> commands directly from the Windows <code>terminal</code> command-prompt. As demonstrated in the previous section, your (Default) distro&#39;s <code>bash</code> environment is used, i.e. whichever distribution that is.</p>
+<p>Here are a few <em>very</em> basic examples:</p>
+<pre><code>C:\Backups&gt; wsl ls -lh
+
+C:\Backups&gt; bash -c &#34;ls -lh&#34;</code></pre>
+<p>Both the commands above do exactly the <em>same</em> thing, but are <em>called</em> differently. The example given is particularly useful, because it shows file sizes in human-readable format, instead of something like 281,077,760.</p>
+<p><strong>Task</strong>: try some none-destructive commands yourself ... go on, be creative</p>
+<h2 is-upgraded><strong>Windows within Bash</strong></h2>
+<p>Mentioned previously was the ability to run Windows <code>executables</code> from <em>within</em> a Linux environment. This is made possible by having some important Windows directories included in the <code>$PATH</code> environment variable in all WSL distros. Here is a sample <code>$PATH</code> from our Debian distro:</p>
+<p class="image-container"><img alt="Debian Sample Path Output" title="Debian Sample Path Output" style="width: 624.00px" src="img/a08945f6803f1313.png"></p>
+<p>Most notable are the lines containing <code>/mnt/c/*</code></p>
+<p><strong>Task</strong>: try these commands (in order) to see what happens with the <code>Test.txt</code> file:</p>
+<pre>cd
+explorer.exe .</pre>
+<p>Then switch back to your Linux command-line, and type this command:</p>
+<pre>notepad.exe Test.txt</pre>
+<p>Notepad will open, asking you to create new file? Click <code>Yes</code> ... now type some text, and save the file ...</p>
+<ul>
+<li>Check that it exists in Windows File Explorer (you may have to hit <code>Refresh</code>)</li>
+<li>Also check at your <code>bash</code> command-line by running the following command:<br><code>ls -l Test.txt</code> (Linux <strong>is</strong> case-sensitive)</li>
+</ul>
+<h3 is-upgraded>Explanation:</h3>
+<ol type="1" start="1">
+<li><code>cd</code> by itself will always <code>change directory</code> to your home folder (<code>~</code>)</li>
+<li>launch <code>explorer.exe</code> in the <em>current</em> directory, represented by dot (<code>.</code>)</li>
+<li>switch back to Linux (keyboard shortcut: <code>Alt</code> + <code>Tab</code>)</li>
+<li>launch <code>notepad.exe</code> with the <code>Test.txt</code> parameter</li>
+<li>type in some text, then save the file ... check its file size</li>
+<li>if you switch back to <code>bash</code> with Notepad still open, you&#39;ll notice that the command remains active on the command-line ... close the Notepad app to return to your shell</li>
+</ol>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Helpful Tips &amp; Tricks" duration="3">
+        <h3 is-upgraded><strong>On this page: GUI apps Dconf issue | Disk space PS script</strong></h3>
+<h2 is-upgraded><strong>Dconf issue running GUI apps</strong></h2>
+<p>To demonstrate that GUI apps were now supported on newer versions of WSL, after installing the Mousepad app, I ran into this error message: <strong>failed to commit changes to dconf</strong></p>
+<p>After a little research, I was able to resolve the issue by installing the <strong>dbus-x11</strong> package within the distro in question (Debian) and all was well ... you may need to do this with <em>all</em> WSL distros?</p>
+<p>GitHub issue/resolution: <a href="https://github.com/microsoft/wslg/issues/675" target="_blank">open GUI app always get dbus warning</a><br>Quote: somehow the WSL system is not flagging dbus-x11 as a required dependency of x11/GUI apps.<br>BTW: the dbus-x11 package <em>is</em> installed by default in a Debian 12.9 bare-metal distro, for example.</p>
+<p>Kudos to <strong>TheNavyBear</strong> by the way ... thank you =)</p>
+<p class="image-container"><img alt="Mousepad installed on WSL" title="Mousepad installed on WSL" style="width: 624.00px" src="img/1d7882e10e49dd17.png"></p>
+<h2 is-upgraded>Show disk space for <em>all</em> Distros</h2>
+<p>While researching information for this guide, I actually installed all 14 distros, <em>currently</em> available through the command-line, so I wanted a way to easily determine the disk space used by <em>each</em> distro. Mostly, I like to think outside the square, so going to <strong>Settings</strong> | <strong>Apps</strong> | <strong>Installed apps</strong> was far too easy!</p>
+<p>I wanted a script that would list <em>all</em> distros in one go. To find it, I went to Google and searched for &#34;How to find WSL distros used disk space&#34; ... what I ended up with was a <strong>PowerShell</strong> script from an answer to this <strong>Super User</strong> question: <a href="https://superuser.com/a/1707747" target="_blank">How to get a WSL distribution size from the Windows command line?</a></p>
+<p>Kudos to <strong>NotTheDr01ds</strong> by the way ... thank you =)</p>
+<aside class="special"><p>Note: the code below and the file on GitHub are untouched from<br>the original post, so it&#39;s up to you if you&#39;d like to add some polish</p>
+</aside>
+<p><strong>Click to view </strong><em>or </em><strong>Right-click</strong> | <strong>Save link as</strong></p>
+<h3 is-upgraded><a href="https://raw.githubusercontent.com/mikaere66/mikaere66.github.io/main/codelabs/install-wsl-2-in-windows/ps1/GetAllWslDistrosDiskUsage.ps1" target="_blank">Link to equivalent file on GitHub</a></h3>
+<p>Please refer to <a href="https://superuser.com/a/1707747" target="_blank">original link</a> for explanation</p>
+<pre><code>Get-ChildItem &#34;HKCU:\Software\Microsoft\Windows\CurrentVersion\Lxss&#34; -Recurse |
+ForEach-Object {
+    $distro_name = ($_ | Get-ItemProperty -Name DistributionName).DistributionName
+    $distro_dir =  ($_ | Get-ItemProperty -Name BasePath).BasePath
+    $distro_dir = Switch ($PSVersionTable.PSEdition) {
+      &#34;Core&#34; {
+        $distro_dir -replace &#39;^\\\\\?\\&#39;,&#39;&#39;
+      }
+      &#34;Desktop&#34; {
+        if ($distro_dir.StartsWith(&#39;\\?\&#39;)) {
+            $distro_dir
+        } else {
+            &#39;\\?\&#39; + $distro_dir
+        }
+      }
+    }
+    Write-Output &#34;------------------------------&#34;
+    Write-Output &#34;Distribution: $distro_name&#34;
+    Write-Output &#34;Directory: $($distro_dir -replace &#39;\\\\\?\\&#39;,&#39;&#39;)&#34;
+    $distro_size = &#34;{0:N0} MB&#34; -f ((Get-ChildItem -Recurse -LiteralPath &#34;$distro_dir&#34; | Measure-Object -Property Length -sum).sum / 1Mb)
+    Write-Output &#34;Size: $distro_size&#34;
+}</code></pre>
+<aside class="warning"><p>Important: the ability to run PowerShell scripts from the command-line is outside the scope of this guide ... please read through and <strong>understand the script first</strong> before executing it</p>
+</aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="WSL Help and Links" duration="3">
+        <h3 is-upgraded><strong>On this page: WSL Help | Links</strong></h3>
+<p class="image-container"><img alt="WSL version on Windows 11" title="WSL version on Windows 11" style="width: 624.00px" src="img/7f63f939d1747cb0.png"></p>
+<aside class="special"><p>This output from <code>wsl --help</code> was derived from version 2.3.26.0 on Windows 11.<br>Only a few lines below have been changed, and <em>only</em> for formatting purposes.</p>
+<p>For the few lines that are <em>not</em> visible on-screen, click and drag to the right ...</p>
+</aside>
+<pre><code>Copyright (c) Microsoft Corporation. All rights reserved.
+For privacy information about this product please visit https://aka.ms/privacy.
+
+Usage: wsl.exe [Argument] [Options...] [CommandLine]
+
+Arguments for running Linux binaries:
+
+    If no command line is provided, wsl.exe launches the default shell.
+
+    --exec, -e &lt;CommandLine&gt;
+        Execute the specified command without using the default Linux shell.
+
+    --shell-type &lt;standard|login|none&gt;
+        Execute the specified command with the provided shell type.
+
+    --
+        Pass the remaining command line as-is.
+
+Options:
+    --cd &lt;Directory&gt;
+        Sets the specified directory as the current working directory.
+        If ~ is used the &#34;Linux user&#39;s home path&#34; will be used. If the path begins
+        with a / character, it will be interpreted as an absolute Linux path.
+        Otherwise, the value must be an absolute Windows path.
+
+    --distribution, -d &lt;Distro&gt;
+        Run the specified distribution.
+
+    --user, -u &lt;UserName&gt;
+        Run as the specified user.
+
+    --system
+        Launches a shell for the system distribution.
+
+Arguments for managing Windows Subsystem for Linux:
+
+    --help
+        Display usage information.
+
+    --debug-shell
+        Open a WSL2 debug shell for diagnostics purposes.
+
+    --install [Distro] [Options...]
+        Install a Windows Subsystem for Linux distribution.
+        For a list of valid distributions, use &#34;wsl.exe --list --online&#34;.
+
+        Options:
+            --no-launch, -n
+                Do not launch the distribution after install.
+
+            --web-download
+                Download the distribution from the internet instead of the Microsoft Store.
+
+            --no-distribution
+                Only install the required optional components, does not install a distribution.
+
+            --enable-wsl1
+                Enable WSL1 support.
+
+    --manage &lt;Distro&gt; &lt;Options...&gt;
+        Changes distro specific options.
+
+        Options:
+            --move &lt;Location&gt;
+                Move the distribution to a new location.
+
+            --set-sparse, -s &lt;true|false&gt;
+                Set the vhdx of distro to be sparse, allowing disk space to be automatically reclaimed.
+
+    --mount &lt;Disk&gt;
+        Attaches and mounts a physical or virtual disk in all WSL 2 distributions.
+
+        Options:
+            --vhd
+                Specifies that &lt;Disk&gt; refers to a virtual hard disk.
+
+            --bare
+                Attach the disk to WSL2, but do not mount it.
+
+            --name &lt;Name&gt;
+                Mount the disk using a custom name for the mountpoint.
+
+            --type &lt;Type&gt;
+                Filesystem to use when mounting a disk, if not specified defaults to ext4.
+
+            --options &lt;Options&gt;
+                Additional mount options.
+
+            --partition &lt;Index&gt;
+                Index of the partition to mount, if not specified defaults to the whole disk.
+
+    --set-default-version &lt;Version&gt;
+        Changes the default install version for new distributions.
+
+    --shutdown
+        Immediately terminates all running distributions and the WSL 2
+        lightweight utility virtual machine.
+
+    --status
+        Show the status of Windows Subsystem for Linux.
+
+    --unmount [Disk]
+        Unmounts and detaches a disk from all WSL2 distributions.
+        Unmounts and detaches all disks if called without argument.
+
+    --uninstall
+        Uninstalls the Windows Subsystem for Linux package from this machine.
+
+    --update
+        Update the Windows Subsystem for Linux package.
+
+        Options:
+            --pre-release
+                Download a pre-release version if available.
+
+    --version, -v
+        Display version information.
+
+Arguments for managing distributions in Windows Subsystem for Linux:
+
+    --export &lt;Distro&gt; &lt;FileName&gt; [Options]
+        Exports the distribution to a tar file.
+        The filename can be - for stdout.
+
+        Options:
+            --vhd
+                Specifies that the distribution should be exported as a .vhdx file.
+
+    --import &lt;Distro&gt; &lt;InstallLocation&gt; &lt;FileName&gt; [Options]
+        Imports the specified tar file as a new distribution.
+        The filename can be - for stdin.
+
+        Options:
+            --version &lt;Version&gt;
+                Specifies the version to use for the new distribution.
+
+            --vhd
+                Specifies that the provided file is a .vhdx file, not a tar file.
+                This operation makes a copy of the .vhdx file at the specified install location.
+
+    --import-in-place &lt;Distro&gt; &lt;FileName&gt;
+        Imports the specified .vhdx file as a new distribution.
+        This virtual hard disk must be formatted with the ext4 filesystem type.
+
+    --list, -l [Options]
+        Lists distributions.
+
+        Options:
+            --all
+                List all distributions, including distributions that are
+                currently being installed or uninstalled.
+
+            --running
+                List only distributions that are currently running.
+
+            --quiet, -q
+                Only show distribution names.
+
+            --verbose, -v
+                Show detailed information about all distributions.
+
+            --online, -o
+                Displays a list of available distributions for install with &#34;wsl.exe --install&#34;.
+
+    --set-default, -s &lt;Distro&gt;
+        Sets the distribution as the default.
+
+    --set-version &lt;Distro&gt; &lt;Version&gt;
+        Changes the version of the specified distribution.
+
+    --terminate, -t &lt;Distro&gt;
+        Terminates the specified distribution.
+
+    --unregister &lt;Distro&gt;
+        Unregisters the distribution and deletes the root filesystem.</code></pre>
+<h2 is-upgraded><strong>Links</strong></h2>
+<h3 is-upgraded><strong>Microsoft</strong></h3>
+<p>Microsoft Learn has <em>extensive</em> documentation regarding <a href="https://learn.microsoft.com/en-nz/search/?terms=Windows%20Subsystem%20for%20Linux" target="_blank">Windows Subsystem for Linux</a> ... a staggering 563,089 articles, as of January 2025. However, if you just <a href="https://learn.microsoft.com/en-nz/search/?terms=WSL2" target="_blank">search for WSL2</a> that number decreases significantly to a manageable 334 articles.</p>
+<p>Here are some helpful links, if you&#39;re interested in learning more:</p>
+<table>
+<tr><td colspan="1" rowspan="1"><p><strong>Title</strong></p>
+</td><td colspan="1" rowspan="1"><p><strong>Updated</strong></p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p><a href="https://learn.microsoft.com/en-us/windows/wsl/" target="_blank">Windows Subsystem for Linux Documentation</a></p>
+</td><td colspan="1" rowspan="1"><p>Jun 2022</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>⤷ <a href="https://learn.microsoft.com/en-us/windows/wsl/tutorials/linux" target="_blank">Getting started with Linux and Bash</a></p>
+</td><td colspan="1" rowspan="1"><p>Nov 2022</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>⤷ <a href="https://learn.microsoft.com/en-us/windows/wsl/build-custom-distro" target="_blank">Build a Custom Linux Distribution for WSL</a></p>
+</td><td colspan="1" rowspan="1"><p>Nov 2024</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>⤷ <a href="https://learn.microsoft.com/en-us/windows/wsl/tutorials/gui-apps" target="_blank">Run Linux GUI apps with WSL</a></p>
+</td><td colspan="1" rowspan="1"><p>Nov 2024</p>
+</td></tr>
+</table>
+<h3 is-upgraded><strong>Other</strong></h3>
+<p><a href="https://medium.com/@bonguides25/how-to-change-hostname-of-the-ubuntu-instance-in-wsl-93746998ed26" target="_blank">How to Change Hostname of the Ubuntu Instance in WSL</a></p>
+<p><a href="https://en.wikipedia.org/wiki/Windows_Subsystem_for_Linux" target="_blank">Windows Subsystem for Linux — article on Wikipedia</a></p>
+<p><a href="https://superuser.com/a/1389159" target="_blank">Hiding virtual machine status from guest operating system</a></p>
+<p><a href="https://github.com/microsoft/wslg/issues/675" target="_blank">Github issues: open GUI app always get dbus warning</a></p>
+
+
+      </google-codelab-step>
+    
+  </google-codelab>
+
+  <script src="https://storage.googleapis.com/claat-public/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/prettify.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/codelab-elements.js"></script>
+  <script src="//support.google.com/inapp/api.js"></script>
+
+</body>
+</html>

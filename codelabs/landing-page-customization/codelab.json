@@ -1,0 +1,26 @@
+{
+  "environment": "web",
+  "format": "html",
+  "prefix": "https://storage.googleapis.com",
+  "mainga": "UA-49880327-14",
+  "updated": "2025-02-10T20:36:39Z",
+  "id": "landing-page-customization",
+  "duration": 14,
+  "title": "Custom Codelabs Landing Page",
+  "authors": "Michael Mossman",
+  "summary": "How to customize Landing Page for your own Codelabs",
+  "source": "131CV7qe_lxwU4UkgXKgOHHADO8DZ8EaDCE4sa8lAlX0",
+  "theme": "html",
+  "status": [
+    "draft"
+  ],
+  "category": [
+    "html"
+  ],
+  "tags": [
+    "web"
+  ],
+  "feedback": "https://github.com/mikaere66/mikaere66.github.io/issues",
+  "ga": "UA-49880327-14",
+  "url": "landing-page-customization"
+}

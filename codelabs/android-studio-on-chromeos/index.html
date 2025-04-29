@@ -1,0 +1,202 @@
+
+<!doctype html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <meta charset="UTF-8">
+  <title>Android Studio on ChromeOS</title>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://storage.googleapis.com/claat-public/codelab-elements.css">
+  <style>
+    .success {
+      color: #1e8e3e;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+  <google-codelab codelab-gaid=""
+                  id="android-studio-on-chromeos"
+                  title="Android Studio on ChromeOS"
+                  environment="web"
+                  feedback-link="https://github.com/mikaere66/mikaere66.github.io/issues">
+    
+      <google-codelab-step label="Introduction to AS" duration="1">
+        <p class="image-container"><img style="width: 624.00px" src="img/1cc807892a3396f2.png"></p>
+<p><strong>Important</strong>: this guide assumes that you have <em>already</em> set up the Linux Development Environment on your Chromebook. If not, please refer to my <a href="https://mikaere66.github.io" target="_blank">Other Guides</a></p>
+<h2 is-upgraded><strong>What is Android Studio</strong></h2>
+<p>Android Studio is the official IDE (Integrated Development Environment) for creating your own Android (and more recently, cross-platform) applications.</p>
+<p>Not just one program, Android Studio is an entire suite of tools that allows you to build great apps.</p>
+<p>All this is accompanied by extensive documentation within the IDE, and on the official <a href="https://developer.android.com/" target="_blank">Android website</a></p>
+<h2 is-upgraded>Disk space requirements</h2>
+<p>To install Android Studio and its associated SDK and Tools takes a fair amount of disk space. Here is an example of the total disk space required <em>inside</em> your Linux Development Environment:</p>
+<table>
+<tr><td colspan="1" rowspan="1"><p><strong>Phase</strong></p>
+</td><td colspan="1" rowspan="1"><p><strong>Disk usage (GB)</strong></p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Hardware acceleration (KVM)</p>
+</td><td colspan="1" rowspan="1"><p>1.2</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Android Studio (.deb)</p>
+</td><td colspan="1" rowspan="1"><p>3.2</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>SDK/Tools (with Emulator)</p>
+</td><td colspan="1" rowspan="1"><p>3.4</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Project dependencies</p>
+</td><td colspan="1" rowspan="1"><p>3.1</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Small project build</p>
+</td><td colspan="1" rowspan="1"><p>2.0</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p><strong>Total</strong></p>
+</td><td colspan="1" rowspan="1"><p><strong>12.9 GB</strong></p>
+</td></tr>
+</table>
+<p>Your mileage may vary, depending on whether or not you install the emulator, and the size of your first Android project and its dependencies.</p>
+<p>If you think you may need more disk space allocated to your Linux Development Environment, in ChromeOS, go to <strong>Settings</strong> | <strong>About ChromeOS</strong> | <strong>Linux Development Environment</strong> | <strong>Disk Size</strong> ... click the <strong>Change</strong> button to open the <strong>Resize Linux Disk</strong> dialog</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Software installation" duration="5">
+        <h2 is-upgraded><strong>Install prerequisites</strong></h2>
+<h3 is-upgraded><strong>Hardware acceleration</strong></h3>
+<p>Assuming your Chromebook meets the criteria, you may see a message during the initial setup wizard for Android Studio titled Emulator Settings ... <a href="https://developer.android.com/studio/run/emulator-acceleration?utm_source=android-studio#vm-linux" target="_blank">check this page</a> to see if your hardware meets the requirements (skip the HAXM section). If your hardware meets the requirements, install KVM and its dependencies by running the following command:</p>
+<pre><code>sudo apt install qemu-kvm libvirt-daemon-system libvirt-clients bridge-utils</code></pre>
+<h3 is-upgraded><strong>Nano plain-text editor</strong></h3>
+<p>The implementation of Debian/Linux on ChromeOS does <em>not</em> include the nano plain-text editor, so unless you wish to use Vim, install nano using the following command:</p>
+<pre><code>sudo apt install nano</code></pre>
+<h2 is-upgraded><strong>Download Android Studio</strong></h2>
+<p>We will start by downloading the Debian package archive (.deb) file from the official Android website ... <a href="https://developer.android.com/studio#android-studio-downloads" target="_blank">click here to get the latest stable version</a></p>
+<p>Be sure to download the <strong>ChromeOS</strong> version, with the filename ending in <strong>-cros.deb</strong> (approx 1.1 GB) ... save this file to the Downloads folder on your Chromebook.</p>
+<h2 is-upgraded>Install .deb File</h2>
+<p>When the download is complete, locate the file in your My Files app, right-click on it, and select <strong>Install with Linux</strong> from the menu.</p>
+<p>It takes a few seconds for ChromeOS to read the file information, then you can click the <strong>Install</strong> button ... you should see a dialog saying that the <strong>Installation successfully started</strong>.</p>
+<p>After clicking <strong>OK</strong>, you may follow progress for the installation by clicking the Notification count in your dock ... it should take about one minute to complete.</p>
+<p>Do <strong>not</strong> start Android Studio just yet, as we need to make a small adjustment first.</p>
+<h2 is-upgraded><strong>Edit .desktop File</strong></h2>
+<p>As of April 2025, fresh installs of Android Studio come with the <em>old</em> .desktop file, but a <em>new</em> message similar to the following:</p>
+<aside class="warning"><p>⚠ The IDE seems to be launched with a script launcher (&#39;bin/studio.sh&#39;). Please consider switching to a native launcher (&#39;bin/studio&#39;) for better experience.</p>
+</aside>
+<p>Note in the message the difference between <strong>bin/studio.sh</strong> and <strong>bin/studio</strong> ... both these files exist under the Android Studio install location, but we need to fix the launcher (.desktop) file to point to the new executable file, rather than the old shell-script.</p>
+<aside class="special"><p><strong>Tip</strong>: .desktop files are common in Linux ... they control the look and behavior for items on your launcher, whether that&#39;s in ChromeOS, or in a full-blown Linux distribution</p>
+</aside>
+<p>Start by opening a Linux Terminal and entering the following command:</p>
+<pre><code>sudo nano /usr/share/applications/android-studio.desktop</code></pre>
+<p>Use the arrow keys to reach the end of the line beginning with <strong>Exec=</strong> and remove the <strong>.sh</strong> (dot and file extension) so that the line reads as follows:</p>
+<pre>Exec=/opt/android-studio/bin/studio</pre>
+<p>When done, press <code>Ctrl+S</code> to save the file, then <code>Ctrl+X</code> to exit nano.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="SDK/tools wizard" duration="5">
+        <h3 is-upgraded>Now you can start Android Studio</h3>
+<p>Upon launching Android Studio for the first time, you&#39;ll need to install the Android <strong>SDK</strong>, Platform <strong>Tools</strong>, and an <strong>Emulator</strong> (the emulator is optional) ... follow the wizard, where the defaults should be enough to get you started.</p>
+<p>The very first dialog has its text truncated, and is partly illegible. Here is the full text:</p>
+<p><code>Allow Google to collect usage data for Android Studio and its related tools, such as how you use features and resource usage along with software identifiers such as package name and class names and plugin configuration. This data helps improve Android Studio and is collected in accordance with Google's Privacy Policy. Anonymous and aggregated usage data may be shared with Google's partners to improve Android Studio.</code></p>
+<p><code>You can always change this behavior in Settings | Appearance & Behavior | System Settings | Data Sharing.</code></p>
+<p class="image-container"><img style="width: 547.00px" src="img/97dfba00392feff.png"></p>
+<p>Welcome screen for the wizard ... click <strong>Next</strong> when ready</p>
+<p class="image-container"><img style="width: 624.00px" src="img/4979b0f6b9001bd7.png"></p>
+<p>For the Install type, select <strong>Custom</strong> then click the <strong>Next</strong> button:</p>
+<p class="image-container"><img style="width: 624.00px" src="img/79f8e4db4d38ea86.png"></p>
+<p>Android SDK and the latest Platform Tools are already preselected ...</p>
+<p>You may deselect the Emulator (virtual device) if you don&#39;t want it:</p>
+<p class="image-container"><img style="width: 624.00px" src="img/40a4f157b5652399.png"></p>
+<p>Confirm your selections before hitting the <strong>Next</strong> button:</p>
+<p class="image-container"><img style="width: 624.00px" src="img/cdd51f98834ea24c.png"></p>
+<p>You must <strong>Accept</strong> the Licensing Agreement before continuing:</p>
+<p class="image-container"><img style="width: 624.00px" src="img/916462e46f0c6525.png"></p>
+<p>This is the notice you would see regarding Hardware Acceleration:</p>
+<p class="image-container"><img style="width: 624.00px" src="img/ea0738bb5fb427d3.png"></p>
+<p>Download process ... this will take a few minutes:</p>
+<p class="image-container"><img style="width: 624.00px" src="img/70c8af0029589c63.png"></p>
+<p>When completed, you may click the <strong>Finish</strong> button:</p>
+<p class="image-container"><img style="width: 624.00px" src="img/a8561f51037c0a5a.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="AS first-run setup" duration="6">
+        <p>This is the regular <strong>Welcome</strong> dialog whenever you start Android Studio.<br>Note the message you would see regarding the <em>old</em> version of startup:</p>
+<p class="image-container"><img style="width: 624.00px" src="img/1499ed2c400769b9.png"></p>
+<p>Before starting/opening a project, you should decide if you want to keep your Android projects <strong>inside</strong> your Linux Development Environment, or completely <strong>separate</strong> by sharing a folder from ChromeOS ...</p>
+<h3 is-upgraded><strong>Keep projects inside LDE</strong></h3>
+<p>If you wish to go with the default setting of keeping your project files <em>inside</em> your Linux Development Environment, then be aware that you <em>can</em> still access them in ChromeOS (using the My Files app) by going to <strong>Linux files</strong> | <strong>AndroidStudioProjects</strong>. This would require the LDE to be running, as ChromeOS needs to access files within Linux itself.</p>
+<aside class="warning"><p><strong>Warning</strong>: however, if you ever <strong>remove</strong> (uninstall) your Linux Development Environment from ChromeOS, then <strong>all files will be lost</strong>, unless you back them up first!</p>
+</aside>
+<h3 is-upgraded><strong>Keep projects Separate</strong></h3>
+<p>If you wish to keep them separate, then create a new folder in My Files called <strong>Projects</strong>, and share it by right-clicking the new folder and selecting <strong>Share with Linux</strong> from the menu.</p>
+<aside class="special"><p><strong>Tip</strong>: in Appearance &amp; Behavior | System Settings, <strong>uncheck</strong> the box <strong>Reopen projects at startup</strong></p>
+</aside>
+<p>Back at the Android Studio welcome screen, click the gear icon in the bottom-left corner, and select <strong>Settings</strong> ... go to Appearance &amp; Behavior | System Settings, and next to <strong>Default project directory</strong>, click the little folder icon to open the <strong>Select Path</strong> dialog:</p>
+<p class="image-container"><img style="width: 624.00px" src="img/4160ad3eed2a5af7.png"></p>
+<aside class="special"><p>If you do <strong>not</strong> see Settings in the gear menu, on the welcome screen, go to <strong>Customize</strong> | <strong>All settings</strong>.</p>
+<p>If you&#39;ve <em>already</em> opened Android Studio, you can get to Settings by going to the hamburger <strong>Main Menu</strong> at top-left, and under <strong>File</strong>, select <strong>Settings</strong></p>
+</aside>
+<p>In the Select Path dialog, <strong>collapse the home folder</strong> then <strong>Expand the mnt folder</strong> (and subfolders, as necessary) to select the <strong>/mnt/chromeos/MyFiles/Projects</strong> folder you created/shared earlier ... click <strong>Projects</strong> once to highlight it, then click the <strong>OK</strong> button:</p>
+<p class="image-container"><img style="width: 530.00px" src="img/944a01b32a23eef7.png"></p>
+<p>Back at the Android Studio welcome screen, click <strong>New Project</strong> and with Phone and Tablet selected under Templates, select <strong>Empty Activity</strong>, then click the <strong>Next</strong> button:</p>
+<p class="image-container"><img style="width: 624.00px" src="img/546a6d3e09a54768.png"></p>
+<p>Next to Name, type <strong>Hello World</strong>, then click the <strong>Finish</strong> button:</p>
+<p class="image-container"><img style="width: 624.00px" src="img/43ed1a482a33302.png"></p>
+<p>Android Studio will take a few minutes to download the required dependencies and sync your project for the first time. You can follow its progress by opening the <strong>Build</strong> tool window (the <strong>hammer</strong> icon at bottom-left):</p>
+<p class="image-container"><img style="width: 624.00px" src="img/1a5b8582244d3789.png"></p>
+<p>When it&#39;s done, click the green Run icon on the toolbar, or press Shift + Search + 0 (zero) ... (this is equivalent to Shift + F10 on a conventional keyboard) ... Android Studio will require a few more minutes to launch the Emulator and run your project:</p>
+<p class="image-container"><img style="width: 624.00px" src="img/4d99618a591fc60d.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Advanced config" duration="3">
+        <h2 is-upgraded><strong>Emulator from Command Line</strong></h2>
+<p>You may run into issues if you attempt to start an emulator from the command line, using the default setup.</p>
+<p>As of April 2025, Android Studio places virtual devices (for ChromeOS installs) in the <code>~/.config/.android/avd</code> folder, whereas the emulator application looks for them in the <code>~/.android/avd</code> folder.</p>
+<p>A simple workaround is to set the ANDROID_AVD_HOME environment variable ... you can do this by adding the following two lines to the end of your ~<code>/.bashrc</code> file. Start by opening the file for editing in the nano plain-text editor:</p>
+<pre><code>nano ~/.bashrc
+# Add these two lines to the end of the file:
+ANDROID_AVD_HOME=$HOME/.config/.android/avd
+export ANDROID_AVD_HOME</code></pre>
+<p>Save the file and exit by pressing <code>Ctrl+S</code> then <code>Ctrl+X</code></p>
+<aside class="warning"><p><strong>Note</strong>: you will need to restart your Linux Development Environment for the changes to take effect</p>
+</aside>
+<h2 is-upgraded>Bash script/alias for Emulator</h2>
+<h3 is-upgraded><strong>Script</strong></h3>
+<p>You may wish to start the emulator yourself at any time, rather than having to go through Android Studio. To do this, you could create a bash script, similar to the following:</p>
+<pre><code>#!/bin/bash
+$HOME/Android/Sdk/emulator/emulator \
+    -accel on -avd Medium_Phone_API_36</code></pre>
+<p>Be sure to give your new script executable permission, e.g.:</p>
+<pre><code>chmod u+x ~/bin/avd.sh</code></pre>
+<aside class="special"><p><strong>Tip</strong>: the backslash at the end of a line indicates a line-break, meaning lengthy commands can be spread over multiple lines ... this promotes legibility and helps to avoid obscurity</p>
+</aside>
+<h3 is-upgraded><strong>Alias</strong></h3>
+<p>Now that you&#39;ve created a script and granted executable permission, you could make running it even easier by creating a simple alias ... to do so, start by opening the <code>~/.bash_aliases</code> file for editing (if it does not already exist, it will be created upon saving):</p>
+<pre><code>nano ~/.bash_aliases
+# Add the alias, e.g.:
+alias avd=&#39;~/Bin/avd.sh&#39;</code></pre>
+<p>Save the file and exit by pressing <code>Ctrl+S</code> then <code>Ctrl+X</code></p>
+<p>You can either restart your LDE, or run the following command for changes to take effect:</p>
+<pre><code>source ~/.bash_aliases</code></pre>
+
+
+      </google-codelab-step>
+    
+  </google-codelab>
+
+  <script src="https://storage.googleapis.com/claat-public/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/prettify.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/codelab-elements.js"></script>
+  <script src="//support.google.com/inapp/api.js"></script>
+
+</body>
+</html>

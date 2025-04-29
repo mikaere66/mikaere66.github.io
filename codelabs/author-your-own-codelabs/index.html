@@ -1,0 +1,505 @@
+
+<!doctype html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <meta charset="UTF-8">
+  <title>Create a Codelab in Google Docs</title>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://storage.googleapis.com/claat-public/codelab-elements.css">
+  <style>
+    .success {
+      color: #1e8e3e;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+  <google-codelab codelab-gaid="UA-49880327-14"
+                  id="author-your-own-codelabs"
+                  title="Create a Codelab in Google Docs"
+                  environment="web"
+                  feedback-link="https://github.com/mikaere66/mikaere66.github.io/issues">
+    
+      <google-codelab-step label="Codelabs introduction" duration="2">
+        <p class="image-container"><img alt="Codelabs logo" title="Codelabs logo" style="width: 256.00px" src="img/46dac5d4855c965f.png"></p>
+<h2 is-upgraded><strong>About CLaaT (Codelabs as a Thing)</strong></h2>
+<p>Code(what?) ... the concept of codelabs is a <strong>learning by doing</strong> approach to education and tutorials.</p>
+<p>Rather than have your audience lose interest by presenting them with a long-winded &#34;how to&#34; or a tedious &#34;wiki page&#34;, you can format an easy-to-follow guide in the form of a step-by-step <em>codelab</em>.</p>
+<p>Developed and <strong>maintained by a small group of dedicated Googlers</strong> (Google employees), the <code>CLaaT</code> (Codelabs as a Thing) project is open source, and available for anyone to use.</p>
+<p>Note: this format is <strong>not restricted to just coding</strong>! You could author a codelab to represent <em>any</em> type of tutorial. It may be related to Car Maintenance, Home Improvement, Operating Systems, PC Upgrades ... the possibilities are endless.</p>
+<h2 is-upgraded><strong>How do I create my own Codelabs?</strong></h2>
+<p>There are actually <em>two</em> different formats supported: .doc (Google Docs) and .md (Markdown Syntax). However, <strong>we will only be discussing the </strong><code>Google Docs</code> <strong>version</strong> ... please refer to my <a href="https://mikaere66.github.io" target="_blank">other Codelabs</a> for the <code>Markdown</code> version.</p>
+<p>* <strong>Google Documents</strong>: the content for <em>this</em> type of codelab-authoring can be written in Google Docs, using some simple formatting conventions. Google docs files can be stored in your Google Drive account, but <em>not</em> hosted there ... refer to the Conclusion/Hosting section for more on that topic.<br>Google Docs has the advantage of supporting collaboration, so it would be great for a team</p>
+<p>* <strong>Markdown Language</strong>: you can also author codelabs using markdown syntax. Mark(what?) ... Wikipedia describes Markdown as a lightweight <em>markup</em> language for creating formatted text using a plain-text editor.<br>Markdown has the advantage of being stored locally, so it can be edited even when offline</p>
+<aside class="special"><p><strong>Markup</strong> is a generic term for <em>any language</em> that describes a document&#39;s formatting.</p>
+<p><strong>Markdown</strong> is a specific <em>markup language</em>, originally created by John Gruber in 2004</p>
+</aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Software prerequisites" duration="15">
+        <h2 is-upgraded><strong>Target computers for Software</strong></h2>
+<h3 is-upgraded><strong>Linux</strong></h3>
+<p>The following steps include instructions for <strong>Linux</strong> computers, and for Linux in a container, i.e. the <strong>Linux development environment</strong> on a Chromebook, or <strong>Windows Subsystem for Linux</strong> on a Windows PC. If you&#39;re using a fully-fledged Linux distribution installed on your computer, then skip to the <strong>Go</strong> installation, just below ... however, if you&#39;re using a Chromebook or a Windows PC, please read on:</p>
+<h3 is-upgraded>Chromebook</h3>
+<p>If you&#39;re using a <strong>Chromebook</strong>, never fear because the installation of <em>all</em> dependencies has been tested by the author of this tutorial, by following the <strong>Linux instructions</strong> in this guide, within a Linux terminal (Debian Bookworm) on <strong>ChromeOS</strong>. There are <em>some</em> caveats however, which will be outlined (<em>if applicable</em>) as we proceed ... if you have <strong>not yet installed</strong> the <strong>Linux development environment</strong> on your Chromebook, please see my <a href="https://mikaere66.github.io" target="_blank">other Guides</a> on how to achieve this (although, read the next two paragraphs before rushing off).</p>
+<p>By installing all of these dependencies in your Linux container, you may get a message from ChromeOS saying <strong>Linux is low on disk space</strong> ... in that popup, there should be a button for <strong>Resize Linux disk</strong>. About two-thirds of the way down the <strong>Linux development environment</strong> settings page, next to <strong>Disk size</strong>, click the <strong>Change</strong> button. In there, drag the slider to the right to increase the allocated disk space to at least <strong>6.0</strong> GB.</p>
+<p>Also worth noting is that nano is <em>not</em> installed by default ... if you want to use nano as the plain-text editor for system files (e.g. <code>.bashrc</code>), please install it using the following commands:</p>
+<p>Start by updating your actual Debian <strong>system</strong> (recommended):</p>
+<pre><code>sudo apt update &amp;&amp; sudo apt upgrade</code></pre>
+<aside class="special"><p>Tip: if <strong>major</strong> upgrades were installed above, it might be best to restart your <code>Terminal</code> session. To do that, right-click the <strong>Terminal</strong> icon on your Shelf and select <code>Shut down Linux</code> ... then wait about 10 seconds before restarting</p>
+</aside>
+<p>When you&#39;re ready, install <strong>nano</strong> using the following command:</p>
+<pre><code>sudo apt install -y nano</code></pre>
+<h3 is-upgraded><strong>Windows</strong></h3>
+<p>If you&#39;re using a <strong>Windows desktop or laptop</strong>, then you&#39;ll need to have <strong>WSL2</strong> installed, and a distro already set up. If you need help with that, please see my <a href="https://mikaere66.github.io" target="_blank">other Guides</a> on how to install <strong>Windows Subsystem for Linux</strong>.</p>
+<h2 is-upgraded>Go (with Curl) installation</h2>
+<p>The following software is required on your local computer, to &#34;build&#34; the codelab&#39;s output files (HTML by default):</p>
+<ul>
+<li><strong>Go</strong> (golang). Requires curl for install</li>
+<li><strong>CLaaT</strong> (codelabs command-line tool)</li>
+</ul>
+<p>Curl is a command-line tool for transferring data with URL syntax, supporting <em>many</em> web protocols ... it&#39;s required to install Go in the next step, as well as Node.js (if applicable).</p>
+<p>To check for curl on your system, run the following command in your terminal:</p>
+<pre>which curl</pre>
+<p><strong>If you receive output</strong> showing the full-path to curl, then skip to the next step.</p>
+<p>However, <strong>if there is no output</strong>, install curl from your distro&#39;s repos, as shown:</p>
+<p>Start by updating your repos ...<br>(if you haven&#39;t done so already):</p>
+<pre><code>sudo apt update</code></pre>
+<p>Then install the curl program:</p>
+<pre><code>sudo apt install curl</code></pre>
+<h3 is-upgraded><strong>Now you can install Go</strong></h3>
+<ul>
+<li>Start by <a href="https://go.dev/dl/" target="_blank">downloading the latest version</a> from the official Go website</li>
+<li>Then follow their <a href="https://go.dev/doc/install" target="_blank">installation instructions</a> using this separate link<br>(remember to select the tab for <strong>Linux</strong> installation instructions)</li>
+</ul>
+<aside class="warning"><p>Important: note that <strong>both</strong> commands for step #1 require<br><strong>elevated </strong>privileges (i.e. <code>sudo rm ... && sudo tar ...</code>)<br>Observe how <code>sudo</code> is called <strong>twice</strong> in the example above.</p>
+<p>You will have to close/reopen any command prompt<br>windows <em>before</em> running the <code>go version</code> command</p>
+</aside>
+<h2 is-upgraded><strong>CLaaT tool installation</strong></h2>
+<p>The claat executable program converts your input file (e.g. <em>your</em> exercises codelab file) into the actual <code>codelab</code> format, which is HTML by default.</p>
+<p>Assuming you have Go installed now, the command below will result in <code>claat</code> having the full path: <code>$HOME/go/bin/claat</code> ... note that executable permissions will already be set, using this method</p>
+<pre>go install github.com/googlecodelabs/tools/claat@latest</pre>
+<p>Or, download directly from the <a href="https://github.com/googlecodelabs/tools/releases/latest" target="_blank">Google Codelabs</a> GitHub page. No matter which O/S you are using for your bare-metal machine, be sure to select the Linux version, most likely <code>claat-linux-amd64</code></p>
+<aside class="warning"><p>Whether you choose to download CLaaT directly from GitHub, or install it using <strong>go</strong>, you&#39;ll need to add its path to your <strong>.bashrc</strong> file, as mentioned in the Environment/Variables section. For ease-of-use, either <em>rename your downloaded file</em> to <code>claat</code> <strong>or </strong><em>create an alias</em> for <code>claat-linux-amd64</code> ... remember to <em>grant permissions</em> to make the file executable, as shown in the example below:</p>
+</aside>
+<pre>chmod u+x /path-to/claat</pre>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Environment/variables" duration="3">
+        <h3 is-upgraded><strong>Checking the path where CLaaT was installed</strong></h3>
+<pre>ls $HOME/go/bin</pre>
+<p>If all went well, you should see one file listed: <code>claat</code></p>
+<p>Now edit your <code>.bashrc</code> file and append the following:</p>
+<pre>export PATH=$PATH:$HOME/go/bin</pre>
+<p>Close then reopen any terminal sessions before running <code>claat</code><br>(alternatively, run the following command to reload <code>.bashrc</code>)</p>
+<pre><code>source ~/.bashrc</code></pre>
+<p>Then check for the successful installation of <code>claat</code></p>
+<pre><code>claat version
+or
+claat help</code></pre>
+<h3 is-upgraded><strong>Check the path where Go was installed</strong></h3>
+<pre>ls /usr/local/go/bin</pre>
+<p>If all is well, you should see two files listed: <code>go</code> and <code>gofmt</code></p>
+<p>Now edit your <code>.bashrc</code> file and append the following:</p>
+<pre>export PATH=$PATH:/usr/local/go/bin</pre>
+<aside class="special"><p>For settings to take effect, it may be necessary to close/reopen <strong>all</strong> command prompt windows</p>
+</aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Metadata format" duration="5">
+        <p>The start of your <code>codelab.doc</code> file needs to have certain metadata, to enable a codelab to function correctly. Some of this metadata is <strong>required</strong> and some is <strong>optional</strong>, as follows:</p>
+<h2 is-upgraded><strong>Required metadata</strong></h2>
+<p><code>Authors: your_name_here</code><br>At least one name, separated by commas</p>
+<p><code>Category: android, kotlin</code><br>At least one category, separated by commas</p>
+<p><code>Feedback Link: https://example.com</code><br>The hyperlink to open when &#34;Report a mistake&#34; is clicked at bottom-left</p>
+<p><code>URL: how-to-write-a-codelab</code><br>Must be unique within your codelabs directory. This is also<br>used as the folder name where exported files will be created</p>
+<p><code>Status: Published</code><br>Valid options: Draft, Published, Deprecated, Hidden</p>
+<h2 is-upgraded><strong>Optional metadata</strong></h2>
+<p><code>Analytics Account: project-id-123</code><br>This allows you to specify a custom Google Analytics ID for your codelab</p>
+<p><code>Environment: Web</code><br>A tag that allows CLaaT to output some codelabs for a specific environment.<br>All codelabs default to the &#34;Web&#34; environment, but given some hardware constraints, you might only want to generate them for a &#34;Kiosk&#34; environment, where you know people will have the right hardware.<br>You can also use this to target specific events, for instance: <code>Web, polymer-summit</code></p>
+<p><code>Summary: Create a Codelab in Google Docs</code><br>A short summary of the codelab that will be shown in the codelab browser UI</p>
+<p><code>Tags: compose, coroutines</code><br>Add relevant tags to make your codelab easy to find</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Let&#39;s get started!" duration="5">
+        <h2 is-upgraded><strong>Metadata and Title</strong></h2>
+<p>In the previous section, you learned about codelab metadata, required at the start of each <code>codelab.doc</code> file. Let&#39;s create a new codelab in Google Docs and alter the metadata.</p>
+<aside class="special"><p>Tip: after reading the blurb, right-click the link below and select <strong>Open link in new window</strong>. That way, you can view this <em>and</em> that window side-by-side</p>
+</aside>
+<p>Start by opening the template document in Google Docs ... we&#39;ll be using it to get you started: <a href="https://docs.google.com/document/d/1vl-oNLzDmDreLeMId9ZcFjIHWVW0RaDAy2BMY7AMbxQ/edit?usp=sharing" target="_blank">open a copy of the template document read-only</a> (opens in a new tab by default).</p>
+<p>With your two browser windows side-by-side, over in the template window, check to see that you are signed in to <em>your</em> Google account. If you are, you&#39;ll see your own avatar at top-right. <strong>If you&#39;re not signed in</strong>, there will be a big blue button saying <strong>Sign in</strong> ... please sign in as you normally would, using the Google account that you&#39;ll use to author your codelabs, then you should be returned to the original template document</p>
+<aside class="warning"><p>Note: if you see <em>another</em> user&#39;s avatar near the center of the Google Docs toolbar, just ignore it<br>... it simply means that another person is viewing the <em>same</em> template at the same time.</p>
+<p>This will change once you save a copy to your Google Drive, as the new file will belong to <em>you</em></p>
+</aside>
+<h3 is-upgraded><strong>Save a copy to your Google Drive</strong></h3>
+<aside class="special"><p>Tip: go to your <a href="https://drive.google.com/drive/my-drive" target="_blank">Google Drive</a> <em>first</em> and create a <strong>New folder</strong> for your Codelab projects. Then you can keep all your <code>codelab.doc</code> files together in one place, <em>and</em> it will make the next step easier</p>
+</aside>
+<p>In the top-left corner, click the <code>File</code> menu, then select <code>Make a copy</code> ... you will be presented with a <strong>Copy document</strong> dialog asking for a new document <strong>Name</strong> (required), and in which <strong>Folder</strong> to store it (optional).</p>
+<p>Name it <strong>My First Codelab</strong>  ... this is a similar name to the &#34;<code>URL</code>&#34; metadata we&#39;ll be using soon, just to keep things simple for this tutorial. Follow <strong>one</strong> of these steps regarding file location:</p>
+<ul>
+<li>If you do <strong>not</strong> wish to worry about folders, then simply select the <strong>Make a copy</strong> button</li>
+<li>If you <strong>do</strong> wish to select the file location and you <strong>did</strong> create a folder earlier, under <strong>Folder</strong>, click the <strong>My Drive</strong> button and <strong>select the folder</strong> you created previously, then click the <strong>Select</strong> button</li>
+<li>If you <strong>did not create a new folder</strong> previously, <strong>but you wish to do so</strong> now, select the <strong>All locations</strong> tab at the top of the dialog. Hover your mouse cursor over the <strong>My Drive</strong> (or other) listing, and click the arrow (<strong>˃</strong>) at far right. Wait for your files/folders to load, then in the bottom-left corner, you&#39;ll see a <strong>New folder</strong> icon. Click that button and type in a meaningful name, e.g. <strong>My Codelabs</strong> ... you will then be presented with an empty folder. Now you can click the <strong>Select</strong> button</li>
+</ul>
+<h4 is-upgraded><strong>Sample folder/file hierarchy</strong>:</h4>
+<p>My Drive<br>|— My Codelabs<br>|—|— My first Codelab</p>
+<pre>From here on, we will refer to your new file as the &#34;exercises codelab&#34;.
+Instructions for you to follow-along-with will appear in boxes like this</pre>
+<h3 is-upgraded><strong>Codelab Title</strong></h3>
+<p>Your codelab&#39;s title is actually formatted in the <strong>Title</strong> style. Place your mouse cursor somewhere within your new template document&#39;s title <strong>Create a Codelab in Google Docs</strong> and you&#39;ll see <strong>Title</strong> in the format toolbar, instead of <strong>Normal text</strong>.</p>
+<p>To <em>safely</em> highlight the template&#39;s title, place your mouse cursor at the <em>end</em> of the row, then on your keyboard, press the <code>Shift</code> + <code>Home</code> keys simultaneously. This ensures that the hidden line-break character is <strong>not</strong> included in the selection</p>
+<aside class="special"><p>Tip: when selecting text, especially the <strong>entire</strong> row, take care <strong>not</strong> to select the <strong>hidden</strong> line break character, located at the end of each line, <em>unless</em> you actually intend to do so. However, there <em>are</em> cases where you <em>would</em> need to include it, just not today. This tip applies to <em>all</em> word processors</p>
+</aside>
+<p>Now start typing your <em>own</em> title to personalize your codelab, e.g. <strong>My First Codelab</strong></p>
+<h3 is-upgraded><strong>Codelab Metadata</strong></h3>
+<p>This metadata should be added as a <strong>two-column table</strong> anywhere before the first step of the codelab.</p>
+<p>With your template document visible, compare its metadata, at the top of the file, with this example:</p>
+<table>
+<tr><td colspan="1" rowspan="1"><p>Summary</p>
+</td><td colspan="1" rowspan="1"><p>My first Codelab using Google Docs</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>URL</p>
+</td><td colspan="1" rowspan="1"><p>my-first-docs-codelab</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Category</p>
+</td><td colspan="1" rowspan="1"><p>codelabs</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Environment</p>
+</td><td colspan="1" rowspan="1"><p>web</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Status</p>
+</td><td colspan="1" rowspan="1"><p>Draft</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Feedback Link</p>
+</td><td colspan="1" rowspan="1"><p>https://github.com/&lt;username&gt;/&lt;username&gt;.github.io/issues</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Author</p>
+</td><td colspan="1" rowspan="1"><p>Your Name</p>
+</td></tr>
+</table>
+<aside class="warning"><p>Important: if you are creating <em>multiple</em> codelabs, it is imperative that the first thing you <strong>change</strong> in the <strong>metadata</strong> is the &#34;URL&#34; field. This name is used when creating the sub-folder in which the exported HTML is saved. If you have two or more codelabs with the <em>same</em> name, they may be overwritten upon export, without warning! Also, in <em>all</em> cases within this tutorial, please substitute <strong>&lt;username&gt; </strong>(including angle brackets) with <em>your </em><strong>Computer</strong> or <strong>GitHub</strong> username, as applicable</p>
+</aside>
+<pre>Edit the metadata for your exercises codelab, to suit you. Remember
+the guidelines though, as incorrectly formatted metadata may lead to
+a build failure, malformed codelab markup, or unexpected behavior!</pre>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Headers/exporting" duration="4">
+        <aside class="special"><p><strong>Title </strong>in this context, refers to your exported codelab&#39;s <code>index.html</code> document title, <em>not</em> your <code>codelab.doc</code> filename at the very top-left of Google Docs.</p>
+<p>The export instructions are added here, in the <em>middle</em> of the tutorial, because you now have some <em>actual</em> content to <code>export</code> ... it will help to give you an idea of what <code>output</code> to expect, based on the <code>input</code> that you provide. We will cover Exporting below</p>
+</aside>
+<h2 is-upgraded><strong>Headers</strong></h2>
+<h3 is-upgraded><strong>Title/headings/heading levels</strong></h3>
+<p><strong>Title</strong>: as previously mentioned, <strong>Title</strong> is reserved for the overall <strong>document title</strong>, in <em>this</em> case &#34;Create a Codelab in Google Docs&#34; as shown on this browser&#39;s tab, and in the top left-hand corner.<br>It would also show on the <strong>landing page</strong> ... we cover landing pages in <a href="https://mikaere66.github.io" target="_blank">another codelab</a>.</p>
+<p><strong>Heading 1</strong>: every codelab document must use the <strong>Heading 1</strong> paragraph style to delineate the steps of the codelab. In turn, these headings will be used to automatically create a <strong>Table of Contents</strong> that shows the student exactly where they are in the codelab, in <em>this</em> case &#34;Headers/exporting&#34;, and allows them to jump to any step.<br>The table of contents disappears for <em>smaller</em> browser windows, but is still available from the hamburger menu.</p>
+<p><strong>Headings 2..4</strong> have no overall bearing on the codelab itself (except Code blocks ... more on them later). Headings 2..4 are simply used to organize your content, similar to any <em>other</em> well-formatted Google Docs document. These headings will get translated to <code>&lt;h2&gt;</code>, <code>&lt;h3&gt;</code> and <code>&lt;h4&gt;</code> tags in the codelab markup</p>
+<pre>Edit the headers in your exercises codelab to reflect some things that
+you have an interest in. Try adding your own, using correct formatting</pre>
+<h2 is-upgraded>Exporting</h2>
+<h3 is-upgraded><strong>How to Export your Codelab</strong></h3>
+<p>Now it&#39;s time to create some actual output from your &#34;exercises codelab&#34; document ... start by deciding <strong>where on your computer</strong> you&#39;d like to store your project files.</p>
+<p>Let&#39;s say that you have a directory named <code>Projects</code> under your <code>Home</code> folder.</p>
+<p>The CLaaT tool &#34;exports&#34; your HTML files to the &#34;<code>url</code>&#34; suffix specified in the <code>metadata</code> you edited earlier ... for this example, we will use <code>how-to-write-a-codelab</code></p>
+<h4 is-upgraded><strong>Sample folder hierarchy</strong>:</h4>
+<p>Home<br>|— Projects<br>|—|— <strong>how-to-write-a-codelab<br></strong>|—|—|— <strong>img</strong></p>
+<p>The two folders in <strong>bold</strong> are created/updated by the CLaaT tool upon &#34;exporting&#34; your codelab.</p>
+<p>Open a <strong>command prompt</strong> or <strong>terminal</strong> window in your <code>Projects</code> folder, and run this command, or more-succinctly, a variation thereof:</p>
+<pre>claat export 12ABC3DEFGHIJ456K7LMNOPQRS-TUVWXYZ890ABC1244
+(do not copy)</pre>
+<aside class="special"><p>Note: the specified <em>document ID</em> is totally <em>fictitious</em>. Please <strong>substitute with your own</strong> 44 character document ID. Your doc ID can be found after <strong>docs.google.com/document/d/</strong> and before the <strong>/edit?tab=t.0</strong> portion in the address bar URL for <em>your</em> exercises codelab</p>
+</aside>
+<aside class="warning"><p>Important: if this is your first time accessing <em>any</em> Google service via the command-line, then you may get a prompt saying <strong>Authorize me at following URL</strong> ... if so, copy/paste the URL into your browser and sign in using the same Google account that you&#39;ll use to author your codelabs. This is a security feature, similar to any you might run into while attempting to access your Google Docs documents in a web browser, for example. You will see this prompt only once</p>
+</aside>
+<p>If the <code>export</code> command was successful, you should receive a confirmation in the form:</p>
+<pre>ok        how-to-write-a-codelab</pre>
+<p>The <code>how-to-write-a-codelab</code> portion indicates the name of your newly created codelab folder. Open your file manager application, and explore the contents ... you can open the <code>.json</code> and <code>.html</code> files in a plain-text editor and peruse the output, but <strong>do not edit</strong> these files, as their contents are overwritten <em>every</em> time you run <code>claat export ...</code><br></p>
+<p>Note the random filenames in the <code>img</code> sub-folder ... these are generated by the CLaaT tool, and are named as such for security purposes</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Preview your codelab" duration="0">
+        <p>There are many ways you can preview your codelab while in the development phase:</p>
+<ul>
+<li>CLaaT tool (local)</li>
+<li>Direct link (manual)</li>
+<li>My Drive menu (auto)</li>
+<li>Chrome/Edge extension</li>
+<li>Gulp (mentioned, but not covered here)</li>
+</ul>
+<h2 is-upgraded><strong>CLaaT Tool</strong></h2>
+<p>In the previous section, you exported your first codelab ... let&#39;s preview it locally using the CLaaT tool. To do that, open a <strong>second</strong> terminal window in the newly-created <code>how-to-write-a-codelab</code> folder and run the command:</p>
+<pre><code>claat serve</code></pre>
+<p>This will start a temporary <em>local</em> web server instance, and open a <em>new</em> browser tab to the local server instance (<code>http://localhost:9090</code> by default) displaying your new codelab web page.</p>
+<p>Optional: the <code>claat serve</code> command accepts a <code>-addr host:port</code> option, to specify the desired hostname or IP address and port number to bind to.</p>
+<p>It <em>is</em> possible to keep the <code>claat serve</code> instance running, and continue to run <code>claat export</code> in the <em>first</em> terminal window. This will save you from having to constantly switch directories to run each command in turn</p>
+<p>Back in your <code>claat serve</code> terminal window, when you&#39;re ready to <strong>quit</strong> the web server instance, press <code>Ctrl</code> + <code>C</code> simultaneously while that window has focus.</p>
+<h2 is-upgraded>Direct Link</h2>
+<p>The manual method starts with opening a new <code>plain-text</code> document on your computer that you can save and refer to later:</p>
+<p>You just need to paste into that text file two things:</p>
+<ol type="1" start="1">
+<li>the preview URL</li>
+<li>the document ID</li>
+</ol>
+<p><strong>Preview URL</strong>:<br>Start by copying/pasting this URL prefix (including the equals sign):</p>
+<pre>https://codelabs-preview.appspot.com/?file_id=</pre>
+<p><strong>Your Doc ID</strong>:<br>Your document ID can be found after <strong>docs.google.com/document/d/</strong> and before the <strong>/edit?tab=t.0</strong> portion in the address bar URL for <em>your</em> exercises codelab, e.g.</p>
+<pre>12ABC3DEFGHIJ456K7LMNOPQRS-TUVWXYZ890ABC1244
+(do not copy)</pre>
+<p>Copy <em>your</em> document ID into the text file, immediately after the equals sign (no spaces before or after), then save the file. When you&#39;re ready, copy the entire URL, then open a new browser tab and paste your new (full) preview URL into the address bar.</p>
+<aside class="warning"><p>Important: there is an <strong>anomaly with the Codelabs Preview site</strong>, linked above <em>and</em> used in both methods below. Creating special characters using HTML and formatting them as <code>&lt;code&gt;</code> e.g. <strong>&amp;lt;</strong> or <strong>&amp;gt;</strong> to represent <code>&lt;</code> or <code>&gt;</code> within <strong>tables</strong> appears <strong>as-is</strong> in the preview. Please ignore this, since your codelab (after running the <code>claat export ...</code> command) <em>is</em> rendered correctly</p>
+</aside>
+<h2 is-upgraded><strong>My Drive Menu</strong></h2>
+<p>For each <em>codelab</em> document that you store in your <a href="https://drive.google.com/drive/my-drive" target="_blank">Google Drive</a> account, you will find an option for <strong>Open with</strong> | <strong>Codelabs Preview</strong> in the menu next to its name.</p>
+<h2 is-upgraded><strong>Preview Codelab extension</strong></h2>
+<p>To quickly view your codelab in the browser as you add content, you may choose to install the <a href="https://chrome.google.com/webstore/detail/preview-codelab/lhojjnijnkiglhkggagbapfonpdlinji" target="_blank">Preview Codelab</a> for Chrome/Edge extension. This extension can potentially give you a toolbar button that you can click for an &#34;instant&#34; preview.</p>
+<p>If you <em>do</em> opt to install the <strong>Preview Codelab</strong> extension, you&#39;ll need to adjust some of its settings to make it more accessible, i.e. pinning its icon to your browser&#39;s toolbar:</p>
+<aside class="warning"><p><strong>Google Chrome</strong>: after installing the extension, go to Chrome&#39;s main menu <code>&vellip;</code> and select <strong>Extensions</strong> | <strong>Manage Extensions</strong>.<br>You may see a message saying <strong>This extension may soon no longer be supported</strong>. Just click the More options menu <code>&vellip;</code> next to <strong>Find alternative</strong> and select <strong>Keep for now</strong>. Be aware that, if left for 10 minutes or so, this message will actually change to <strong>This extension hasn&#39;t published privacy practices, such as how it collects and uses data</strong> ... if you see this, just click the options menu <code>&vellip;</code> to the right, and select <strong>Keep this extension</strong>.<br>In the <strong>All extensions section</strong>, click <strong>Details</strong> under <strong>Preview Codelab</strong>, and enable <strong>Pin to toolbar</strong></p>
+</aside>
+<aside class="warning"><p><strong>Microsoft Edge</strong>: after installing the extension, if you do see the <strong>Extensions</strong> icon (shaped like a jigsaw-puzzle piece) on your toolbar, skip to step 2</p>
+<ol type="1" start="1">
+<li>Go to Edge&#39;s main menu <code>&hellip;</code> and select Settings. Either select Appearance from the Settings menu at left, or in the <strong>Search settings</strong> box, type <strong>toolbar</strong>.<br>Then scroll down, and under <strong>Other appearance settings</strong>, click <strong>Toolbar</strong>. Under the heading <strong>Select which buttons to show on the toolbar</strong>, next to Extensions button, click the drop-down menu and select <strong>Show automatically</strong></li>
+<li>Click the <strong>Extensions</strong> icon on your toolbar, and next to <strong>Preview Codelab</strong>, click the Thumbtack icon to enable <strong>Pin to toolbar</strong></li>
+</ol>
+</aside>
+<h2 is-upgraded><strong>Gulp method</strong></h2>
+<table>
+<tr><td colspan="1" rowspan="1"><p class="image-container"><img style="width: 128.00px" src="img/5a552d02a770539c.png"></p>
+</td><td colspan="1" rowspan="1"><p>Refer to my <a href="https://mikaere66.github.io" target="_blank">other Guides</a> for a full <strong>Landing Page</strong> tutorial, where you can prepare <em>all</em> your codelabs for publishing, and automatically generate an index page, where they&#39;re listed</p>
+</td></tr>
+</table>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Duration and time" duration="1">
+        <p>Some students are not <em>fully</em> committed to completing a codelab when they first start out. One of the ways that you can keep them engaged is by giving them accurate estimates, at each step, regarding how much <em>additional</em> effort is required to complete the codelab.</p>
+<p>In order to add this feature to your codelab, each section needs to have an estimated <strong>time to complete</strong>, in the form <code>Duration: MM:SS</code> <strong>or </strong><code>Duration: H:MM:SS</code> and it should be placed on the line immediately following the section header. Annotate the text with the color <strong>dark grey 1 </strong>(in the toolbar&#39;s color palette, it&#39;s 5th from the left).</p>
+<p>Sample formatting for <em>this</em> section:</p>
+<pre>&lt;H1&gt;Duration and Time&lt;H1&gt;
+&lt;FONT color=&#34;dark grey 1&#34;&gt;</pre>
+<aside class="warning"><p>The example above is <strong>conceptual</strong> only, and is intended to demonstrate the use of <strong>headings</strong> and <strong>colors</strong> for this particular section in the tutorial</p>
+</aside>
+<p>The total duration for all sections is calculated automatically by the CLaaT tool when a codelab is &#34;exported&#34; ... it appears at the beginning of all codelabs, opposite the codelab&#39;s title, where you&#39;ll see a timer icon followed by the total time remaining. This time estimate is also used for each codelab on the &#34;landing page&#34;, if applicable.</p>
+<p>As the student progresses through each section in the codelab, the estimated time changes to reflect actual time remaining for those sections <em>not-yet</em> completed</p>
+<p><strong>Notes</strong>:</p>
+<ul>
+<li>Seconds are <strong>ignored</strong> ... in other words, only whole minutes are tabulated/displayed</li>
+<li>If you <strong>forget</strong> to add the duration for a section, the default of 1:00 minute will be used</li>
+<li>If only <strong>one</strong> colon is used (<code>M:SS</code>), then that duration is assumed to be minutes:seconds</li>
+<li>If the <strong>last</strong> section of your codelab is simply a <code>Congratulations</code> or <code>Summary</code> page, you should set the duration for that section to zero (0:00)</li>
+</ul>
+<pre>Alter some of the Duration annotations in your exercises codelab. Get
+the total for all the annotations, and after exporting your codelab,
+go to the first section and compare that to what&#39;s shown at top-right</pre>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Lists/special formats" duration="4">
+        <h2 is-upgraded><strong>Bullets/Numbering</strong></h2>
+<p>Bulleted and numbered <strong>lists</strong> are created just the same way as with authoring any well-formatted Google Docs document. Start by entering a list of items <em>without</em> any formatting, adding each list-item on a <em>new</em> line, plus a new <em>empty</em> line at the end of the list.</p>
+<p>When you&#39;re ready, highlight all items in the list (but not the final <em>empty</em> line) then on the toolbar, select either <strong>Bulleted list</strong> or <strong>Numbered list</strong></p>
+<pre>Make your own bulleted and/or numbered list(s) in the exercises codelab,
+whatever suits you. Check its HTML output after running claat export ...</pre>
+<h2 is-upgraded><strong>Info Boxes</strong></h2>
+<p>Info boxes are colored callouts that enclose special information in codelabs. Positive info boxes should contain positive information like best practices and time-saving tips. Negative info boxes should contain information like API usage restrictions or warnings.</p>
+<p>How to create Info boxes:</p>
+<ul>
+<li>Positive information, like best practices and time saving tips, should be formatted as a <strong>single-cell table</strong> with a <strong>light green 3</strong> background</li>
+<li>Negative information, like warnings and API usage restrictions, should be formatted as a <strong>single-cell table</strong> with a <strong>light orange 3</strong> background</li>
+</ul>
+<p>It is recommended that you keep your infoboxes clean, concise and focused on a single topic. If you have information which may be useful to know but is not a critical part of the codelab instructions, then you should link to that information from the FAQ section rather than including it as an infobox.</p>
+<table>
+<tr><td colspan="1" rowspan="1"><p><strong>Table properties: positive info box</strong></p>
+</td><td colspan="1" rowspan="1"><p><strong>Table properties: negative info box</strong></p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p class="image-container"><img alt="Cell background: light green 3" style="width: 298.00px" src="img/1fcb2fcedf4100f6.png"></p>
+</td><td colspan="1" rowspan="1"><p class="image-container"><img alt="Cell background: light orange 3" style="width: 298.00px" src="img/242bed569ff39946.png"></p>
+</td></tr>
+</table>
+<pre>Add your own info boxes (from scratch) to your exercises codelab ...
+start by placing the text-cursor at the desired location, then from
+the Insert menu, select Table | 1x1 ... now enter some text appropriate
+to this info box&#39;s use-case. To format the color, right-click the
+table and about three-quarters of the way down the menu, select &#34;Table
+properties&#34; ... expand the 〉Color category near the bottom, then
+change &#34;Cell background color&#34; to the correct color for your use-case.
+Remember: &#34;light green 3&#34; for positive, &#34;light orange 3&#34; for negative</pre>
+<h2 is-upgraded><strong>Code Blocks</strong></h2>
+<p>So far, in this tutorial, we&#39;ve been outlining exercises for you to complete in special &#34;boxes&#34; ... these boxes are actually intended for &#34;command-line snippets&#34;, but have been used in <em>this</em> case to highlight instructions for you to follow.</p>
+<p>It&#39;s often the case that you will have command-line instructions or log messages which are formatted with a <code>monospaced</code> font and have pre-defined whitespace. You can add these sections to your codelab by creating a <strong>single-cell table</strong> and making sure that all the text within the table is formatted using the <strong>Consolas font</strong> ... in a way, these code blocks are similar to info boxes, but instead of a color background, you use a special font.</p>
+<aside class="special"><p>To format text with the <strong>Consolas</strong> font, unless you&#39;ve used it before in Google Docs, you&#39;ll need to specifically add it from the <strong>More fonts</strong> section. Highlight the desired text, then click the drop-down <strong>Font</strong> menu and select <code>More fonts</code> ... in the dialog box, start typing <code>Consolas</code> in the search field and Consolas should show within the list section. Click the <code>Consolas</code> entry once to select it, then click the <code>OK</code> button.<br>Next time you need Consolas, you&#39;ll find it in the regular Font menu, along with Roboto, etc.</p>
+</aside>
+<pre>Try adding your own Command-line Snippet to the exercises codelab.
+Remember to format the included text with the correct font. This is
+how the CLaaT tool recognizes code blocks &amp; outputs correct markup</pre>
+<p>Do you see a pattern emerging, in how the CLaaT tool recognizes key features <strong>formatted in a particular style</strong>, so that it can convert them to special markup for your codelab&#39;s HTML output?</p>
+<h2 is-upgraded><strong>Code Snippets</strong></h2>
+<pre><code>Code snippets with syntax highlighting can be added
+by creating a single-cell table and making sure that
+all the text is formatted using the Courier New font</code></pre>
+<p>Notice in the example directly above, that certain keywords (from different programming languages) are highlighted in different colors. Both of these blocks are <strong>single-cell</strong> tables, but the first one is formatted using the <strong>Consolas</strong> font, whereas the second is formatted using the <strong>Courier New</strong> font.</p>
+<aside class="warning"><p>Note: in the three <strong>code block</strong>/<strong>code snippet</strong> boxes above, each and every line (except the last line) in each box has a hard-coded <strong>line break</strong>, otherwise the code would scroll far off-screen to the right, which is not the desired effect. <em>This</em> particular box however, has <em>no</em> line breaks whatsoever, because it&#39;s an <em>info box</em>, not a code block. Also, notice that we&#39;re allowed to have <strong>bold</strong>/<em>italicized</em> text here, whereas <em>any/all</em> text formatting within a <strong>code block</strong> or <strong>code snippet</strong> is categorically ignored, <em>except</em> the <strong>Consolas</strong>/<strong>Courier New</strong> fonts</p>
+</aside>
+<p>Any additional styles applied to the code will be overridden by the syntax highlighting. This means that you&#39;re free to use code highlighting Add-ons in your <code>codelab.doc</code> but it will have <em>no</em> effect on how the code is highlighted in the final codelab.</p>
+<p>For programming tutorials, it is strongly recommended that you provide a <strong>Heading 3</strong> header directly above your code snippet with the <strong>filename</strong>, if appropriate. This helps students keep track of where the code is coming from. The codelab framework uses the <em>file extension</em> of that Heading 3 header as a clue for how to highlight the code.</p>
+<p>It is also strongly recommended that you make your <strong>Heading 3</strong> header a hyperlink to the actual file, if it is available on GitHub. A leading GitHub icon will automatically be added to the heading in such cases.</p>
+<h2 is-upgraded><strong>Text Styles</strong></h2>
+<p>Apart from special use-cases already mentioned, for the most part, it doesn&#39;t matter which fonts you use in your Google Doc draft, because <em>everything</em> will be formatted using <strong>Roboto</strong> in the final codelab.</p>
+<p>However, there <em>are</em> some simple methods that you can use to add emphasis to certain parts of the text. <strong>Bolded</strong> and <em>italicized</em> text will be passed through to the codelab markup as <code>&lt;strong&gt;</code> and <code>&lt;em&gt;</code> tags respectively. Also, passages of text formatted with the <code>Courier New</code> font will be passed through as inline <code>&lt;code&gt;</code> tags in the markup.</p>
+<p>You might have to experiment with line breaks to get your pages looking just right. Also, while you can use <em>some</em> regular HTML, be aware that left and right angle brackets are special characters in markup, so in the above paragraph, we&#39;ve had to use <strong>&amp;lt;code&amp;gt;</strong> (<em>without</em> the <strong>bold</strong>) to demonstrate <code>&lt;code&gt;</code> correctly, for example.</p>
+<p>Something else worth noting is that technically &#34;line breaks&#34; and &#34;new paragraphs&#34; are two  different things. Normally, in a Google Docs document, when you press the <code>Enter</code> key, you&#39;ll get a <strong>new paragraph</strong>, so when your codelab is exported to markup, it&#39;s translated to <code>&lt;P&gt;</code> ... however, you may notice that there&#39;s a small gap between paragraphs.<br>If you&#39;d like a new line, but want to avoid the gap (as demonstrated by <em>this</em> new line) then press <code>Shift</code> + <code>Enter</code> instead. This creates a <strong>line break</strong> that is translated to <code>&lt;BR&gt;</code> in your HTML output</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Images and videos" duration="0">
+        <h2 is-upgraded><strong>Responsive images</strong></h2>
+<p>Adding images to your codelab is just the same as adding images to a regular Google Docs document.</p>
+<p>Start by positioning the text-cursor at the desired location, then from the <strong>Insert</strong> menu, select <code>Image</code> ... you&#39;ll see a pop-out menu containing the following options:</p>
+<ul>
+<li>Upload from computer</li>
+<li>Search the web</li>
+<li>Drive</li>
+<li>Photos</li>
+<li>Camera</li>
+<li>By URL</li>
+</ul>
+<p>Select the preferred method, then the image will be inserted and saved &#34;within&#34; the document itself, even when the <strong>By URL</strong> option is used. That way, your images will always be available, and not reliant on someone else&#39;s website.</p>
+<p>For images, <strong>Alt text</strong> helps with accessibility, as well as showing up if (for some reason) the image fails to load, or the viewer has images turned off.</p>
+<p>To add <strong>Alt text</strong> for an image, right-click the image and select <strong>Alt Text</strong>. In the pop-out menu that shows on the right-hand edge of Google Docs, <strong>Alt text</strong> is at the bottom.<br><strong>Keyboard shortcut</strong> for Alt text is: <code>Ctrl</code> + <code>Alt</code> + <code>Y</code> <em>after</em> clicking the image once to highlight it.</p>
+<p>A <strong>title</strong> tag can also be added to an image, which will show as a &#34;tooltip&#34; when the mouse-cursor is hovered over the image. After added your &#34;Alt text&#34;, click the <code>Advanced options</code> link to also add a &#34;title&#34; tag.</p>
+<aside class="special"><p>Note: after running the <code>claat export ...</code> command, images are saved to your local computer, within the <strong>img</strong> folder under the codelab&#39;s output directory, in our case: <strong>my-first-docs-codelab/img</strong></p>
+</aside>
+<p class="image-container"><img alt="Image sample" title="Image sample" style="width: 624.00px" src="img/afb216d18c40e4a7.jpeg"></p>
+<p><strong>Task</strong>:</p>
+<p>Search on Google (or whatever) for something that you have an interest in, then flip to the Images tab.</p>
+<p>Find something of medium size, i.e. the example above is 924x601 pixels ... if too big, you&#39;ll find that the image is actually downsized (if required) to match the <em>width</em> of the codelab&#39;s <em>main</em> section (this).</p>
+<p>For example, try dragging the right-hand edge of this window in and out to see how the image resizes (tip: when done, press <code>ESC</code> while <em>still holding the mouse button</em>, to restore the window&#39;s original size)</p>
+<h2 is-upgraded><strong>Youtube videos</strong></h2>
+<p>Youtube videos can be embedded by following these simple steps:</p>
+<ol type="1" start="1">
+<li>Add an image in the desired location within the document, as outlined above. The image can be a screenshot of the video (thumbnail) for instance, but it doesn&#39;t really matter since it won&#39;t be displayed, but instead, replaced by the embedded video</li>
+<li>Take the same steps (as for images) to add &#34;Alt Text&#34; by first clicking the image to make it &#34;active&#34;, and doing the <code>Ctrl</code> + <code>Alt</code> + <code>Y</code> thing</li>
+<li>However, this time, instead of typing in some &#34;Alt text&#34;, paste a YouTube video link in the Description field of the Alt text, in the format <code>https://www.youtube.com/watch?v=DWAinkJ54AP8</code> where <code>DWAinkJ54AP8</code> is the video ID in this sample URL</li>
+</ol>
+<iframe class="youtube-video" src="https://www.youtube.com/embed/DWAinkJ54AP8?rel=0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<aside class="warning"><p>Although the video URL used in this example is formatted correctly, it is no longer valid, as the video has been removed from YouTube ... the use of an <em>invalid</em> video ID was <em>by design</em>, for the purpose of demonstration only</p>
+</aside>
+<p><strong>Task</strong>:</p>
+<p>Try adding a video to your exercises codelab, by first inserting an image, then adding a YouTube url as the Alt text</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Buttons and iFrames" duration="3">
+        <h2 is-upgraded><strong>How to add a Button</strong></h2>
+<p>In order to add a button to your codelab, simply add a hyperlink to some text, and make sure that the text is <strong>highlighted</strong> with a <strong>dark green 1</strong> background (note the distinction between text <em>color</em> and background <em>highlighting</em>). The link for the example button below actually points to <strong>example.com</strong> and will open that website in a <strong>new tab</strong> by default, but a link to a file download will work just the same way.</p>
+<table>
+<tr><td colspan="1" rowspan="1"><p class="image-container"><img alt="Button highlight: dark green 1" title="Open in new tab for better view" style="width: 248.00px" src="img/978e81e8a2904d10.png"></p>
+</td><td colspan="1" rowspan="1"><p>In Google Docs, the <strong>Highlight color</strong> button (on the formatting toolbar) is represented by an icon that is supposed to look like a &#34;highlighter pen&#34;</p>
+</td></tr>
+</table>
+<h3 is-upgraded><strong>Sample button:</strong></h3>
+<p><a href="https://example.com" target="_blank"><paper-button class="colored" raised><iron-icon icon="file-download"></iron-icon>Download the Internet</paper-button></a></p>
+<pre>Add a button to your exercises codelab using the correct Highlight color</pre>
+<h2 is-upgraded><strong>How to add an iFrame</strong></h2>
+<p>Aaah no, iFrames are not a new type of eyewear from Apple ... an inline frame (or iFrame) is a special HTML element that loads <em>another</em> HTML page in <em>your</em> HTML document. It essentially puts another webpage <em>within</em> the parent page.</p>
+<p>You can add an iFrame by following these steps:</p>
+<ul>
+<li>Add an image in the document. The image can be a screenshot of the iFrame (thumbnail) for instance, but it doesn&#39;t really matter since it won&#39;t be displayed, but instead replaced by the embedded iFrame</li>
+<li>Take the same steps (as for images) to add &#34;Alt Text&#34; by first clicking the image to make it &#34;active&#34;, and doing the <code>Ctrl</code> + <code>Alt</code> + <code>Y</code> thing</li>
+<li>As with videos, instead of typing in some &#34;Alt text&#34;, paste a full URL in the Description field of the Alt text, which in this example is <code>https://codepen.io/tzoght/embed/yRNZaP</code></li>
+</ul>
+<iframe class="embedded-iframe" src="https://codepen.io/tzoght/embed/yRNZaP"></iframe>
+<aside class="warning"><p>Important: for security reasons, <strong>iFrame embedding is limited</strong> to an enumerated set of allowable iFrame source URLs</p>
+</aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Summary and links" duration="0">
+        <p>There was much to cover in this tutorial, so it&#39;s great that you&#39;ve made it this far. Below you&#39;ll find a quick reference guide to some commonly-used formats, as well as some of the more commonly-used <code>claat</code> and <code>gulp</code> commands. Gulp is used to help prepare <em>all</em> your codelabs for publishing, and automatically generate an index (landing) page ... refer to my <a href="https://mikaere66.github.io" target="_blank">other Codelabs</a>.</p>
+<p>Further down are some helpful links to other codelab sites</p>
+<h2 is-upgraded><strong>Formatting guidelines</strong></h2>
+<h3 is-upgraded><strong>Full-on code blocks</strong></h3>
+<p>(single-cell table req&#39;d)</p>
+<ul>
+<li>Console output (no Highlighting): <strong>all</strong> formatted as <code>Consolas</code> font</li>
+<li>Code snippets (<strong>with</strong> Highlighting): <strong>all</strong> formatted as <code>Courier New</code></li>
+</ul>
+<aside class="special"><p>Tip: an easy way to remember these is to think about them in terms of <em>how</em> the <code>Consolas</code> listing is <em>worded</em> ... <code>Terminal</code> or <code>Console</code> output should use the <code>Consolas</code> font. Also, the fact that <code>Courier New</code> is used for syntax highlighting <strong>and </strong><code>&lt;code&gt;</code> snippets (below) is trivial</p>
+</aside>
+<h3 is-upgraded><strong>Simple font/text color</strong></h3>
+<ul>
+<li>Section header only: must be <strong>Heading 1</strong></li>
+<li>Duration text color: <strong>dark grey 1</strong> (fifth from the left)<br>and must be on the next line after <strong>Section</strong> header</li>
+<li>Simple <code>&lt;code&gt;</code> snippets: <code>Courier New</code> font</li>
+<li>Actually displaying <code>&lt;code&gt;</code> in the line above:<br>&amp;lt;code&amp;gt; formatted as <code>Courier New</code></li>
+</ul>
+<h3 is-upgraded><strong>Buttons</strong></h3>
+<p>Add a hyperlink to some text, and make sure that the text is <strong>highlighted</strong> with a <strong>dark green 1</strong> background (remember, on the toolbar, select <strong>Highlight color</strong>, <em>not</em> Text color)</p>
+<h3 is-upgraded><strong>Info boxes</strong></h3>
+<p>(single-cell table req&#39;d)</p>
+<ul>
+<li>Positive info box: <strong>light green 3 </strong>cell background color</li>
+<li>Negative info box: <strong>light orange 3 </strong>cell background color</li>
+</ul>
+<h2 is-upgraded>CLaaT tool commands</h2>
+<aside class="warning"><p><strong>Below</strong>: the text <em>before</em> the (<code>$</code>) sign indicates the <code>current directory</code> in your terminal</p>
+</aside>
+<p>Export your Google Docs <code>codelab.doc</code> as HTML to your <code>codelabs</code> folder:</p>
+<pre><code>codelabs $ claat export YOUR_DOCUMENT_ID_123</code></pre>
+<p>After exporting, start a <code>Web server</code> and open <code>./index.html</code> in a New tab:</p>
+<pre><code>how-to-write-a-codelab $ claat serve</code></pre>
+<h2 is-upgraded><strong>Gulp tool commands</strong></h2>
+<p>After exporting, start a <code>Web server</code> with <code>landing page</code> as <code>/index.html</code>:</p>
+<pre><code>site $ gulp serve --codelabs-dir=codelabs</code></pre>
+<p>Start a <code>Web server</code> to test a <code>compiled</code> and <code>minified</code> version for publishing:</p>
+<pre><code>site $ gulp serve:dist --codelabs-dir=codelabs</code></pre>
+<p>To create the <code>production</code> version before publishing, but <em>without</em> the Web server:</p>
+<pre><code>site $ gulp dist --codelabs-dir=codelabs</code></pre>
+<aside class="special"><p>Tip: <code>gulp dist</code> is <strong>not</strong> required if you <em>just</em> ran the <code>gulp serve:dist</code> command</p>
+</aside>
+<h2 is-upgraded><strong>Web links</strong></h2>
+<p>For further info, check out the official GitHub repo:</p>
+<ul>
+<li><a href="https://github.com/googlecodelabs/tools" target="_blank">Google Codelabs Tools</a></li>
+</ul>
+<p>For codelab hosting ideas, check out these links:</p>
+<ul>
+<li><a href="https://docs.github.com/en/pages/quickstart" target="_blank">Quickstart for GitHub Pages</a></li>
+<li><a href="https://github.com/googlecodelabs/tools#how-do-i-publish-my-codelabs" target="_blank">How do I Publish my Codelabs?</a></li>
+</ul>
+
+
+      </google-codelab-step>
+    
+  </google-codelab>
+
+  <script src="https://storage.googleapis.com/claat-public/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/prettify.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/codelab-elements.js"></script>
+  <script src="//support.google.com/inapp/api.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,25 @@
+{
+  "environment": "web",
+  "format": "html",
+  "prefix": "https://storage.googleapis.com",
+  "mainga": "UA-49880327-14",
+  "updated": "2025-04-08T23:36:47Z",
+  "id": "chromeos-flex-on-a-pc",
+  "duration": 38,
+  "title": "ChromeOS Flex on an x86_64 PC",
+  "authors": "Michael Mossman",
+  "summary": "Refresh an older PC with ChromeOS Flex",
+  "source": "1pGYKJNaeYOxsm5-7MaBUxmXTEdKjvTRDGodUjG55-Yc",
+  "theme": "chromeos-flex",
+  "status": [
+    "published"
+  ],
+  "category": [
+    "chromeos-flex"
+  ],
+  "tags": [
+    "web"
+  ],
+  "feedback": "https://github.com/mikaere66/mikaere66.github.io/issues",
+  "url": "chromeos-flex-on-a-pc"
+}

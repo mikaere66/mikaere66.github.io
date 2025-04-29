@@ -1,0 +1,25 @@
+{
+  "environment": "web",
+  "format": "html",
+  "prefix": "https://storage.googleapis.com",
+  "mainga": "UA-49880327-14",
+  "updated": "2025-04-05T21:22:17Z",
+  "id": "android-studio-on-chromeos",
+  "duration": 20,
+  "title": "Android Studio on ChromeOS",
+  "authors": "Michael Mossman",
+  "summary": "How to install Android Studio on ChromeOS",
+  "source": "1rpCQW5e6FQvZe6aCPonI3u6HEQFw6IrRBnMZ4lywSSY",
+  "theme": "android",
+  "status": [
+    "draft"
+  ],
+  "category": [
+    "android"
+  ],
+  "tags": [
+    "web"
+  ],
+  "feedback": "https://github.com/mikaere66/mikaere66.github.io/issues",
+  "url": "android-studio-on-chromeos"
+}

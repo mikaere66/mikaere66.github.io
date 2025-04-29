@@ -1,0 +1,25 @@
+{
+  "environment": "web",
+  "format": "html",
+  "prefix": "https://storage.googleapis.com",
+  "mainga": "UA-49880327-14",
+  "updated": "2025-02-13T22:52:08Z",
+  "id": "add-linux-on-chromebook",
+  "duration": 30,
+  "title": "Add a Linux setup on ChromeOS",
+  "authors": "Michael Mossman",
+  "summary": "Add a Linux container on your Chromebook",
+  "source": "1oloVSFi2JzZoga9_dfsvfi_DLIO0NBUoQ0VrcYGpg4I",
+  "theme": "crostini",
+  "status": [
+    "published"
+  ],
+  "category": [
+    "crostini"
+  ],
+  "tags": [
+    "web"
+  ],
+  "feedback": "https://github.com/mikaere66/mikaere66.github.io/issues",
+  "url": "add-linux-on-chromebook"
+}

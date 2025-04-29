@@ -1,0 +1,511 @@
+
+<!doctype html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <meta charset="UTF-8">
+  <title>ChromeOS/Play on an x86_64 PC</title>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://storage.googleapis.com/claat-public/codelab-elements.css">
+  <style>
+    .success {
+      color: #1e8e3e;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+  <google-codelab codelab-gaid=""
+                  id="chromeos-play-on-a-pc"
+                  title="ChromeOS/Play on an x86_64 PC"
+                  environment="web"
+                  feedback-link="https://github.com/mikaere66/mikaere66.github.io/issues">
+    
+      <google-codelab-step label="Considerations" duration="2">
+        <p class="image-container"><img style="width: 624.00px" src="img/de1a49b32662be71.png"></p>
+<p>Image attribution: <a href="https://github.com/sebanc/brunch" target="_blank">Brunch Framework</a> website</p>
+<h2 is-upgraded><strong>Intended audience</strong></h2>
+<p>ChromeOS Flex and ChromeOS Brunch are both intended as <strong>a replacement operating system</strong> for x86_64 PCs, where it would occupy the <strong>entire</strong> disk.</p>
+<p>For this reason, be aware that by installing Flex or Brunch on your PC, <strong>your computer&#39;s disk will be wiped</strong> clean, with whatever operating system and/or data on there being <strong>completely lost</strong>.</p>
+<aside class="warning"><p>For those familiar with the Linux installation process, ChromeOS Flex/Brunch are <strong>not</strong> like that. There is no partitioning, no installing alongside ... this will irreversibly <strong>wipe out</strong> your entire disk</p>
+</aside>
+<p>This guide for installing the more <em>native</em> ChromeOS Brunch is <strong>far more involved</strong> than just installing ChromeOS Flex, so unless you <em>really</em> want the Google Play store functionality in your ChromeOS setup, then consider the regular ChromeOS Flex instead ... refer to my <a href="https://mikaere66.github.io/" target="_blank">Other Guides</a> for help with that.</p>
+<p>This guide will help you build a ChromeOS image using tools brought about by the community-driven project known as the <strong>Brunch Framework</strong>. Instead of repeating the information already on their GitHub page, I will just link to it <a href="https://github.com/sebanc/brunch" target="_blank">here</a> if you&#39;re interested in learning about what goes into ChromeOS Brunch.</p>
+<aside class="warning"><p><strong>Important</strong>: ChromeOS Brunch is designed to work on computers with an Intel <strong>8th Gen or later</strong> CPU, or an <strong>AMD Ryzen</strong> CPU. If you have an <em>older</em> CPU, then consider ChromeOS Flex instead</p>
+</aside>
+<h3 is-upgraded><strong>Purpose</strong></h3>
+<p>&#34;The Brunch framework aims to create a generic x86_64 ChromeOS image from an official recovery image, enabling ChromeOS on devices not officially supported by Google&#34; ... as a bonus, these builds include the Google Play store app.</p>
+<h3 is-upgraded>How it works</h3>
+<p>&#34;It achieves this by using a 1 GB ROOTC partition containing a custom kernel, an initramfs, the swtpm binaries, userspace patches, and configuration files, along with a specific EFI partition for booting&#34;.</p>
+<h2 is-upgraded><strong>Prerequisites</strong></h2>
+<p>The same principles regarding compatibility apply to <strong>both</strong> ChromeOS Flex <em>and</em> ChromeOS Brunch.</p>
+<p>Google has published a <a href="https://support.google.com/chromeosflex/answer/11513094" target="_blank">Certified Models List</a> which outlines the desktop and laptop PCs that are <strong>certified</strong> to run ChromeOS Flex. The list also shows when the device first started being supported, and for how long it will be <em>officially</em> supported (the <strong>End of support</strong> date ... usually 10 years after the model was first announced).</p>
+<p>Before going further with this guide, please review the <strong>Certified Models List</strong> to make sure that your computer <em>is</em> listed/supported ... if you can&#39;t find your model on the list, double-check that you have the correct model name/number, as follows:</p>
+<h3 is-upgraded><strong>Windows</strong></h3>
+<p>Newer versions of Windows include the <strong>msinfo32</strong> utility:</p>
+<ul>
+<li>Right-click the <strong>Start</strong> button and select <strong>Run</strong> ...</li>
+<li>In the Run dialog, type <strong>msinfo32</strong> and press <strong>Enter</strong></li>
+</ul>
+<p><strong>System Information</strong> will start in the <strong>System Summary</strong> section.<br>Note where it says <strong>System Model</strong> in the following example:</p>
+<p class="image-container"><img style="width: 624.00px" src="img/f2b5c0fba4188171.png"></p>
+<h3 is-upgraded><strong>Linux</strong></h3>
+<p>To find your computer model, type the following command into your terminal:</p>
+<pre><code>sudo dmidecode | grep  &#34;Product Name&#34;</code></pre>
+<p>Sample output for the same machine shown under Windows:</p>
+<pre>Product Name: Latitude 5400
+Product Name: 0PD9KD</pre>
+<p>If this does <strong>not</strong> provide any useful output, repeat the command <strong>without</strong> piping dmidecode to grep.</p>
+<h2 is-upgraded><strong>USB Flash Drive</strong></h2>
+<p>To create the <strong>ChromeOS Brunch bootable installer</strong>, you&#39;ll need a spare USB stick (preferably <strong>USB3</strong>) with at least <strong>16 GB</strong> capacity. Note that (like the computer disk) this <strong>will be completely wiped</strong> during the boot disk/installer creation process.</p>
+<aside class="warning"><p>Using the <strong>Chromebook Recovery Utility</strong>, it is possible to create a <strong>microSD</strong> bootable installer, but this will require extra steps to get your PC to boot from a microSD card. Many will <strong>not</strong> allow it.</p>
+<p>Also, a card slot <em>might</em> have a slower read/write speed, hence it will take longer to create/boot</p>
+</aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Download Files" duration="5">
+        <p>To install ChromeOS Brunch, you&#39;ll be creating <em>your own</em> bootable image, derived from an actual ChromeOS recovery image, together with the tools available from the Brunch Framework.</p>
+<aside class="special"><p><strong>Tip</strong>: save both these files to the same folder on your computer, on a drive with lots of free space.</p>
+<p>But, read this entire page <em>before</em> downloading, to get an overview of what we&#39;re trying to achieve.</p>
+</aside>
+<p>First, you need to identify the ChromeOS recovery image that is suitable for your particular hardware. Refer to the following table:</p>
+<table>
+<tr><td colspan="1" rowspan="1"><p><strong>Processor</strong></p>
+</td><td colspan="1" rowspan="1"><p><strong>Recovery image<br>(board / codename w/link)</strong></p>
+</td><td colspan="1" rowspan="1"><p><strong>Size (GB)</strong></p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Intel 8th/9th Gen</p>
+</td><td colspan="1" rowspan="1"><p>rammus / <a href="https://cros.tech/device/shyvana/" target="_blank">shyvana</a></p>
+</td><td colspan="1" rowspan="1"><p>1.6</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>↳ Celeron</p>
+</td><td colspan="1" rowspan="1"><p>octopus / <a href="https://cros.tech/device/bobba/" target="_blank">bobba</a></p>
+</td><td colspan="1" rowspan="1"><p>1.7</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Intel 10th Gen</p>
+</td><td colspan="1" rowspan="1"><p>hatch / <a href="https://cros.tech/device/jinlon/" target="_blank">jinlon</a></p>
+</td><td colspan="1" rowspan="1"><p>1.7</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Intel 11th Gen</p>
+</td><td colspan="1" rowspan="1"><p>volteer / <a href="https://cros.tech/device/voxel/" target="_blank">voxel</a></p>
+</td><td colspan="1" rowspan="1"><p>1.8</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>AMD Ryzen</p>
+</td><td colspan="1" rowspan="1"><p>zork / <a href="https://cros.tech/device/gumboz/" target="_blank">gumboz</a></p>
+</td><td colspan="1" rowspan="1"><p>1.8</p>
+</td></tr>
+</table>
+<p>Once you&#39;ve downloaded the recovery image, it&#39;s time to download the Brunch archive from their GitHub repository. Click the <strong>Download</strong> button below to go to the official Brunch Framework page and get their <strong>latest </strong>stable release (&gt; 900 MB):</p>
+<p><a href="https://github.com/sebanc/brunch/releases/latest" target="_blank"><paper-button class="colored" raised><iron-icon icon="file-download"></iron-icon>Download Brunch</paper-button></a></p>
+<p><a href="https://github.com/sebanc/brunch/releases" target="_blank"><paper-button class="colored" raised>↳ Other Releases ↲</paper-button></a></p>
+<p>Whichever operating system you use to create the USB installer, the downloaded <strong>.zip</strong> files and the extracted files within (combined) require nearly <strong>20 GB</strong> of <strong>free disk space</strong></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Bootable Image" duration="5">
+        <p>Now for the fun part ... we need to create the actual disk image that will contain the Brunch Framework bootloader, and of course the ChromeOS installer.</p>
+<aside class="warning"><p><strong>Important</strong>: if you are using Windows, these instructions assume that you have installed the Windows Subsystem for Linux (WSL). If <strong>not</strong>, please refer to my <a href="https://mikaere66.github.io/" target="_blank">Other Guides</a> for help with that</p>
+</aside>
+<p><strong>Linux</strong>: open a Terminal in (or <code>cd</code> into) <strong>same folder as your downloaded files</strong> from previous section.</p>
+<aside class="special"><p><strong>Windows</strong>: start WSL with the command <code>wsl --distribution &lt;distro&gt;</code> and you will start in your <strong>Windows</strong> user folder, instead of your <strong>Linux</strong> home folder. Now <code>cd</code> into Downloads folder.</p>
+<p><strong>WSL example path</strong>: /mnt/c/Users/&lt;yourusername&gt;/Downloads</p>
+</aside>
+<p>The <strong>extracted</strong> files will occupy (approximately) the following amount of disk space,<br><strong>plus</strong>, we need to create the actual ChromeOS Brunch <em>bootable image</em> file, as shown:</p>
+<table>
+<tr><td colspan="1" rowspan="1"><p>Recovery image</p>
+</td><td colspan="1" rowspan="1"><p>4.6</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Brunch installer</p>
+</td><td colspan="1" rowspan="1"><p>1.1</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p><em>Bootable image</em></p>
+</td><td colspan="1" rowspan="1"><p><em>14.0</em></p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p><strong>Total</strong></p>
+</td><td colspan="1" rowspan="1"><p><strong>19.7 GB</strong></p>
+</td></tr>
+</table>
+<p>Update your repo versions:</p>
+<pre><code>sudo apt update</code></pre>
+<p>Install these dependencies:</p>
+<pre><code>sudo apt install pv cgpt tar unzip</code></pre>
+<aside class="special"><p><strong>Tip</strong>: the following two commands assume you have <em>just</em> the necessary files in the downloads folder. If <strong>not</strong>, you may need to substitute the wildcard filenames with their <em>actual</em> filenames</p>
+</aside>
+<p>Extract the Brunch archive:</p>
+<pre><code>tar zxvf brunch_*.tar.gz</code></pre>
+<p>Extract ChromeOS recovery:</p>
+<pre><code>unzip chromeos_*.bin.zip</code></pre>
+<p>List files to get correct chromeos filename, so you can copy/paste it in next step:</p>
+<pre><code>ls</code></pre>
+<h3 is-upgraded><strong>Example output</strong></h3>
+<p>brunch_r134_stable_20250322.tar.gz<br><strong>chromeos_16151.61.0_rammus_recovery_stable-channel_RammusMPKeys-v7.bin<br></strong>chromeos_16151.61.0_rammus_recovery_stable-channel_RammusMPKeys-v7.bin.zip<br>chromeos-install.sh<br>efi_legacy.img<br>efi_secure.img<br>rootc.img</p>
+<aside class="warning"><p><strong>Important</strong>: be sure you have adequate disk space, as the next step will need about 14 GB free</p>
+</aside>
+<p>Create the actual installer (replace <strong>&lt;recovery_filename&gt;</strong> with the <strong>correct</strong> filename):</p>
+<pre><code>sudo bash chromeos-install.sh -src &lt;recovery_filename&gt;.bin -dst chromeos.img</code></pre>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Write to USB" duration="40">
+        <p>You can now write your new image, from the previous section, to a USB thumb drive. There are 3 methods to choose from:</p>
+<h2 is-upgraded><strong>Balena Etcher Method</strong></h2>
+<p><strong>Time estimates</strong>:</p>
+<table>
+<tr><td colspan="1" rowspan="1"><p>Writing to USB</p>
+</td><td colspan="1" rowspan="1"><p>42 minutes</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Verifying USB</p>
+</td><td colspan="1" rowspan="1"><p>10 minutes</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p><strong>Total time</strong></p>
+</td><td colspan="1" rowspan="1"><p><strong>52 minutes</strong></p>
+</td></tr>
+</table>
+<p>This method uses the popular <strong>Balena Etcher</strong> software to write the bootable image to your USB thumb drive ... start by going to the official <a href="https://etcher.balena.io/" target="_blank">Balena Etcher</a> website, and clicking the Download Etcher button.</p>
+<p>Select the correct version for your O/S and CPU architecture.</p>
+<p>Install the app (if applicable) then follow these simple steps:</p>
+<p>Open the Balena Etcher app, the on the left, click <strong>Flash from File</strong>.<br>Browse to the folder where your installer image is located, and select it.</p>
+<p>Next, click the <strong>Select target</strong> button at center.<br>Check the box next to your USB thumb drive, then click the <strong>Select 1</strong> button.</p>
+<p>When you are ready, click the <strong>Flash!</strong> button at right.</p>
+<aside class="warning"><p>Try to refrain from using your computer during this time, to avoid any hiccups</p>
+</aside>
+<h2 is-upgraded>Chrome Method</h2>
+<p>This method involves using the <strong>Chromebook Recovery Utility</strong>, a Google Chrome browser extension freely available from the Chrome Web Store. If you don&#39;t already have it installed, follow <a href="https://chromewebstore.google.com/detail/chromebook-recovery-utili/pocpnlppkickgojjlmhdmidojbmbodfm" target="_blank">this link</a> and add it to your Chrome browser, or just go to the <a href="https://chromewebstore.google.com/category/extensions" target="_blank">Chrome Web Store</a> and search for Chromebook Recovery Utility.</p>
+<aside class="warning"><p>Unfortunately, this Chrome extension is <strong>not yet supported on Linux</strong> computers</p>
+</aside>
+<p><strong>Time estimates</strong>:</p>
+<table>
+<tr><td colspan="1" rowspan="1"><p>Writing to USB</p>
+</td><td colspan="1" rowspan="1"><p>25 minutes</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Verifying USB</p>
+</td><td colspan="1" rowspan="1"><p>14 minutes</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p><strong>Total time</strong></p>
+</td><td colspan="1" rowspan="1"><p><strong>39 minutes</strong></p>
+</td></tr>
+</table>
+<aside class="special"><p><strong>Note</strong>: you will need to rename your chromeos.img file to <strong>chromeos.bin</strong> ...<br>because the Chromebook Recovery Utility will only recognize <strong>.bin</strong> file types</p>
+</aside>
+<p>In your Chrome browser, open the Chromebook Recovery Utility and from the gear menu at top-right, select <strong>Use local media</strong>.<br>Browse to the folder where your installer image is located, and select it.</p>
+<p>After the Chromebook Recovery Utility has parsed the file, you will see a drop-down menu showing removable media drives ... select your USB thumb drive, then click <strong>Continue</strong>.</p>
+<p>If you&#39;re on Windows, you will be prompted with a UAC dialog. Just click <strong>Yes</strong> to continue ...</p>
+<p>As indicated above, it takes a while to write/verify the USB thumb drive, so please be patient.</p>
+<aside class="warning"><p>Try to refrain from using your computer during this time, to avoid any hiccups</p>
+</aside>
+<h2 is-upgraded><strong>Rufus Method</strong></h2>
+<p><strong>Time estimates</strong>:</p>
+<table>
+<tr><td colspan="1" rowspan="1"><p>Writing to USB</p>
+</td><td colspan="1" rowspan="1"><p>25 minutes</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Verifying USB</p>
+</td><td colspan="1" rowspan="1"><p>N/A</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p><strong>Total time</strong></p>
+</td><td colspan="1" rowspan="1"><p><strong>25 minutes</strong></p>
+</td></tr>
+</table>
+<p>This method uses another popular utility called <strong>Rufus</strong>. Start by going to the official <a href="https://rufus.ie/en/" target="_blank">Rufus website</a> and downloading your preferred version, under the <strong>Download</strong> heading (about half-way down the page).</p>
+<p>Once installed (if applicable), start the Rufus app, and at the top, select your USB thumb drive, if it&#39;s not already selected.</p>
+<p>Next, click the big <strong>SELECT</strong> button just under that, over to the right ...<br>Browse to the folder where your installer image is located, and select it.</p>
+<p>After the Rufus app has parsed the file, it will make selections in the appropriate boxes to suit the partition scheme and file system types.</p>
+<p>When you are ready, click the big <strong>START</strong> button near the bottom of the window.</p>
+<aside class="warning"><p>Try to refrain from using your computer during this time, to avoid any hiccups</p>
+</aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="First boot USB" duration="20">
+        <h3 is-upgraded><strong>How to Boot</strong></h3>
+<p>The first thing to do in order to boot from a USB thumb drive is to find out <strong>how to get your particular computer to boot from USB</strong>. Because there are so many makes and models, that level of information is outside the scope of this guide.</p>
+<p>Do a Google (or similar) search for <strong>&lt;make&gt; &lt;model&gt; how to boot from USB<br></strong>where &lt;make&gt; &amp; &lt;model&gt; are the <em>actual</em> make and model of <em>your</em> computer.</p>
+<p>Examples for various laptop brands include:</p>
+<table>
+<tr><td colspan="1" rowspan="1"><p><strong>Manufacturer</strong></p>
+</td><td colspan="1" rowspan="1"><p><strong>Special key</strong></p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Acer</p>
+</td><td colspan="1" rowspan="1"><p>F12</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Asus</p>
+</td><td colspan="1" rowspan="1"><p>F8</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Dell</p>
+</td><td colspan="1" rowspan="1"><p>F12</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>HP</p>
+</td><td colspan="1" rowspan="1"><p>F9</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Lenovo</p>
+</td><td colspan="1" rowspan="1"><p>F12</p>
+</td></tr>
+</table>
+<h3 is-upgraded><strong>Actual Boot</strong></h3>
+<p>When you have the info you need to enable Booting from USB, insert the USB thumb drive into the target ChromeOS Brunch computer, and turn on the power. At the manufacturer&#39;s logo, press the special key (or key combo) to bring up the boot menu.</p>
+<p>Select the bootable USB you created earlier (it&#39;s usually listed by its brand name). At the colorful GRUB screen, just allow the auto timer to boot into the default <strong>ChromeOS</strong> selection.</p>
+<p><strong>Please be patient</strong> with the first boot, as it can take a long time, depending on your hardware ... to quote from the ChromeOS Brunch website: &#34;the Brunch framework has to rebuild itself by copying the original rootfs, modules and firmware files after each significant change. The time this process takes depends mostly on your USB flash drive / SD card write speed. You may try with one that has better write speed&#34;.</p>
+<p>Upon testing, it took <strong>68</strong> minutes, during which time the following stages of the boot process were shown onscreen, so at least you know <em>something</em> is happening:</p>
+<ul>
+<li>Loading Brunch Framework</li>
+<li>RootFS is being rebuilt</li>
+<li>Patches are being applied</li>
+<li>(screen will dim once)</li>
+</ul>
+<p><strong>Note</strong>: testing on a Dell Latitude 5521 had an initial boot time of just <strong>20</strong> minutes.</p>
+<h3 is-upgraded>Once Booted</h3>
+<p>When you see the <strong>Welcome to your Chromebook</strong> screen, on your keyboard, press <code>Ctrl+Alt+F2</code> to open a command shell.</p>
+<aside class="special"><p><strong>Tip</strong>: you may skip this step &amp; move to the next section, although it is mentioned in <em>some</em> docs</p>
+</aside>
+<p>Log in as <code>root</code> then enter the following command:</p>
+<pre><code>sudo resize-data</code></pre>
+<p>The operation will take a few seconds to complete, then it will prompt you to restart the computer ... press the <code>Enter</code> key to reboot</p>
+<aside class="warning"><p><strong>Note</strong>: during testing, the second boot took 60 minutes to complete, with the same three stages</p>
+</aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Actual Install" duration="20">
+        <p>From the <strong>Welcome to your Chromebook</strong> screen, press <code>Ctrl+Alt+F2</code> and log in as <code>root</code></p>
+<p>Now, you need to identify the disk that you are going to install to. Type the following command:</p>
+<pre><code>lsblk -e7</code></pre>
+<p>Look for a disk named <strong>sda</strong> or <strong>nvme0n1</strong> (or similar) ... you should be able to identify it by its size, printed next to the device name, e.g. <strong>sda</strong>      8:0    0      <strong>238.47G</strong>  0 disk</p>
+<aside class="warning"><p><strong>Important</strong>: it is essential that you identify the <strong>correct</strong> disk, because it <strong>will be wiped clean</strong></p>
+</aside>
+<p>This command is the installer. Type the following:</p>
+<pre><code>sudo chromeos-install -dst /dev/sdX</code></pre>
+<p>... (where <strong>sdX</strong> is the disk you identified with lsblk)</p>
+<p>Now type <code>yes</code> to <strong>confirm that all data will be lost</strong>.</p>
+<p>The installation should only take about 10 minutes ... when it&#39;s complete, log out by typing <code>exit</code></p>
+<p>Return to the <strong>Welcome to your Chromebook</strong> screen by pressing <code>Ctrl+Alt+F1</code></p>
+<p>Shut down your computer from the ChromeOS menu at bottom-right (the shutdown process may take longer than you expect, but please be patient ... do <strong>not</strong> remove the USB thumb drive until your computer has completely shut down).</p>
+<p>Remove the USB thumb drive, then power on your computer ... you should now see that colorful GRUB screen again, but this time, you&#39;re booting from your HDD/SSD.</p>
+<p>Congrats, you&#39;ve just installed ChromeOS Brunch ... now, set up ChromeOS as normal</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="How to Update" duration="0">
+        <p>There are 3 types of update to consider, as follows:</p>
+<ul>
+<li>Brunch/ChromeOS together</li>
+<li>Update just ChromeOS</li>
+<li>Update just Brunch</li>
+</ul>
+<p>Which one you choose depends on your interpretation of what&#39;s best and/or easiest.</p>
+<aside class="warning"><p><strong>Important</strong>: although TTY <em>can</em> be accessed from the login screen, you must be logged-in first, before pressing <code>Ctrl+Alt+F2</code> so that TTY can access the current user&#39;s Downloads folder</p>
+</aside>
+<h2 is-upgraded><strong>How to update Brunch and ChromeOS together</strong></h2>
+<p>Disk space requirements:</p>
+<table>
+<tr><td colspan="1" rowspan="1"><p>Latest brunch (.tar.gz)</p>
+</td><td colspan="1" rowspan="1"><p>0.89 GB</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Latest recovery (.zip)</p>
+</td><td colspan="1" rowspan="1"><p>1.8 GB</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Recovery extracted (.bin)</p>
+</td><td colspan="1" rowspan="1"><p>4.7 GB</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p><strong>Total</strong></p>
+</td><td colspan="1" rowspan="1"><p><strong>7.39 GB</strong></p>
+</td></tr>
+</table>
+<h3 is-upgraded><strong>Manually</strong></h3>
+<p>There are 3 main steps to manually update <em>both</em> Brunch <em>and</em> ChromeOS together:</p>
+<ol type="1" start="1">
+<li>Download the <a href="https://github.com/sebanc/brunch/releases/latest" target="_blank">latest Brunch</a> release</li>
+<li>Download <a href="https://cros.tech/" target="_blank">latest recovery</a> &amp; extract it</li>
+<li>Run the <strong>chromeos-update</strong> command</li>
+</ol>
+<p>However, please read <em>all</em> the instructions within this <em>Manually</em> section before downloading anything.</p>
+<ol type="1" start="1">
+<li>Downloading the latest Brunch release is pretty straight-forward ... just follow the link above, and download the file with the <strong>.tar.gz</strong> extension, saving it to your Downloads folder</li>
+<li>When downloading the latest recovery, follow the link above, and be sure to download the <em>same</em> recovery that matches your current installation, i.e. for the same codename that you used initially to install Brunch, but the latest version of it ... if you can&#39;t remember the codename of the recovery, in ChromeOS, open a new tab in your Chrome browser and type <code>chrome://system</code> into the address bar, then press <code>enter</code> ... scroll down to <strong>HWID</strong> on the left. Your codename will be shown as the <strong>first word</strong> in the right column, on the same row (ignore the hex code). Alternatively, open a TTY terminal by pressing <code>Ctrl+Alt+F2</code> and log in as <code>root</code> then run the command <code>sudo crossystem hwid</code></li>
+<li>Running the chromeos-update command is a little tricky, because you need to access your file downloads from <em>within</em> the TTY terminal. To help, follow these steps before running update:</li>
+</ol>
+<p><strong>Extract the recovery .zip file</strong>:</p>
+<ul>
+<li>Right-click the file and select <strong>Extract all</strong> from the menu</li>
+<li>Follow its progress at <strong>bottom-right</strong> of the My Files app</li>
+<li>When done, a new window will open in the <strong>chromeos...recovery...</strong> folder</li>
+<li>Right-click the extracted <strong>chromeos...recovery...bin</strong> file and select <strong>Cut</strong></li>
+<li>Close that new window, then <strong>Paste</strong> the file into your <strong>Downloads</strong> folder</li>
+</ul>
+<p><strong>Rename the downloaded files</strong>:</p>
+<ul>
+<li>Rename the extracted <strong>chromeos...recovery...bin</strong> file to <strong>recovery.bin</strong></li>
+<li>Rename the intact <strong>brunch_r123_stable...tar.gz</strong> file to <strong>brunch.tar.gz</strong></li>
+</ul>
+<aside class="special"><p><strong>Tip</strong>: if it&#39;s hard to tell which recovery filename is which, look at the file sizes</p>
+</aside>
+<p><strong>Open your TTY terminal, and</strong>:</p>
+<p>Log in as <code>root</code> ... example command line:</p>
+<pre><code>localhost login: root</code></pre>
+<p>Type the following command, noting that it&#39;s <em>intentionally</em> split into <strong>3 separate lines</strong>, so that it&#39;s easily verified. Type the first 2 lines ending with a backslash (<code>\</code>) then press <code>Enter</code> ... type the subsequent line(s) and double-check the full command for accuracy <em>before</em> pressing <code>Enter</code> after the third line:</p>
+<pre><code>sudo chromeos-update \
+-r /home/chronos/user/MyFiles/Downloads/recovery.bin \
+-f /home/chronos/user/MyFiles/Downloads/brunch.tar.gz</code></pre>
+<aside class="warning"><p><strong>Important</strong>: remember ... Linux paths and filenames are <strong>case-sensitive</strong></p>
+</aside>
+<p>When the update is complete, log out from <code>root</code> by typing <code>exit</code> then press <code>Ctrl+Alt+F1</code> to return to ChromeOS ... <strong>restart your computer immediately</strong> for the changes to take effect.</p>
+<p><strong>Delete unneeded files/folders</strong>:</p>
+<p>Once you&#39;ve logged back in to ChromeOS, go to the My Files app, and in the Downloads folder, delete these files and folders:</p>
+<ul>
+<li>the empty <strong>chromeos...recovery...</strong> folder (extracted .bin)</li>
+<li><strong>chromeos...recovery...zip</strong> and <strong>recovery.bin</strong> files</li>
+<li>the intact but renamed <strong>brunch.tar.gz</strong> file</li>
+</ul>
+<h3 is-upgraded><strong>via Script</strong></h3>
+<p>There is a very good script provided by <a href="https://github.com/BiteDasher/brcr-update" target="_blank">BiteDasher</a> ... check out the link if you would like to see what&#39;s in the script. To go ahead with it, the instructions have been updated <em>here</em>, because it no longer works when logged in as <code>chronos</code> ... instead, you must log in to the TTY terminal as <code>root</code></p>
+<p>Unless you are reading this on a different computer, you may wish to view this page on your mobile phone or write down the commands on a notepad. However, you <em>are</em> able to switch back and forth between the TTY and your ChromeOS desktop by pressing <code>Ctrl+Alt+F2</code> and <code>Ctrl+Alt+F1</code> respectively.</p>
+<p>Open the TTY terminal by pressing <code>Ctrl+Alt+F2</code> ... at the prompt, type <code>root</code> then press <code>&lt;enter&gt;</code> to log in.</p>
+<p>Type the following command to download the script and run it, as explained below:</p>
+<pre>curl -L -o - https://git.io/JLh1V | sudo bash</pre>
+<aside class="special"><p><strong>Tip</strong>: take care with the position of <code>-o -</code> before https ... together, they mean output to console.</p>
+<p>The command uses curl to download a file from a location (<code>-L</code>), a URL in this case ... the other switch tells curl to output (<code>-o</code>) the file to stdout (<code>-</code>)  then pipe that output to bash using sudo</p>
+</aside>
+<p>The install.sh script (alias: <code>git.io/JLh1V</code>) will install the <code>brcr-update</code> script in <code>/usr/bin</code></p>
+<p>Enter the following command into your TTY terminal to actually <em>run</em> the <code>brcr-update</code> script:</p>
+<pre><code>brcr-update</code></pre>
+<h2 is-upgraded><strong>How to update just Brunch</strong></h2>
+<h3 is-upgraded><strong>Manually</strong></h3>
+<p>To manually update <em>just</em> Brunch, follow the instructions in the <strong>Manually</strong> section above, but ignore all references to the <strong>chromeos...recovery...bin</strong> and <strong>recovery.bin</strong> files, i.e. your final update command would be:</p>
+<pre><code>sudo chromeos-update \
+-f /home/chronos/user/MyFiles/Downloads/brunch.tar.gz</code></pre>
+<p>When the update is complete, log out from <code>root</code> by typing <code>exit</code> then press <code>Ctrl+Alt+F1</code> to return to ChromeOS ... <strong>restart your computer immediately</strong> for the changes to take effect.</p>
+<h2 is-upgraded><strong>How to update just ChromeOS</strong></h2>
+<h3 is-upgraded><strong>Manually</strong></h3>
+<p>To manually update <em>just</em> ChromeOS, follow the instructions in the <strong>Manually</strong> section above, but ignore all references to the <strong>brunch_r123_stable...tar.gz</strong> and <strong>brunch.tar.gz</strong> files, i.e. your final update command would be:</p>
+<pre><code>sudo chromeos-update \
+-r /home/chronos/user/MyFiles/Downloads/recovery.bin</code></pre>
+<p>When the update is complete, log out from <code>root</code> by typing <code>exit</code> then press <code>Ctrl+Alt+F1</code> to return to ChromeOS ... <strong>restart your computer immediately</strong> for the changes to take effect.</p>
+<h3 is-upgraded><strong>via ChromeOS Settings</strong></h3>
+<p><strong>When your computer is currently off</strong>:</p>
+<p>This is the preferred method, compared to running <em>edit-brunch-config</em> below<br>(this section also applies to a computer that has <em>just been restarted</em>).</p>
+<p>Turn your computer on and wait for the colorful GRUB menu to appear.</p>
+<p>Press the down arrow to select <strong>ChromeOS (settings)</strong>, then press <strong>Enter</strong>.</p>
+<p>Follow the 7 steps of the wizard ... press <strong>Enter</strong> to confirm at each step:</p>
+<ol type="1" start="1">
+<li>Select the kernel (top is the default)</li>
+<li>Turn on the <strong>enable_updates</strong> option</li>
+<li>(Optional)</li>
+<li>(Optional)</li>
+<li>(Blank)</li>
+<li>(Blank)</li>
+<li>(Optional)</li>
+</ol>
+<aside class="special"><p><strong>Tip</strong>: use your arrow keys to move up/down ... tap the space bar to select/deselect</p>
+</aside>
+<p>Press any key to reboot your computer ...</p>
+<p>When you are logged back into ChromeOS, go to <strong>Settings</strong> | <strong>About ChromeOS</strong> and click the <strong>Check for updates</strong> button at top-right.</p>
+<p><strong>When already logged in to ChromeOS</strong>:</p>
+<p>Open a TTY terminal by pressing <code>Ctrl+Alt+F2</code> ... at the prompt, type <code>root</code> then press <code>&lt;enter&gt;</code> to log in.</p>
+<p>Type the following command to start the settings wizard:</p>
+<pre><code>sudo edit-brunch-config</code></pre>
+<p><strong>Follow the same 7 steps</strong> shown in the section just above</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Erase the USB" duration="0">
+        <p>It is recommended that you keep your ChromeOS Brunch installation USB for emergencies, but if you find that you no longer need it, then you&#39;ll need to <strong>remove all 12 partitions</strong> and <strong>reformat the device</strong> before it can be used again.</p>
+<aside class="special"><p><strong>Note</strong>: for the purpose of this guide, these instructions apply to microSD cards as well</p>
+</aside>
+<h2 is-upgraded><strong>ChromeOS/Windows</strong></h2>
+<p>To erase the installation USB, simply use the original <strong>Chromebook Recovery Utility</strong> that you used to create the installer.</p>
+<p>Open your Chrome browser, and start the <strong>Chromebook Recovery Utility</strong> extension.<br>Click the <strong>gear icon</strong> at top-right, and select <strong>Erase recovery media</strong> from the menu:</p>
+<p class="image-container"><img style="width: 624.00px" src="img/e15f8c9cb8c34bd.png"></p>
+<p>Select the correct <strong>USB thumb drive</strong> from the drop-down menu:</p>
+<p class="image-container"><img style="width: 624.00px" src="img/9193f0223cebeead.png"></p>
+<p><strong>Double-check</strong> that you have the <strong>correct</strong> drive before clicking <strong>Continue</strong></p>
+<p class="image-container"><img style="width: 624.00px" src="img/7969e288526202ca.png"></p>
+<p>Click the <strong>Erase now</strong> button to <strong>remove ChromeOS Flex</strong> from the drive:</p>
+<p class="image-container"><img style="width: 624.00px" src="img/860dbe801b4cb374.png"></p>
+<p>That&#39;s it ... you can now format the USB thumb drive as you normally would.<br>Click the <strong>Done</strong> button to close the <strong>Chromebook Recovery Utility</strong> extension:</p>
+<p class="image-container"><img style="width: 624.00px" src="img/6fcb75c7af07f89b.png"></p>
+<h3 is-upgraded><strong>Advanced Windows</strong></h3>
+<p>If you are comfortable using the command-line, then open the Windows <strong>Command Prompt</strong> or a <strong>Terminal</strong> window as <strong>Administrator</strong>, and run the <code>diskpart</code> command.</p>
+<p>In diskpart, list all disks:</p>
+<pre><code>list disk</code></pre>
+<p>Identify your USB stick by size (probably 14.5 GB for a 16 GB stick), then select that disk:</p>
+<pre><code>select disk X</code></pre>
+<p>where X is the number next to your thumb drive</p>
+<p>Once selected, list disks again to double-check:</p>
+<pre><code>list disk</code></pre>
+<p>Your thumb drive <strong>should have an asterisk (*)  in front</strong> of it</p>
+<p>When you&#39;re sure that you have the correct disk, run the clean command:</p>
+<pre><code>clean</code></pre>
+<p>Exit the diskpart utility:</p>
+<pre><code>exit</code></pre>
+<p>You can now format the disk with your preferred file system, as you normally would.</p>
+<h2 is-upgraded><strong>Linux</strong></h2>
+<aside class="special"><p>Using <strong>gparted</strong> to reformat this drive is <strong>not</strong> recommended, because there are 12 partitions to delete. You will receive <strong>two error messages</strong> for each &amp; every partition deleted during the process</p>
+</aside>
+<p>Start by identifying the correct device name:</p>
+<pre><code>lsblk</code></pre>
+<p>Your drive should have the <strong>correct size</strong> shown, and <strong>12 partitions</strong> as demonstrated earlier.</p>
+<p>When you are happy that you have the correct device name, run the following command:</p>
+<pre>sudo dd if=/dev/zero of=/dev/sdX bs=512 count=1 conv=notrunc</pre>
+<p>where <strong>/dev/sdX</strong> is the USB drive&#39;s device name (replace X with actual letter).</p>
+<aside class="warning"><p>Be <strong>very</strong> careful <strong>before</strong> pressing Enter with this command ... it is going to <strong>completely destroy a block device</strong> on your computer ... double-check &amp; triple-check that you have the correct device</p>
+</aside>
+<p>Now in Gparted, you will need to create a partition table <em>before</em> creating a new partition</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Tips and Tricks" duration="0">
+        <h2 is-upgraded><strong>Dual boot with another O/S</strong></h2>
+<p>All the guides I&#39;ve seen about dual-booting ChromeOS with Windows, for example, suggest &#34;installing&#34; the ChromeOS side of things as an <strong>image</strong> file on a separate partition.</p>
+<p>That&#39;s fine <em>if</em> you&#39;re happy with that method, but there is <em>another</em> way, which I&#39;ve successfully implemented on my Dell Latitude 5400 ... it involves a <em>second</em> 2242 SSD, installed in the WWAN slot, allowing me to keep my ChromeOS setup completely separate from my Windows setup.</p>
+<aside class="warning"><p><strong>Important</strong>: not all laptops support an M.2 SSD in the WWAN slot, and even less support booting from it ... please take this into consideration before going out and purchasing an M.2 2242 drive.</p>
+<p>Do the research for your make and model of laptop to see if adding a second SSD will work ... and if you <em>are</em> thinking about buying a 2242 M.2 SSD specifically for this purpose, then consider getting a Western Digital SN520 or SN750, as they have been widely reported to be compatible</p>
+</aside>
+<h3 is-upgraded><strong>How it works</strong></h3>
+<p>To begin with, each of the two operating systems is installed separately, as a standalone O/S, meaning there&#39;s only one drive in the machine at a time, and the O/S occupies the entire drive.</p>
+<aside class="special"><p><strong>Tip</strong>: temporarily removing the drive <strong>not being installed to</strong> will help to avoid headaches, since you have <strong>no</strong> control whatsoever regarding <em>which</em> drive ChromeOS (for example) will be installed on</p>
+</aside>
+<h3 is-upgraded><strong>How to boot</strong></h3>
+<p>After installing both operating systems, and reinstalling <em>both</em> drives, start your computer, then go into your UEFI setup (BIOS) and look for <strong>Boot Sequence</strong> or similar.</p>
+<p>You want to arrange the drives in order of preference, i.e. the most-used O/S at the top ... please consult your computer manual if you need help with this.</p>
+<p>When it comes time to boot, you would do nothing at startup if you want to use your most-used O/S (the default) ... but, to select the <em>other</em> O/S, you would press the key combo that you used at the start of this guide (when you booted from the USB thumb drive). From the menu, you would select the drive containing your second O/S, which would most likely be listed directly beneath the main O/S drive</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Troubleshooting" duration="0">
+        <h2 is-upgraded><strong>Flashing Caps Lock</strong></h2>
+<p>If ever you find yourself stuck at the Starting Brunch Framework screen, and the Caps Lock key is flashing on your keyboard, then follow these steps to repair your Brunch installation:</p>
+<ul>
+<li>press and hold <code>Ctrl+Alt+Del</code> to restart your computer</li>
+<li>at the colorful GRUB screen, select ChromeOS (settings)</li>
+<li>go through the wizard, selecting any options that you&#39;d <em>previously</em> selected</li>
+<li>restart the computer when prompted ... Brunch should then rebuild its files</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+  </google-codelab>
+
+  <script src="https://storage.googleapis.com/claat-public/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/prettify.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/codelab-elements.js"></script>
+  <script src="//support.google.com/inapp/api.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,25 @@
+{
+  "environment": "web",
+  "format": "html",
+  "prefix": "https://storage.googleapis.com",
+  "mainga": "UA-49880327-14",
+  "updated": "2025-02-13T22:16:31Z",
+  "id": "install-wsl-2-in-windows",
+  "duration": 36,
+  "title": "Install/manage WSL2 in Windows",
+  "authors": "Michael Mossman",
+  "summary": "My first Codelab using Google Docs",
+  "source": "1xALuoly87sbKK1ixcrjQoYocHgFb_0aX3taaY60Wj9k",
+  "theme": "wsl",
+  "status": [
+    "published"
+  ],
+  "category": [
+    "wsl"
+  ],
+  "tags": [
+    "web"
+  ],
+  "feedback": "https://github.com/mikaere66/mikaere66.github.io/issues",
+  "url": "install-wsl-2-in-windows"
+}

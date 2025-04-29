@@ -1,0 +1,23 @@
+{
+  "environment": "web",
+  "format": "html",
+  "prefix": "https://storage.googleapis.com",
+  "mainga": "UA-49880327-14",
+  "updated": "2025-03-04T03:52:01+13:00",
+  "id": "pub-to-username-github-io",
+  "duration": 15,
+  "title": "Publish your codelabs to GitHub",
+  "authors": "Michael Mossman",
+  "summary": "How to Publish codelabs to",
+  "source": "pub-to-username-github-io.md",
+  "theme": "",
+  "status": [
+    "published"
+  ],
+  "category": [
+    "github"
+  ],
+  "tags": [],
+  "feedback": "https://github.com/mikaere66/mikaere66.github.io/issues",
+  "url": "pub-to-username-github-io"
+}

@@ -1,0 +1,25 @@
+{
+  "environment": "web",
+  "format": "html",
+  "prefix": "https://storage.googleapis.com",
+  "mainga": "UA-49880327-14",
+  "updated": "2025-04-09T05:31:13Z",
+  "id": "chromeos-play-on-a-pc",
+  "duration": 92,
+  "title": "ChromeOS/Play on an x86_64 PC",
+  "authors": "Michael Mossman",
+  "summary": "Install native ChromeOS with Google Play support",
+  "source": "1jHOGka-Hz5QIkrS2IEkaB8QpMHVWd5tm2FAxyoYivIg",
+  "theme": "chromeos-play",
+  "status": [
+    "draft"
+  ],
+  "category": [
+    "chromeos-play"
+  ],
+  "tags": [
+    "web"
+  ],
+  "feedback": "https://github.com/mikaere66/mikaere66.github.io/issues",
+  "url": "chromeos-play-on-a-pc"
+}

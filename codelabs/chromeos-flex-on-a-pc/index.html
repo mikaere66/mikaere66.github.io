@@ -1,0 +1,306 @@
+
+<!doctype html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <meta charset="UTF-8">
+  <title>ChromeOS Flex on an x86_64 PC</title>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://storage.googleapis.com/claat-public/codelab-elements.css">
+  <style>
+    .success {
+      color: #1e8e3e;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+  <google-codelab codelab-gaid=""
+                  id="chromeos-flex-on-a-pc"
+                  title="ChromeOS Flex on an x86_64 PC"
+                  environment="web"
+                  feedback-link="https://github.com/mikaere66/mikaere66.github.io/issues">
+    
+      <google-codelab-step label="Considerations" duration="2">
+        <p class="image-container"><img style="width: 624.00px" src="img/b7da385e1493f8f1.png"></p>
+<p>Image attribution: <a href="https://www.freemalaysiatoday.com/category/leisure/2022/07/18/how-to-give-an-old-pc-or-mac-a-new-lease-of-life/" target="_blank">Free Malaysia Today</a> website</p>
+<h2 is-upgraded><strong>Intended audience</strong></h2>
+<p>ChromeOS Flex is intended as <strong>a replacement operating system</strong> for x86_64 PCs, where it will occupy the <strong>entire</strong> disk.</p>
+<p>For this reason, be aware that by installing ChromeOS Flex on your PC, <strong>your computer&#39;s disk will be wiped</strong> clean, with whatever operating system and/or data on there being <strong>completely lost</strong>.</p>
+<aside class="warning"><p>For those familiar with the Linux installation process, ChromeOS Flex is <strong>not</strong> like that ... there is no partitioning, no installing alongside ... this will irreversibly <strong>wipe out</strong> your entire disk</p>
+</aside>
+<h2 is-upgraded><strong>Prerequisites</strong></h2>
+<p>Google has published a <a href="https://support.google.com/chromeosflex/answer/11513094" target="_blank">Certified Models List</a> which outlines the desktop and laptop PCs that are <strong>certified</strong> to run ChromeOS Flex. The list also shows when the device started being supported, and for how long it will be <em>officially</em> supported (the <strong>End of support</strong> date ... usually 10 years after the model was first announced).</p>
+<p>Before going further with this guide, please review the <strong>Certified Models List</strong> to make sure that your computer <em>is</em> listed/supported ... if you can&#39;t find your model on the list, double-check that you have the correct model name/number, as follows:</p>
+<h3 is-upgraded><strong>Windows</strong></h3>
+<p>Newer versions of Windows include the <strong>msinfo32</strong> utility:</p>
+<ul>
+<li>Right-click the <strong>Start</strong> button and select <strong>Run</strong> ...</li>
+<li>In the Run dialog, type <strong>msinfo32</strong> and press <strong>Enter</strong></li>
+</ul>
+<p><strong>System Information</strong> will start in the <strong>System Summary</strong> section.<br>Note where it says <strong>System Model</strong> in the following example:</p>
+<p class="image-container"><img style="width: 624.00px" src="img/fb03ed77460cd3b1.png"></p>
+<h3 is-upgraded><strong>Linux</strong></h3>
+<p>To find your computer model, type the following command into your terminal:</p>
+<pre><code>sudo dmidecode | grep  &#34;Product Name&#34;</code></pre>
+<p>Sample output for the same machine shown under Windows:</p>
+<pre>Product Name: Latitude 5521
+Product Name: 07V9JV</pre>
+<p>If this does <strong>not</strong> provide any useful output, repeat the command <strong>without</strong> piping dmidecode to grep.</p>
+<h2 is-upgraded><strong>USB Flash Drive</strong></h2>
+<p>To create the <strong>ChromeOS Flex bootable installer</strong>, you&#39;ll need a spare USB stick (preferably <strong>USB3</strong>) with at least <strong>16 GB</strong> capacity. Note that (like the computer disk) this <strong>will be completely wiped</strong> during the boot disk/installer creation process.</p>
+<aside class="special"><p>Although the Google docs recommend an 8 GB drive capacity, having 8 GB printed on the label in the store does <strong>not</strong> mean it has an 8 GB capacity ... you&#39;ll most likely find that it&#39;s only 7.5 GB</p>
+</aside>
+<p>Whichever operating system you use to create the USB installer, the downloaded <strong>.zip</strong> file and the extracted <strong>.bin</strong> image file (combined) require <strong>10 GB</strong> of <strong>free disk space</strong> ... for <strong>Windows</strong> and <strong>macOS</strong>, this means on your <strong>system</strong> drive ... on <strong>Linux</strong>, it&#39;s up to you where you download/extract these files.</p>
+<aside class="warning"><p>Using the <strong>Chromebook Recovery Utility</strong>, it is possible to create a <strong>microSD</strong> bootable installer, but this will require extra steps to get your PC to boot from a microSD card. Many will <strong>not</strong> allow it.</p>
+<p>Also, a card slot <em>might</em> have a slower read/write speed, hence it will take longer to create/boot</p>
+</aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Chrome Method" duration="30">
+        <h2 is-upgraded><strong>Create the bootable installer</strong></h2>
+<p><strong>Time/space estimates</strong>:</p>
+<table>
+<tr><td colspan="1" rowspan="1"><p>Downloading</p>
+</td><td colspan="1" rowspan="1"><p>2.0 minutes</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Verifying/unpacking</p>
+</td><td colspan="1" rowspan="1"><p>0.5 minutes</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Writing to USB</p>
+</td><td colspan="1" rowspan="1"><p>19.5 minutes</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Verifying USB</p>
+</td><td colspan="1" rowspan="1"><p>4.0 minutes</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p><strong>Total time</strong></p>
+</td><td colspan="1" rowspan="1"><p><strong>26.0 minutes</strong></p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Free disk space</p>
+</td><td colspan="1" rowspan="1"><p>10 GB</p>
+</td></tr>
+</table>
+<p>The best way to create this bootable installer in <strong>Windows</strong> or <strong>macOS</strong> is with the <strong>Chromebook Recovery Utility</strong> extension for your Chrome browser ... <em>normally</em> this utility is used to create recovery USB thumb drives for specific Chromebooks, but it can <em>also</em> be used to create a <strong>ChromeOS Flex USB Installer</strong> with just a few clicks ... and the process is completely automated.</p>
+<aside class="warning"><p>Unfortunately, this Chrome extension is <strong>not yet supported on Linux</strong> computers</p>
+</aside>
+<p>Prepare your recovery media by <strong>backing up any files you want</strong> to keep, because this process will <strong>wipe its entire contents</strong> during creation of the recovery disk.</p>
+<p>Start by opening your Chrome browser, and going to the <a href="https://chromewebstore.google.com/detail/chromebook-recovery-utili/pocpnlppkickgojjlmhdmidojbmbodfm" target="_blank">Chromebook Recovery Utility</a> extension page in the <strong>Chrome Web Store</strong> ... alternatively, in the three-dot menu at top-right of Chrome, select <strong>Extensions</strong> | <strong>Visit Chrome Web Store</strong> and search for <strong>Chromebook Recovery Utility</strong>.</p>
+<table>
+<tr><td colspan="1" rowspan="1"><p class="image-container"><img style="width: 128.00px" src="img/5fa5bae11939450d.jpeg"></p>
+</td><td colspan="1" rowspan="1"><p>Install the extension ... it&#39;s icon should match the one shown at left</p>
+</td></tr>
+</table>
+<p>When you&#39;re ready, start the <strong>Chromebook Recovery Utility</strong> and click <strong>Get Started</strong>:</p>
+<p class="image-container"><img style="width: 624.00px" src="img/3daa172724b07aae.png"></p>
+<aside class="warning"><p>Although this utility says 8 GB or larger, remember most 8 GB flash drives are only 7.5 GB</p>
+</aside>
+<p>Click the <strong>Select a model from a list</strong> button</p>
+<p class="image-container"><img style="width: 624.00px" src="img/17ceb68c3aabdd2a.png"></p>
+<p>Click the <strong>Select a manufacturer</strong> drop-down list ...</p>
+<p class="image-container"><img style="width: 624.00px" src="img/4d995339b2dae3a8.png"></p>
+<p>and choose the <strong>Google ChromeOS Flex</strong> listing</p>
+<p class="image-container"><img style="width: 624.00px" src="img/f513cea8fe0dd0fd.png"></p>
+<p>Click the <strong>Select a product</strong> drop-down list ...</p>
+<p class="image-container"><img style="width: 624.00px" src="img/b2913c74c86e2bf6.png"></p>
+<p>and choose the <strong>ChromeOS Flex</strong> listing</p>
+<p class="image-container"><img style="width: 624.00px" src="img/d3668e23ad1a3a14.png"></p>
+<p>Click the <strong>Continue</strong> button when ready</p>
+<p class="image-container"><img style="width: 624.00px" src="img/7263633844b0a1b7.png"></p>
+<p>Click the <strong>Select</strong> drop-down list ...</p>
+<p class="image-container"><img style="width: 624.00px" src="img/bfeb722daac8f104.png"></p>
+<p>and choose your <strong>USB thumb drive</strong> from the list</p>
+<p class="image-container"><img style="width: 624.00px" src="img/8135d5960ad088b6.png"></p>
+<p>Click the <strong>Create now</strong> button when ready</p>
+<p class="image-container"><img style="width: 624.00px" src="img/43ed0480579d3465.png"></p>
+<p><strong>Windows</strong> will prompt you with a <strong>User Access Control</strong> dialog.<br>Click the <strong>Yes</strong> button to allowing writing the USB thumb drive:</p>
+<p class="image-container"><img style="width: 570.00px" src="img/46c3aa088ca4832b.png"></p>
+<aside class="warning"><p>Try to refrain from using your computer during this time, to avoid any hiccups</p>
+</aside>
+<p>The process will take at least 26 minutes, in 4 phases ...<br>Download, verify/unpack file, write USB, and verify USB:</p>
+<p class="image-container"><img style="width: 624.00px" src="img/556e2129be2cdc5a.png"></p>
+<p>That&#39;s it ... you&#39;re done!</p>
+<p class="image-container"><img style="width: 624.00px" src="img/990e576b832c1b0b.png"></p>
+<aside class="special"><p><strong>Tip</strong>: rather than removing the <strong>Chromebook Recovery Utility</strong> extension from Chrome, just <strong>turn it off</strong> for now, because you may need it later, if you decide to reformat the USB thumb drive</p>
+</aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Linux Method" duration="0">
+        <h2 is-upgraded><strong>Create the bootable installer</strong></h2>
+<p><strong>Time/space estimates</strong>:</p>
+<table>
+<tr><td colspan="1" rowspan="1"><p>Downloading</p>
+</td><td colspan="1" rowspan="1"><p>3 minutes</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Verifying/unpacking</p>
+</td><td colspan="1" rowspan="1"><p>1 minute</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Writing to USB</p>
+</td><td colspan="1" rowspan="1"><p>23 minutes</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Verifying USB</p>
+</td><td colspan="1" rowspan="1"><p>5 minutes</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p><strong>Total time</strong></p>
+</td><td colspan="1" rowspan="1"><p><strong>32 minutes</strong></p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p>Free disk space</p>
+</td><td colspan="1" rowspan="1"><p>9 GB</p>
+</td></tr>
+</table>
+<p>This method is for <strong>Linux</strong> users, and involves manually downloading/extracting the installer image, then writing the USB installer using the <strong>Balena Etcher</strong> utility (also requires download):<br></p>
+<p>Start by downloading the latest ChromeOS Flex installer image:</p>
+<table>
+<tr><td colspan="1" rowspan="1"><p><a href="https://dl.google.com/chromeos-flex/images/latest.bin.zip" target="_blank"><paper-button class="colored" raised><iron-icon icon="file-download"></iron-icon>Download Directly (1.3 GB)</paper-button></a></p>
+</td><td colspan="1" rowspan="1"><p>dl.google.com <strong>OR</strong> ...</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p><a href="https://chromeos.exerra.xyz/" target="_blank"><paper-button class="colored" raised><iron-icon icon="file-download"></iron-icon>Download &amp; verify integrity</paper-button></a></p>
+</td><td colspan="1" rowspan="1"><p>chromeos.exerra.xyz</p>
+</td></tr>
+</table>
+<p><strong>Version info</strong> (only relevant to Exerra.xyz):</p>
+<ul>
+<li>LTC = Long Term support Candidate</li>
+<li>LTS = Long Term Stable</li>
+<li>Stable = Regular version</li>
+</ul>
+<aside class="special"><p>Although the <strong>Exerra.xyz website is not affiliated with Google</strong>, the actual <strong>downloads do come directly from Google servers</strong>. The advantage of taking <em>this</em> route is that you can get the .zip file checksum and verify the integrity of your download</p>
+</aside>
+<p><strong>Create a checksum file for .zip</strong>:</p>
+<p>On the Exerra.xyz website, just above the <strong>Download</strong> button for each of the 3 versions of ChromeOS Flex, you&#39;ll see a drop-down arrow next to <strong>Hashes</strong> ... click the drop-down, then double-click the <strong>SHA1</strong> hash number to highlight it ... now right-click the highlighted hash, and select <strong>Copy</strong>.</p>
+<p>Start an empty plain-text file, and paste the <strong>hash</strong> into the file, followed by <strong>two spaces</strong> ... then paste the <strong>filename</strong> for the associated .zip file. Save the file in the corresponding <strong>filename.zip.sha1sum</strong> format ... for example: <strong>chromeos_16151.47.0_reven_recovery_stable-channel_mp-v7.bin.zip.sha1sum</strong></p>
+<p><strong>Verify download (if applicable)</strong>:</p>
+<p>To verify the integrity of your downloaded .zip file, start by opening a terminal in (or <code>cd</code> into) the folder where you saved the .zip file.</p>
+<p>Run this command to verify your download:</p>
+<pre><code>sha1sum -c *.sha1sum</code></pre>
+<p>You should eventually see some output similar to the following:</p>
+<pre>chromeos_16151.47.0_reven_recovery_stable-channel_mp-v7.bin.zip: OK</pre>
+<p><strong>Unzip the .bin image file</strong>:</p>
+<p>Unzip the downloaded .zip file to a temporary location ...<br>(the temp location will need to have <strong>at least</strong> 8 GB free)</p>
+<p>Either use a GUI archive program, or run the following command:</p>
+<pre>unzip -d /tmp/ /path/to/downloaded.zip</pre>
+<p><strong>Download Balena Etcher</strong>:</p>
+<p>Go to <a href="https://etcher.balena.io/" target="_blank">https://etcher.balena.io/</a> to download the latest version ... you&#39;ll see a <strong>Download Etcher</strong> button at top center. Download the <strong>Etcher for Linux x64 (64-bit) (zip)</strong> version.</p>
+<p>Unzip the file, then open a terminal window (or <code>cd</code> into) the <strong>balenaEtcher-linux-x64</strong> folder.</p>
+<p>To run the Balena Etcher executable, type this command:</p>
+<pre><code>./balena-etcher</code></pre>
+<p>Follow these few steps to flash the image to USB:</p>
+<ul>
+<li>Click the <strong>Flash from file</strong> button in Balena Etcher</li>
+<li>Navigate to the folder where you unzipped the .bin image file</li>
+<li>Double-click the file to select it. Balena Etcher will open the file</li>
+<li>Now click the <strong>Select target</strong> button in Balena Etcher</li>
+<li>Check the little box next to <strong>your USB</strong> thumb drive, then click <strong>Select 1</strong></li>
+<li>When you happy to proceed, click the <strong>Flash!</strong> button</li>
+</ul>
+<aside class="warning"><p>Try to refrain from using your PC during this time, to avoid any hiccups</p>
+</aside>
+<p>This method will take approximately 28 minutes, assuming a USB3 stick.<br></p>
+<p>Once the write process is complete, use <code>lsblk</code> to list the drive contents.<br>There should be 12 partitions in total, ranging in size from 2 MB to 5 GB.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Boot from USB" duration="3">
+        <p>When you are ready to install ChromeOS Flex on your computer, first double-check that you have a backup of any data that you wish to save, because remember, <strong>the drive will be wiped</strong> clean.</p>
+<p>Insert the drive and boot from the USB thumb drive.</p>
+<aside class="special"><p>The various methods for booting from removable media are outside the scope of this guide, as there are so many different key combinations for different makes and models. To find out how to start <em>your</em> computer by booting from USB, do a Google search for <strong>&lt;make&gt; &lt;model&gt; boot from USB</strong> where &lt;make&gt; and &lt;model&gt; are the actual make and model of your personal computer</p>
+</aside>
+<p>Once booted, there is <strong>little to no feedback</strong> for the first minute or so, except maybe your computer&#39;s fan spinning up. The entire <strong>boot sequence will take about 3 minutes</strong>, so please be patient.</p>
+<p class="image-container"><img style="width: 624.00px" src="img/e38e798bc97b4833.jpeg"></p>
+<p>Once the installer has fully loaded, you will see the familiar ChromeOS interface, with a big <strong>Get started</strong> button ... click <strong>Get started</strong> to go to the next screen, where you&#39;ll see the following options:</p>
+<ul>
+<li><strong>Install ChromeOS Flex<br></strong>Convert this device into a ChromeOS Flex device</li>
+<li><strong>Try it first<br></strong>Keep your OS and run ChromeOS Flex from USB</li>
+</ul>
+<aside class="warning"><p>If you do wish to try before you buy, please be patient, and remember that you are running a full operating system from a USB thumb drive ... it is going to be slow. It&#39;s best to wait for one task to complete before moving on to the next, rather than clicking the same thing multiple times</p>
+</aside>
+<p>To install ChromeOS Flex onto your computer, you will need to be at the login screen, i.e. if you did <strong>Try it first</strong>, you will need to <strong>log out</strong> first.</p>
+<p>Follow the prompts ... it doesn&#39;t take long. When the installation is complete, <strong>shut down</strong> your PC, <strong>remove the USB</strong> thumb drive, then turn your computer on again.</p>
+<p class="image-container"><img style="width: 624.00px" src="img/a943b9c54ead6253.png"></p>
+<p>If all went well, you should see the <strong>ChromeOS Flex</strong> logo during boot. You can then follow the wizard to <strong>complete the setup process</strong>, similar to setting up a new Chromebook</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Erase the USB" duration="2">
+        <p>It is recommended that you keep your ChromeOS Flex installation USB for emergencies, but if you find that you no longer need it, then you&#39;ll need to <strong>remove all 12 partitions</strong> and <strong>reformat the device</strong> before it can be used again.</p>
+<aside class="special"><p>Note: for the purpose of this guide, these instructions apply to microSD cards as well</p>
+</aside>
+<h2 is-upgraded><strong>ChromeOS/Windows</strong></h2>
+<p>To erase the installation USB, simply use the original <strong>Chromebook Recovery Utility</strong> that you used to create the installer.</p>
+<p>Open your Chrome browser, and start the <strong>Chromebook Recovery Utility</strong> extension.<br>Click the <strong>gear icon</strong> at top-right, and select <strong>Erase recovery media</strong> from the menu:</p>
+<p class="image-container"><img style="width: 624.00px" src="img/e15f8c9cb8c34bd.png"></p>
+<p>Select the correct <strong>USB thumb drive</strong> from the drop-down menu:</p>
+<p class="image-container"><img style="width: 624.00px" src="img/9193f0223cebeead.png"></p>
+<p><strong>Double-check</strong> that you have the <strong>correct</strong> drive before clicking <strong>Continue</strong></p>
+<p class="image-container"><img style="width: 624.00px" src="img/7969e288526202ca.png"></p>
+<p>Click the <strong>Erase now</strong> button to <strong>remove ChromeOS Flex</strong> from the drive:</p>
+<p class="image-container"><img style="width: 624.00px" src="img/860dbe801b4cb374.png"></p>
+<p>That&#39;s it ... you can now format the USB thumb drive as you normally would.<br>Click the <strong>Done</strong> button to close the <strong>Chromebook Recovery Utility</strong> extension:</p>
+<p class="image-container"><img style="width: 624.00px" src="img/6fcb75c7af07f89b.png"></p>
+<h3 is-upgraded><strong>Advanced Windows</strong></h3>
+<p>If you are comfortable using the command-line, then open the Windows <strong>Command Prompt</strong> or a <strong>Terminal</strong> window as <strong>Administrator</strong>, and run the <code>diskpart</code> command.</p>
+<p>In diskpart, list all disks:</p>
+<pre><code>list disk</code></pre>
+<p>Identify your USB stick by size (probably 14.5 GB for a 16 GB stick), then select that disk:</p>
+<pre><code>select disk X</code></pre>
+<p>where X is the number next to your thumb drive</p>
+<p>Once selected, list disks again to double-check:</p>
+<pre><code>list disk</code></pre>
+<p>Your thumb drive <strong>should have an asterisk (*)  in front</strong> of it</p>
+<p>When you&#39;re sure that you have the correct disk, run the clean command:</p>
+<pre><code>clean</code></pre>
+<p>Exit the diskpart utility:</p>
+<pre><code>exit</code></pre>
+<p>You can now format the disk with your preferred file system, as you normally would.</p>
+<h2 is-upgraded><strong>Linux</strong></h2>
+<aside class="special"><p>Using <strong>gparted</strong> to reformat this drive is <strong>not</strong> recommended, because there are 12 partitions to delete. You will receive <strong>two error messages</strong> for each &amp; every partition deleted during the process</p>
+</aside>
+<p>Start by identifying the correct device name:</p>
+<pre><code>lsblk</code></pre>
+<p>Your drive should have the <strong>correct size</strong> shown, and <strong>12 partitions</strong> as demonstrated earlier.</p>
+<p>When you are happy that you have the correct device name, run the following command:</p>
+<pre>sudo dd if=/dev/zero of=/dev/sdX bs=512 count=1 conv=notrunc</pre>
+<p>where <strong>/dev/sdX</strong> is the USB drive&#39;s device name (replace X with actual letter).</p>
+<aside class="warning"><p>Be <strong>very</strong> careful <strong>before</strong> pressing Enter with this command ... it is going to <strong>completely destroy a block device</strong> on your computer ... double-check &amp; triple-check that you have the correct device</p>
+</aside>
+<p>Now in Gparted, you will need to create a partition table <em>before</em> creating a new partition</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Help and Links" duration="1">
+        <h2 is-upgraded><strong>Official Links</strong></h2>
+<p><a href="https://support.google.com/chromeosflex/answer/11513094" target="_blank">Certified models list (Certified for ChromeOS Flex)</a></p>
+<p><a href="https://support.google.com/chromeosflex/answer/11542901" target="_blank">Differences between ChromeOS Flex and ChromeOS</a></p>
+<p><a href="https://support.google.com/chromeosflex/answer/11552529" target="_blank">Google&#39;s official ChromeOS Flex Installation Guide</a></p>
+<p><a href="https://chromeos.dev/en/education/chromeos-lts" target="_blank">Information about Long Term Support releases</a></p>
+<h2 is-upgraded><strong>Troubleshooting</strong></h2>
+<h3 is-upgraded><strong>Recover unreadable USB thumb drive</strong></h3>
+<p>Sometimes, writing to a USB thumb drive might be interrupted, for whatever reason, and incomplete.</p>
+<p>If this happens, then you might find that your operating system is no longer able to read the drive.</p>
+<p>Rather than repeating the excellent information supplied by the makers of Balena Etcher, here is a link to their GitHub user documentation: <a href="https://github.com/balena-io/etcher/blob/master/docs/USER-DOCUMENTATION.md?d_id=92e06341-01fc-4a38-a96b-16e28fc39aa8&s_id=1672837261619#recovering-broken-drives" target="_blank">Recovering broken drives</a></p>
+
+
+      </google-codelab-step>
+    
+  </google-codelab>
+
+  <script src="https://storage.googleapis.com/claat-public/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/prettify.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/codelab-elements.js"></script>
+  <script src="//support.google.com/inapp/api.js"></script>
+
+</body>
+</html>

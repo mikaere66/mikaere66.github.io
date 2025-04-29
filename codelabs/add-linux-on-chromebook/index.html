@@ -1,0 +1,320 @@
+
+<!doctype html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <meta charset="UTF-8">
+  <title>Add a Linux setup on ChromeOS</title>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://storage.googleapis.com/claat-public/codelab-elements.css">
+  <style>
+    .success {
+      color: #1e8e3e;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+  <google-codelab codelab-gaid=""
+                  id="add-linux-on-chromebook"
+                  title="Add a Linux setup on ChromeOS"
+                  environment="web"
+                  feedback-link="https://github.com/mikaere66/mikaere66.github.io/issues">
+    
+      <google-codelab-step label="Introducing Crostini" duration="5">
+        <h2 is-upgraded>About this Guide</h2>
+<ul>
+<li>This guide was tried and tested on an older-generation HP Chromebook 14-DB0023DX (codename: grunt/careena) released in May 2019, but with the latest (as of January 2025) stable branch of ChromeOS version 132.0.6834.154</li>
+<li>All images contain a <strong>title</strong> tag, meaning that if you hover your mouse-cursor over an image, you&#39;ll see a little tooltip with a brief description of what the image portrays.</li>
+<li>To view any image in <strong>full</strong> size, right-click the image, and select <code>Open image in new tab</code></li>
+<li>All external links open in a <strong>new</strong> tab</li>
+</ul>
+<h2 is-upgraded>Crostini Project</h2>
+<p>Crostini is the codename used internally that refers to Google&#39;s feature within ChromeOS that allows you to add Linux support to your Chromebook. You can install Linux CLI and GUI apps. By extension, this also means that you can run Android apps on your Chromebook, whether installed via the Play Store, &#34;side-loaded&#34; apps, or your own app-development projects.</p>
+<h2 is-upgraded>Debian Bookworm</h2>
+<p>Google chose Debian as its base for the Crostini project. The version installed (as of January 2025) is the latest release, which is Debian 12.9 ... the Debian version is also (currently) known as <strong>stable</strong> or by its codename <strong>Bookworm</strong></p>
+<p class="image-container"><img alt="OS version showing Bookworm" title="OS version showing Bookworm" style="width: 601.70px" src="img/502e708e7217ffb.png"></p>
+<aside class="special"><p><strong>Fun facts</strong></p>
+<ul>
+<li>Debian distribution codenames are based on names of characters from the <em>Toy Story</em> films</li>
+<li>Debian&#39;s <em>unstable</em> trunk is named after Sid, a character who regularly destroyed his toys</li>
+</ul>
+<p>Source: Wikipedia <a href="https://en.wikipedia.org/wiki/Debian_version_history" target="_blank">Debian version history</a></p>
+</aside>
+<h2 is-upgraded>Linux apps</h2>
+<p>Screenshot showing Linux app installed via the Linux command-line</p>
+<p class="image-container"><img alt="Linux app Mousepad installed" title="Linux app Mousepad installed" style="width: 601.70px" src="img/b12694c97c88bc75.png"></p>
+<h2 is-upgraded>Android apps</h2>
+<p>Screenshot showing Android app deployed via ADB wireless debug</p>
+<p class="image-container"><img alt="Android app Discover installed" title="Android app Discover installed" style="width: 412.00px" src="img/165c384d69023b92.png"></p>
+<h2 is-upgraded>Prerequisites</h2>
+<h3 is-upgraded>Pre-2019 Chromebooks</h3>
+<p><a href="https://www.chromium.org/chromium-os/chrome-os-systems-supporting-linux/" target="_blank">ChromeOS Systems Supporting Linux on ChromeOS</a></p>
+<p>As you may see from the list in the link above, only <em>certain</em> older-model Chromebooks are able to support the Linux environment, and even <em>less</em> are able to run Android apps. If your Pre-2019 Chromebook is <em>not</em> on the list, do not dispair ... at least give it a try</p>
+<h3 is-upgraded>Post-2019 Chromebooks</h3>
+<p>Unless otherwise specified, <em>all</em> devices launched in 2019 and later support Linux on ChromeOS</p>
+<h3 is-upgraded>Internet Connection</h3>
+<p>Unless you have a wired connection, before you install the Linux environment and update/upgrade the Linux system, please make sure that you&#39;re connected to a WiFi network, to save mobile data (if applicable)</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Updates then Set up" duration="15">
+        <p>Before doing anything major on <em>any</em> OS, it&#39;s always a good idea to ensure that your system software is up-to-date. To do that in ChromeOS, start by opening your <strong>Launcher</strong> and searching for <strong>Settings</strong>. In the Settings app, scroll down on the left, and click <code>About ChromeOS</code></p>
+<table>
+<tr><td colspan="1" rowspan="1"><p class="image-container"><img alt="ChromeOS settings icon" title="ChromeOS settings icon" style="width: 40.00px" src="img/3bbe812e7d05161f.png"></p>
+</td><td colspan="1" rowspan="1"><p>Tip: pin the Settings icon to your Shelf, because we&#39;ll be using it a <em>lot</em></p>
+</td></tr>
+</table>
+<p class="image-container"><img alt="Settings | About ChromeOS" title="Settings | About ChromeOS" style="width: 601.70px" src="img/cc6c927d3dde5ba.png"></p>
+<p>At the top-right corner, click the <code>Check for updates</code> button</p>
+<ul>
+<li>If there are <strong>updates available</strong>, they will start downloading, then install automatically. Keep the Settings window visible so you know when to restart your Chromebook</li>
+<li>If there are <strong>no updates</strong>, a message will tell you so, just above <strong>Version</strong> information</li>
+</ul>
+<p>After restarting your Chromebook, or if no update was required, open the Settings app again (if needed) and return to  <code>About ChromeOS</code> but this time scroll down on the right, until you see <strong>Developers</strong>. Under that heading you&#39;ll see <strong>Linux development environment</strong> ... click the <code>Set up</code> button</p>
+<p class="image-container"><img alt="About ChromeOS | Linux development environment" title="About ChromeOS | Linux development environment" style="width: 601.70px" src="img/3350e6bf88c4663a.png"></p>
+<p>You&#39;ll now see a dialog titled <strong>Set up Linux development environment</strong> ... if you would like to find out more about <em>Setting up Linux on your Chromebook</em>, click the <a href="https://support.google.com/chromebook/answer/9145439?visit_id=638738170515129201-1531710173" target="_blank">Learn more</a> link, otherwise click the <code>Next</code> button when ready</p>
+<p class="image-container"><img alt="Set up Linux development environment" title="Set up Linux development environment" style="width: 601.70px" src="img/6801e31c184d228c.png"></p>
+<p>On the next screen, you&#39;ll be prompted for a Linux <strong>username</strong> ... this will be your account name within the Linux environment, i.e. the name of your <code>$HOME</code> folder under <code>/home/</code> as well as the name that appears on the command-line next to the <code>penguin</code> hostname, as shown in this example:</p>
+<p class="image-container"><img alt="Sample command-prompt &amp; home folder" title="Sample command-prompt &amp; home folder" style="width: 312.00px" src="img/60ec4e5a02c12ac0.png"></p>
+<p>Regarding the <strong>Disk size</strong> option, you can either accept the default size of 10.0 GB, or click <code>Customized</code> then use the slider to adjust between the minimum (2.0 GB) and the maximum allowed (about 1.0 GB <em>less</em> than your Chromebook&#39;s free space) ... click the <code>Install</code> button when ready</p>
+<p class="image-container"><img alt="Set username and Disk size options" title="Set username and Disk size options" style="width: 601.70px" src="img/37115b633db03e01.png"></p>
+<p>Please be patient while Linux is being set up, because this process is quite delicate (YMMV), i.e. refrain from using your Chromebook until the installation is complete</p>
+<p class="image-container"><img alt="Installing Linux progress" title="Installing Linux progress" style="width: 601.70px" src="img/93a6eec2be94264a.png"></p>
+<p><strong>If all goes well</strong> and the installation completes successfully, you&#39;ll be presented with a <strong>Linux Terminal</strong> session automatically ... skip to the Terminal screenshots in the next section</p>
+<p>However, <strong>if there&#39;s a problem during setup</strong>, especially in the latter stages, you&#39;ll see an error message similar to the screenshot below ... click the <code>Retry</code> button, but if <em>nothing</em> happens, then click the <code>Cancel</code> button. You might just find that the Linux environment <em>was</em> actually installed. If this is the case, and you are happy to proceed, restart your Chromebook to ensure that any changes will take effect</p>
+<p class="image-container"><img alt="Installing Linux unspecified error" title="Installing Linux unspecified error" style="width: 601.70px" src="img/c22c5c04e572f8c6.png"></p>
+<p>If you see a message saying <strong>Installation failed due to lack of storage space</strong>, then click <code>Cancel</code> and restart the setup process from scratch, but this time limit your <strong>Disk size</strong> to about <em>half</em> of what is available. There&#39;s no need to start deleting files, unless that&#39;s actually the cause</p>
+<p class="image-container"><img alt="Installing Linux disk size error" title="Installing Linux disk size error" style="width: 601.70px" src="img/cd60b5c0f6714c72.png"></p>
+<aside class="warning"><p>Important: if the installation failed due to lack of storage space, but after clicking Cancel, you find that Linux <em>looks</em> like it&#39;s set up, Linux <strong>will not start</strong>! Please <strong>remove</strong> the Linux development environment, restart your Chromebook, then try again from scratch</p>
+</aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Terminal application" duration="3">
+        <p>Congrats, you&#39;ve just installed the <strong>Linux development environment</strong> on your Chromebook</p>
+<table>
+<tr><td colspan="1" rowspan="1"><p class="image-container"><img alt="Linux terminal icon" title="Linux terminal icon" style="width: 40.00px" src="img/334d9a3e90366b2c.png"></p>
+</td><td colspan="1" rowspan="1"><p>Tip: now might be a good time to pin the Terminal icon to your Shelf</p>
+</td></tr>
+</table>
+<p>In the screenshot below, you might not notice unless it was pointed out, but there are actually <strong>two</strong> tabs open ... the first being your Terminal <strong>settings</strong> tab (circled in green), plus the actual <strong>terminal-session</strong> tab (outlined in red). Please <strong>click the Settings tab</strong> for now. We will cover the command-prompt soon</p>
+<p class="image-container"><img alt="Terminal window Settings tab" title="Terminal window Settings tab" style="width: 601.70px" src="img/ee0cfb58a61e2ade.png"></p>
+<p>Each time you open the Terminal app, you&#39;re greeted with this window (<em>normally</em> just this <strong>first</strong> tab, <em>unless</em> using the shortcut we&#39;ll discuss soon). On this tab, you can launch a Linux session by clicking the <strong>penguin</strong> icon; add <strong>SSH</strong> connections if desired; or in <strong>Terminal settings</strong>, you can customize your terminal look &amp; feel, and manage your SSH configuration. <strong>Developer settings</strong> takes you to the main Settings app, where you originally set up Linux. We will cover Developer settings in the next section</p>
+<aside class="warning"><p>Note: the <code>Manage</code> button at top-right just takes you to the <em>same</em> Developer settings</p>
+</aside>
+<aside class="special"><p>Tip: there <em>is</em> a shortcut to launch the command-prompt <strong>directly</strong> ... right-click the Terminal icon, either in the Launcher, or on your Shelf if you pinned it there, and you&#39;ll see the Linux penguin icon.</p>
+<p>Also: note that using <em>this</em> shortcut will open a <strong>new Terminal window</strong>, rather than just the new tab you get when you click <code>penguin</code> in the window above</p>
+</aside>
+<p class="image-container"><img alt="Shortcut directly to command-prompt" title="Shortcut directly to command-prompt" style="width: 255.00px" src="img/2f99884931d1265d.png"></p>
+<p>Here&#39;s a screenshot showing your actual command-prompt, running for the first time. As the message indicates, you will see this introduction 4 more times. Please read it so you have an understanding. If this information is relevant to <em>you</em>, copy and paste it into a text file, and save it for future reference</p>
+<p class="image-container"><img alt="First time command-prompt" title="First time command-prompt" style="width: 601.70px" src="img/6275a699914668b3.png"></p>
+<aside class="warning"><p>Note: this particular NOTICE was shown on new installs starting with release 131, because major changes were made within ChromeOS. Your current installation might show an entirely <em>different</em> message, or <em>no</em> message at all</p>
+</aside>
+<h2 is-upgraded>Update Repository Lists</h2>
+<p>Like any OS that is freshly installed, it&#39;s always a good idea to update the system before first use. To do this in your Linux Terminal, run the following command:</p>
+<pre><code>sudo apt update</code></pre>
+<p>(using <code>elevated privileges</code> run the <code>apt</code> command with the <code>update</code> option)</p>
+<p>This will download an updated list of software repositories from Debian servers. You may see a message stating that <strong>X packages can be upgraded</strong></p>
+<p class="image-container"><img alt="After checking for updates" title="After checking for updates" style="width: 601.70px" src="img/a9524aa369cc3651.png"></p>
+<h2 is-upgraded>Install Upgrades</h2>
+<p>If <strong>packages can be upgraded</strong>, run the following command to install the upgrades:</p>
+<pre><code>sudo apt upgrade</code></pre>
+<p>(using <code>elevated privileges</code> run the <code>apt</code> command with the <code>upgrade</code> option)</p>
+<p>Note that, in the prompt shown below, the <code>Y</code> is capitalized ... this indicates that it&#39;s the <strong>default</strong> selection, so if you just press the <code>Enter</code> key, it means <strong>Yes</strong>. You can press <code>y</code> or <code>n</code> if you wish</p>
+<p class="image-container"><img alt="Performing system upgrades" title="Performing system upgrades" style="width: 601.70px" src="img/7979ea7211a7195.png"></p>
+<p>Linux will then download the required upgrade files, unpack them, and install them.<br>That&#39;s it ... you&#39;ve just <em>updated</em> your repo lists and <em>upgraded</em> your system</p>
+<h2 is-upgraded>Shut down Linux</h2>
+<p>When you close the Terminal window (or a tab), either by clicking the <code>Close</code> button or by typing <code>exit</code> at the command-line, your Linux environment is <em>still</em> running in the background. This has many advantages, but if you find that your system is low on resources, you may wish to quit Linux altogether.</p>
+<p>To <em>completely</em> shut down your Linux environment, you&#39;ll find a new menu entry on the Terminal app&#39;s right-click menu that you saw earlier, as in the screenshot below. Rest assured ... if you do <strong>not</strong> see <strong>Shut down Linux</strong>, then it&#39;s <em>not</em> running in the background</p>
+<p class="image-container"><img alt="Shut down Linux menu" title="Shut down Linux menu" style="width: 253.00px" src="img/bb608dd56d813225.png"></p>
+<aside class="warning"><p>Note: <em>completely</em> shutting down your Linux development environment while Linux apps are <strong>running</strong> may result in loss of data. Be sure to quit your programs, then exit gracefully.</p>
+<p>Please allow about 10 seconds after a shutdown, before <strong>restarting</strong> Linux</p>
+</aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Linux dev env settings" duration="2">
+        <p>To configure options for your Linux development environment, go to <strong>Settings</strong> | <strong>About ChromeOS</strong> | <strong>Linux development environment</strong>, as shown in previous sections</p>
+<p class="image-container"><img alt="About ChromeOS | Linux development environment" title="About ChromeOS | Linux development environment" style="width: 601.70px" src="img/693af35e7279647a.png"></p>
+<p>Here is an outline for each of the settings shown in the screenshot:</p>
+<ul>
+<li><strong>Manage shared folders</strong>: you can share a folder from within the <strong>Files</strong> app by right-clicking the folder and selecting <code>Share with Linux</code> from the menu.<br>* This works for both <strong>My Files</strong> folders, <strong>Google Drive</strong> folders, <em>and </em><strong>External</strong> storage devices.<br>* After sharing one or two folders, they&#39;re listed all in one place, within Manage shared folders.<br>* To <strong>stop sharing</strong> a folder, first ensure that relevant files are closed in Linux apps, then in Manage shared folders, click the Stop sharing icon ⨯ adjacent to the folder&#39;s name<br><img alt="Manage shared folders" title="Manage shared folders" style="width: 601.70px" src="img/1967a15a51fdf99d.png"><br>* To view shared folders in your Linux terminal, run the command <code>ls /mnt/chromeos</code></li>
+<li><strong>Manage USB devices</strong>: within this menu, you can set preferences regarding what happens when you connect a USB device to your Chromebook; whether or not those same devices will be connected to Linux <em>automatically</em> upon connection; and whether or not to allow Linux access to a connected device. Note that only <em>supported</em> devices are shown within this interface.<br>* Once you connect a device, the text &#34;Available USB devices will appear here&#34; will change to a list of <strong>supported</strong> devices, where you can enable/disable Linux access.<br>Notes re storage devices:<br>If you&#39;re <strong>unable to mount</strong> the disk/partition in Linux, please refer to the <strong>Troubleshooting</strong> section later in this guide.<br>Please ensure Linux files are closed properly before <strong>turning off</strong> access<img alt="Manage USB devices" title="Manage USB devices" style="width: 601.70px" src="img/2baa6a528d3d567c.png"></li>
+<li><strong>Backup &amp; restore</strong>: in this menu, you can <strong>Back up</strong> or <strong>Restore</strong> your <em>full</em> Linux setup, along with your apps and files ... you might do this periodically, or just before a Powerwash, for example<br><img alt="Backup &amp; restore" title="Backup &amp; restore" style="width: 601.70px" src="img/9cd6fa2a1b8572d0.png"><br>* The backup file (a Crostini image file) is saved to a location of your choosing (preferably an <em>external</em> drive) with the default filename of <code>chromeos-linux-YYYY-MM-DD.tini</code> where YYYY-MM-DD reflects the current date. To give you an <em>estimate</em> of what to expect, a backup after installing 39 Linux updates (system: 30.7 MB total disk usage) and one small GUI app (mousepad: 18.3 MB total disk usage), the <code>.tini</code> file was 437 MB, and took about 2 minutes.<br>* The backup includes <em>any/all</em> changes to your Linux development environment since install (<em>or</em> the most-recent restore) including apps, documents, settings, and even system updates. Restoring such a backup will return your Linux environment to its former state, for <em>that</em> backup.<br>* Tip: you can restore a backup directly from the Files app, by double-clicking the <code>.tini</code> file<br><img alt="Please read/heed the warning before Restore" title="Please read/heed the warning before Restore" style="width: 513.00px" src="img/6d36a7b591bafabb.png"><br></li>
+<li><strong>Develop Android apps</strong>: in here, you&#39;ll find just one toggle switch for <strong>Enable ADB debugging</strong> ... if you&#39;re interested in testing your Android apps for Desktop compatibility, then refer to the next section, which covers it in far more detail<br><img alt="Develop Android apps" title="Develop Android apps" style="width: 601.70px" src="img/2169db6103a81806.png"><br>* Tip: if you enabled this previously, then removed and reinstalled your Linux environment, you may find that this is <em>still</em> enabled. The same applies if you previously enabled <em>Developer options</em> within Android settings</li>
+<li><strong>Port forwarding</strong>: allows you to open the port to your local development server, for example.<br><img alt="Port forwarding" title="Port forwarding" style="width: 601.70px" src="img/5918afcaf0bd41b3.png"><br>* Tip: if you&#39;re unable to toggle a port, make sure you have Linux running by opening the Terminal app and connecting to Linux. Feel free to close the Terminal app once Linux is up and running. It will continue to run in the background, unless you shut it down</li>
+<li><strong>Disk size</strong>: while initially setting up your Linux development environment, you specified how much disk space to allocate to Linux. To adjust that size, click the <code>Change</code> button<br><img alt="Disk size" title="Disk size" style="width: 601.70px" src="img/8729ac130fce7e64.png"><br>Use the slider to set the new size, then click the <code>Re-size</code> button when ready<br><img alt="Resize Linux disk size Dialog" title="Resize Linux disk size Dialog" style="width: 512.00px" src="img/6bb4e1a1c0a0e3e6.png"></li>
+<li><strong>Allow Linux to access your microphone</strong>: requires Linux to Shut down and Restart<br><img alt="Allow Linux to access your microphone" title="Allow Linux to access your microphone" style="width: 601.70px" src="img/6bafeaa30f4c696a.png"></li>
+<li><strong>Remove Linux development environment</strong>: this action will completely <strong>remove your personal Linux files/folders</strong>, as well as the Linux development environment itself<br><img alt="Completely remove Linux development environment" title="Completely remove Linux development environment" style="width: 601.70px" src="img/4640e54f9c67a766.png"><br>You will be asked to confirm your selection before proceeding.<br>* Tip: do a Linux backup, as outlined above, before removing<br><img alt="Confirm removal of Linux" title="Confirm removal of Linux" style="width: 448.00px" src="img/c2168eb2d761acb2.png"><br>Because this is a big change within ChromeOS, it&#39;s probably best to <strong>restart your Chromebook</strong>, especially if you&#39;re troubleshooting and intend to <em>reinstall</em> the Linux development environment straight away</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Android development" duration="2">
+        <p>How to set up your Chromebook to test your Android apps for Desktop compatibility:</p>
+<p>These steps assume you have <em>already</em> installed the Linux development environment.</p>
+<h3 is-upgraded>ADB debugging at the ChromeOS level</h3>
+<p>The first thing you need to do is enable ADB debugging on your Chromebook. ADB (Android Debug Bridge) is a versatile command-line tool that lets you communicate with a device, or for devices to communicate amongst themselves.</p>
+<p>To enable Android debugging on your Chromebook, go to <strong>Settings</strong>, scroll down on the left, and click <code>About ChromeOS</code></p>
+<p>Scroll down on the right this time, and under <strong>Developers</strong>, click <code>Linux development environment</code> ... in there, about half way down, click <code>Develop Android apps</code> then turn on the toggle switch next to <code>Enable ADB debugging</code> ... you will be prompted to confirm. There are two <strong>important</strong> things to note at this stage:</p>
+<ol type="1" start="1">
+<li><strong>enabling</strong> ADB requires you to restart your Chromebook</li>
+<li>more importantly, <strong>disabling</strong> ADB requires a factory reset</li>
+</ol>
+<p class="image-container"><img alt="Confirm enable ADB debugging" title="Confirm enable ADB debugging" style="width: 512.00px" src="img/fb3ccc5ab56002ad.png"></p>
+<aside class="warning"><p>If the menu entry for <code>Develop Android apps</code> is <strong>not</strong> available, then your Chromebook model may not support this feature. Please refer to the <strong>Troubleshooting</strong> section for links</p>
+</aside>
+<p>If you agreed <strong>and</strong> you understand that <strong>disabling ADB debugging requires a factory reset</strong>, then after restarting your Chromebook, you&#39;ll be prompted <em>again</em> to confirm (please excuse the low-quality image)</p>
+<p class="image-container"><img alt="Confirm again after restart" title="Confirm again after restart" style="width: 601.70px" src="img/ce8aab527929abf.png"></p>
+<h3 is-upgraded>ADB debugging at the Android level</h3>
+<p>Assuming that you&#39;re using the Chromebook to test your Android apps for Desktop compatibility, then you&#39;ll need to <em>also</em> enable <strong>Wireless debugging</strong>, so you can deploy your app over WiFi, directly from within Android Studio on your main development computer.</p>
+<p>To do this, start by opening Android settings (similar to the Settings app on your mobile phone):</p>
+<ul>
+<li>To open Android settings in ChromeOS, go to <strong>Settings</strong>, scroll down on the left, and click <code>Apps</code></li>
+<li>Now click <strong>Manage Google Play preferences</strong> ... in there, click <code>Android settings</code></li>
+</ul>
+<table>
+<tr><td colspan="1" rowspan="1"><p class="image-container"><img alt="Android settings icon" title="Android settings icon" style="width: 40.00px" src="img/f8decf1a849d2be7.png"></p>
+</td><td colspan="1" rowspan="1"><p>Tip: pin the Android preferences icon to your Shelf for easier access.</p>
+<p>Yes, in main Settings, it&#39;s called settings, but on Shelf its preferences</p>
+</td></tr>
+</table>
+<p>In the <strong>Android settings</strong> app, scroll down to <strong>About device</strong> ... in there, you&#39;ll see <strong>Build number</strong>. Click or tap on that 7 times, then you&#39;ll see a Toast message saying <code>You are now a developer</code></p>
+<p class="image-container"><img alt="Settings | About device | Build number" title="Settings | About device | Build number" style="width: 412.00px" src="img/887d2e2d0d5dfe28.png"></p>
+<p>Back out of <strong>About device</strong> by clicking the ← arrow, then click <strong>System</strong>, and in there you&#39;ll see a <em>new</em> menu item: <strong>Developer options</strong></p>
+<p class="image-container"><img alt="Settings | System | Developer options" title="Settings | System | Developer options" style="width: 412.00px" src="img/5ecc4a12d1cdff5c.png"></p>
+<p>Go into <strong>Developer options</strong> and enable the toggle switch next to <code>ADB debugging</code> ... you&#39;ll be prompted to confirm, but this time, there&#39;s <em>no</em> restart.</p>
+<p><strong>Also</strong>, enable the toggle switch next to <code>Wireless debugging</code> ... it may <em>not</em> stay in the On position, but that&#39;s okay for now</p>
+<aside class="warning"><p>Important: enabling the <code>Wireless debugging</code> option is a critical step, even if the switch does <em>not</em> stay in the <code>On</code> position. You may skip this step if using a <em>wired</em> connection</p>
+</aside>
+<p class="image-container"><img alt="Confirm enable ADB debugging" title="Confirm enable ADB debugging" style="width: 412.00px" src="img/9737ae15c2ffab5d.png"></p>
+<h4 is-upgraded><strong>Connect from your Main computer</strong></h4>
+<p>Before connecting wirelessly from your main computer, click the <strong>WiFi</strong> icon at the bottom-right of your Chromebook screen, then go into the Network list by clicking the ˃ arrow next to your current WiFi connection at top-left of the menu. This time, at the top-right of that menu, you&#39;ll see the <strong>Network info</strong> icon ... click that to show your current IP address.</p>
+<p class="image-container"><img alt="Network info IP address" title="Network info IP address" style="width: 397.00px" src="img/9610ef0fbd546b83.png"></p>
+<p>Make a note of the IP address for the next step, or just type it directly into your main computer as you go. To connect wirelessly using <strong>adb</strong>, type the following command in your main computer&#39;s terminal:</p>
+<pre><code>adb connect &lt;your.chromebook.ip.address&gt;:5555</code></pre>
+<p>That <code>adb</code> command should prompt a security alert on your <strong>Chromebook</strong>, asking you to <strong>Allow USB debugging?</strong> Toggle the checkbox to <code>Always allow from this computer</code> then click <code>Allow</code></p>
+<p class="image-container"><img alt="Security prompt ADB debugging" title="Security prompt ADB debugging" style="width: 601.70px" src="img/88555783e551f37d.png"></p>
+<p>If you run the original <code>adb connect ...</code> command again on you main computer, you should see a message saying <strong>Already connected to XXX.XXX.X.XXX:5555</strong></p>
+<p class="image-container"><img alt="ADB connected successfully" title="ADB connected successfully" style="width: 462.00px" src="img/487cc909a98eea4a.png"></p>
+<aside class="special"><p>Tip: if you see a <code>Command 'adb' not found</code> message, and you definitely have Android Studio installed, adb should be in your <code>&lt;sdk-location&gt;/platform-tools</code> directory.</p>
+<p>If you see the message <code>Failed to connect to xxx.xxx.x.xxx:5555</code> then immediately try again, and you might just get a better result.</p>
+<p>Otherwise, please refer to the <strong>Troubleshooting</strong> section</p>
+</aside>
+<p>You should now be ready to test your Android apps by deploying them to your Chromebook ... happy debugging!</p>
+<aside class="warning"><p>Note: you will need to run the <code>adb connect ...</code> command for <em>each</em> development session</p>
+</aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Tips and tricks" duration="2">
+        <h2 is-upgraded>Developer options</h2>
+<p>In the previous section, we covered how to enable Developer options within Android settings. There is <em>much</em> more that you can do in that menu than just enable ADB debugging though. A good example is <strong>Quick setting developer tiles</strong> ... within there, you can turn on <strong>Window animation scale</strong> to view your animations in slow motion, for example.</p>
+<p>Also, if you&#39;re doing maps-based app development, you can Select a <strong>mock location app</strong>.</p>
+<p>Having said all that, please do <strong>not</strong> change settings in Developer options if you do <em>not</em> know what they&#39;re for</p>
+<h2 is-upgraded>Limited disk space</h2>
+<p>Remember that Linux runs in a container, and is limited on the amount of disk space that it has access to. Keep that in mind when installing (especially) GUI apps, which may require lots of dependencies. For example, installing <strong>gedit</strong> would require 196 MB of downloads <em>plus</em> 640 MB of disk space to install, whereas a lighter-weight text editor like <strong>mousepad</strong> (for instance) requires only 3.5 MB of downloads plus the 14.8 MB to install</p>
+<h2 is-upgraded>Linux startup times</h2>
+<ul>
+<li>If you have an older or less-powerful model, it pays to wait about 30 seconds <strong>after starting your Chromebook</strong> before starting a new Linux session</li>
+<li>If you <strong>just started</strong> your Chromebook, <em>or</em> if the Linux environment was <strong>Shut down</strong> completely, <em>then</em> you go into the <strong>Files</strong> app and click <strong>Linux files</strong>, you&#39;ll see a spinning animation for a number of seconds. This is to be expected, because ChromeOS has to &#34;spin-up&#34; your Linux OS in order to display those files, which are actually stored within your Linux development environment itself</li>
+<li>The same principle applies to starting Linux apps from the Launcher or your Shelf ... you may have a better experience if you start your Linux container <em>before</em> you start (especially large) Linux apps from the Launcher or Shelf. You can then close the Terminal window if it&#39;s not actually required</li>
+</ul>
+<h2 is-upgraded>Login screen warning</h2>
+<p>On your first login to your Chromebook after installing the <strong>Linux development environment</strong>, you may notice a warning in red saying &#34;<strong>This device may contain apps that haven&#39;t been verified by Google</strong>&#34; ... this is to be expected, as you are now able to install any number of <em>third-party</em> Linux and Android apps. If you share this Chromebook with others however, please let <em>them</em> know that the warning is nothing to worry about</p>
+<h2 is-upgraded>Settings within Linux</h2>
+<aside class="warning"><p>Warning: be sure to make a backup (which only takes a few minutes) before editing system files.</p>
+<p>Backups are in <strong>Settings</strong> | <strong>About ChromeOS</strong> | <strong>Linux development environment</strong> | <strong>Backup &amp; restore</strong></p>
+</aside>
+<p>Just like with a distro running on bare-metal, or in a VM, your Linux environment can be configured to suit your needs. For example, here are a few things you might like to change:</p>
+<ul>
+<li>Don&#39;t like the <code>penguin</code> hostname? Change it by first editing <code>/etc/hostname</code> then immediately after, edit <code>/etc/hosts</code> and change the <code>penguin</code> reference in <em>that</em> file to the <strong>same</strong> name that you just set in <code>/etc/hostname</code> ... now, you must completely <strong>shut down</strong> and restart your Linux environment for changes to take effect.<br>* After shutting down Linux, wait about 10 seconds before relaunching your Linux environment</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Troubleshooting" duration="1">
+        <h2 is-upgraded>Fixing problems with Linux</h2>
+<p>If you experience issues with Linux or Linux apps, following these steps in turn, <em>after</em> saving any open files in Linux:</p>
+<ol type="1" start="1">
+<li>Try shutting down your Linux environment.<br>Wait ten seconds or so.<br>Restart your Linux environment</li>
+<li>Try restarting your Chromebook</li>
+<li>Try updating your Linux repos and installing any upgrades ...<br>To do so, open Terminal then run the following commands:</li>
+</ol>
+<pre><code>sudo apt update &amp;&amp; sudo apt upgrade</code></pre>
+<aside class="special"><p>Note: for major upgrades, you <em>might</em> need to restart your Chromebook for changes to take effect</p>
+</aside>
+<h2 is-upgraded>Get to know your device</h2>
+<p>A big help in troubleshooting any tech-related issue is <em>knowing</em> your hardware. A great tool for this in ChromeOS is the <strong>About Version</strong> information, which can be found by going to <strong>Settings</strong> | <strong>About ChromeOS</strong> | <strong>Additional details</strong> | <strong>Build details</strong>, or by just typing <code>chrome://version</code> directly into your Chrome browser&#39;s address bar ... here, you&#39;ll see info like:</p>
+<ul>
+<li>Firmware Version: a hint to your Chromebook&#39;s boardname</li>
+<li>Customization ID: a hint to your Chromebook&#39;s codename</li>
+<li>ARC version: (Android Runtime for Chrome) SDK version</li>
+</ul>
+<h2 is-upgraded>Installation failure</h2>
+<p>IMHO, it&#39;s not uncommon to see a message saying <strong>Error installing Linux</strong> ... luckily you can click the <code>Retry</code> button, but if the installation fails more than twice, it might be a good idea to consider your network connection. If you suspect that the failure might be caused by a spotty network, then (if you can spare the data) consider using your mobile phone as a hotspot, just for <em>this</em> install phase. The installation will use approximately 500 MB of data. Remember to disconnect &amp; turn off your hotspot as soon as Linux installs successfully</p>
+<h2 is-upgraded>Installing ADB/SDK platform-tools on your main computer</h2>
+<p>On your main computer, if you were unable to find <code>adb</code> in your <code>&lt;sdk-location&gt;/platform-tools</code> directory, the Android documentation recommends that you should get the latest SDK Platform-Tools through Android Studio&#39;s <strong>SDK Manager</strong></p>
+<p class="image-container"><img alt="SDK Manager showing Platform-Tools" title="SDK Manager showing Platform-Tools" style="width: 601.70px" src="img/8bc46f0a0dedbd7d.png"></p>
+<p>If you do <strong>not</strong> use Android Studio, you should be able to install it through most distros&#39; repositories. The advantage with <em>this</em> method is that the executables are updated along with your distro ... however, the manual downloads from the official Android website <em>may</em> be more up-to-date.</p>
+<p>SDK Platform Tools can be download from the <a href="https://developer.android.com/tools/releases/platform-tools" target="_blank">official Android website</a>.</p>
+<p>If you download/install <strong>manually</strong>, you&#39;ll need to either specify the <em>full</em> path to the <code>adb</code> executable file (or create an alias) <em>or</em> add its location to your computer environment&#39;s path</p>
+<h2 is-upgraded>Trouble mounting external storage</h2>
+<p>When you allow access to a USB external <strong>storage</strong> device within <strong>Manage USB devices</strong>, you will most likely find that it&#39;s <em>not</em> mounted within the Linux environment, and worse still, not <em>able</em> to be mounted. Apparently, this is for security reasons.</p>
+<p>As a workaround, instead of giving &#34;permission&#34; through Manage <strong>USB</strong> devices, turn off the toggle switch next to the offending device. Now, go into the <strong>Files</strong> app, and right-click the USB drive listed at bottom-left, and select <code>Share with Linux</code> ... this &#34;share&#34; would now be managed through <strong>Manage shared folders</strong>, <em>instead of </em><strong>Manage USB devices</strong>. Within Linux itself, files/folders on your external USB drive will be available via <code>/mnt/chromeos/removable/</code></p>
+<aside class="warning"><p>Important: please do <strong>not</strong> eject the disk before following these steps:</p>
+<ul>
+<li><strong>Close relevant files</strong> within Linux</li>
+<li>Go to <strong>Settings</strong> | <strong>About ChromeOS</strong> | <strong>Linux development environment</strong> | <strong>Manage shared folders</strong></li>
+<li>Remove the share by clicking the <strong>Stop sharing</strong> icon ⨯ adjacent to the drive&#39;s label</li>
+</ul>
+<p>If you <em>already</em> have the Files app open, a quicker way to <strong>Manage shared folders</strong> is to select <strong>Manage Linux sharing</strong> from the <strong>More options</strong> ︙ menu, <em>or</em> by right-clicking the USB drive at bottom-left, and selecting <strong>Manage Linux sharing</strong></p>
+</aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Helpful links" duration="0">
+        <h2 is-upgraded>Official links</h2>
+<p>Some links to pages on the official ChromeOS.dev website:</p>
+<p><a href="https://chromeos.dev/en/linux" target="_blank">Linux on ChromeOS</a></p>
+<p><a href="https://chromeos.dev/en/linux/setup#sharing-files-to-linux" target="_blank">Sharing files with Linux</a></p>
+<p><a href="https://chromeos.dev/en/linux/setup#installing-linux-apps-and-packages" target="_blank">Installing Linux apps and packages</a></p>
+<p><a href="https://chromeos.dev/en/linux/setup#restarting-the-linux-container" target="_blank">Restarting the Linux container</a></p>
+<p><a href="https://chromeos.dev/en/linux/setup#security-and-permissions" target="_blank">Security and permissions</a></p>
+<h2 is-upgraded>Unofficial links</h2>
+<p>Some other links found useful while researching this guide:</p>
+<p><a href="https://shibumi.dev/posts/mount-block-devices-in-chromeos/" target="_blank">Mount Block Devices in ChromeOS</a></p>
+<h2 is-upgraded>Mentioned links</h2>
+<p>Links scattered throughout this guide, here in one place:</p>
+<p>Wikipedia <a href="https://en.wikipedia.org/wiki/Debian_version_history" target="_blank">Debian version history</a></p>
+<p><a href="https://www.chromium.org/chromium-os/chrome-os-systems-supporting-linux/" target="_blank">Pre-2019 Systems Supporting Linux on ChromeOS</a></p>
+<p>Setting up Linux on your Chromebook <a href="https://support.google.com/chromebook/answer/9145439?visit_id=638738170515129201-1531710173" target="_blank">Learn more</a></p>
+<p>Android <a href="https://developer.android.com/tools/releases/platform-tools" target="_blank">SDK Platform Tools</a></p>
+
+
+      </google-codelab-step>
+    
+  </google-codelab>
+
+  <script src="https://storage.googleapis.com/claat-public/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/prettify.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/codelab-elements.js"></script>
+  <script src="//support.google.com/inapp/api.js"></script>
+
+</body>
+</html>

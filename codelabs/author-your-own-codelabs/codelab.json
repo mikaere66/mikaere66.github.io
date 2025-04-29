@@ -1,0 +1,26 @@
+{
+  "environment": "web",
+  "format": "html",
+  "prefix": "https://storage.googleapis.com",
+  "mainga": "UA-49880327-14",
+  "updated": "2025-02-10T19:55:44Z",
+  "id": "author-your-own-codelabs",
+  "duration": 42,
+  "title": "Create a Codelab in Google Docs",
+  "authors": "Michael Mossman",
+  "summary": "How to use Google Docs to create your own Codelabs",
+  "source": "15tkDeH_Up13e52muJixljoGJOoCGgGZgTbOhsvOwxXc",
+  "theme": "docs",
+  "status": [
+    "published"
+  ],
+  "category": [
+    "docs"
+  ],
+  "tags": [
+    "web"
+  ],
+  "feedback": "https://github.com/mikaere66/mikaere66.github.io/issues",
+  "ga": "UA-49880327-14",
+  "url": "author-your-own-codelabs"
+}
